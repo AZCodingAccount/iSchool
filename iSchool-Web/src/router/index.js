@@ -11,28 +11,28 @@ const router = createRouter({
       path: '/login',
       component: () => import('@/views/LoginRegisterWindow.vue')
     },
-    // {
-    //   path: '/main',
-    //   component: () => import('@/views/MainWindow.vue'),
-    //   children: [
-    //     {
-    //       path: '',
-    //       redirect: '/main/course_schedule'
-    //     },
-    //     {
-    //       path: 'course_schedule',
-    //       component: () => import('@/views/CourseScheduleWindow.vue'),
-    //     },
-    //     {
-    //       path: 'friend',
-    //       component: () => import('@/views/FriendWindow.vue'),
-    //     },
-    //     {
-    //       path: 'user',
-    //       component: () => import('@/views/UserWindow.vue'),
-    //     }
-    //   ]
-    // },
+    {
+      path: '/main',
+      component: () => import('@/views/MainWindow.vue'),
+      children: [
+        {
+          path: '',
+          redirect: '/main/home'
+        },
+        {
+          path: 'home',
+          component: () => import('@/views/HomeWindow.vue'),
+        },
+        {
+          path: 'comment',
+          component: () => import('@/views/CommentWindow.vue'),
+        },
+        {
+          path: 'mine',
+          component: () => import('@/views/MineWindow.vue'),
+        },
+      ]
+    },
     {
       path: '/:pathMatch(.*)',
       component: () => import('@/views/NotFound.vue')
