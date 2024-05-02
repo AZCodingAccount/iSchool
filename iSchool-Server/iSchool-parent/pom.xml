@@ -1,0 +1,163 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.iSchool</groupId>
+    <artifactId>iSchool-parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <name>iSchool-parent</name>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>../iSchool-gateway</module>
+        <module>../iSchool-service</module>
+        <module>../iSchool-base</module>
+        <module>../iSchool-model</module>
+    </modules>
+
+
+    <!-- 版本控制 -->
+    <properties>
+        <java.version>1.8</java.version>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.source>8</maven.compiler.source>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring-cloud.version>Hoxton.SR9</spring-cloud.version>
+        <spring-boot.version>2.3.7.RELEASE</spring-boot.version>
+        <spring-cloud-alibaba.version>2.2.6.RELEASE</spring-cloud-alibaba.version>
+        <org.projectlombok.version>1.18.8</org.projectlombok.version>
+        <fastjson.version>1.2.83</fastjson.version>
+        <druid-spring-boot-starter.version>1.2.8</druid-spring-boot-starter.version>
+        <mysql-connector-java.version>8.0.30</mysql-connector-java.version>
+        <mybatis-plus-boot-starter.version>3.4.1</mybatis-plus-boot-starter.version>
+        <xxl-job-core.version>2.3.1</xxl-job-core.version>
+        <swagger-annotations.version>1.5.20</swagger-annotations.version>
+        <okhttp.version>4.8.1</okhttp.version>
+    </properties>
+
+    <!--  一引入  -->
+    <dependencyManagement>
+        <dependencies>
+            <!-- spring cloud -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!--            springboot-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!--            spring cloud alibaba-->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- lombok，简化类的构建-->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${org.projectlombok.version}</version>
+            </dependency>
+
+            <!--          swagger 接口文档-->
+            <!--            <dependency>-->
+            <!--                <groupId>io.swagger</groupId>-->
+            <!--                <artifactId>swagger-annotations</artifactId>-->
+            <!--                <version>${swagger-annotations.version}</version>-->
+            <!--            </dependency>-->
+            <!-- fastjson ，json解析工具 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+            <!-- druid 连接池管理 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid-spring-boot-starter.version}</version>
+            </dependency>
+
+            <!-- mySQL数据库驱动包管理 -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql-connector-java.version}</version>
+            </dependency>
+            <!-- mybatis plus 集成Spring Boot启动器 -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus-boot-starter.version}</version>
+            </dependency>
+
+            <!-- mybatis plus 代码生成器 -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-generator</artifactId>
+                <version>${mybatis-plus-boot-starter.version}</version>
+            </dependency>
+
+            <!--分布式任务调度-->
+            <dependency>
+                <groupId>com.xuxueli</groupId>
+                <artifactId>xxl-job-core</artifactId>
+                <version>${xxl-job-core.version}</version>
+            </dependency>
+            <!--Spring boot单元测试-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${spring-boot.version}</version>
+                <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.junit.vintage</groupId>
+                        <artifactId>junit-vintage-engine</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <!--            okhttp-->
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>${okhttp.version}</version>
+            </dependency>
+
+        </dependencies>
+
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <!--指定项目源码jdk的版本-->
+                    <source>1.8</source>
+                    <!--指定项目编译后的jdk的版本-->
+                    <target>1.8</target>
+                    <!--配置注解预编译-->
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${org.projectlombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -1,0 +1,53 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+**/node_modules
+# roadhog-api-doc ignore
+/src/utils/request-temp.js
+_roadhog-api-doc
+
+# production
+/dist
+
+# misc
+.DS_Store
+npm-debug.log*
+yarn-error.log
+
+/coverage
+.idea
+yarn.lock
+package-lock.json
+*bak
+.vscode
+
+
+# visual studio code
+.history
+*.log
+functions/*
+.temp/**
+
+# umi
+.umi
+.umi-production
+.umi-test
+
+# screenshot
+screenshot
+.firebase
+.eslintcache
+
+build
+
+# 本项目文件
+第5组-中期报告.doc
+原型图.rp
+# 忽略编译生成的文件夹
+**/target/
+#忽略所有.svn目录
+.svn/
+#忽略所有.idea目录
+.idea/
+#忽略所有.iml文件
+*.iml
