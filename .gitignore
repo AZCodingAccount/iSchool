@@ -44,4 +44,10 @@ build
 第5组-中期报告.doc
 原型图.rp
 # 忽略编译生成的文件夹
-/target/
+**/target/
+#忽略所有.svn目录
+.svn/
+#忽略所有.idea目录
+.idea/
+#忽略所有.iml文件
+*.iml
