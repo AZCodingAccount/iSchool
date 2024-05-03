@@ -8,19 +8,28 @@
         mode="horizontal" :ellipsis="false" :router="true">
         <!-- logo -->
         <div style="display: flex; margin-left: 2%;">
-            <img style="height: 80%;" src="/public/img/logo.png" alt="logo">
-            <div style="font-size: 30px; margin: 3%">iSchool</div>
+            <img style="height: 100%;" src="/public/img/code.png" alt="logo">
+            <div style="font-size: 30px; margin: 3%; font-style: italic; line-height: 155%;">iSchool</div>
         </div>
         <div style="flex-grow: 1;"></div>
-        <el-menu-item style="font-size: 130%;" index="/main/home"><el-icon size="160%">
-                <Search />
-            </el-icon>首页</el-menu-item>
-        <el-menu-item style="font-size: 130%;" index="/main/comment"><el-icon size="160%">
-                <ChatDotRound />
-            </el-icon>大众点评</el-menu-item>
-        <el-menu-item style="font-size: 130%;" index="/main/mine"><el-icon size="160%">
-                <User />
-            </el-icon>个人中心</el-menu-item>
+        <el-tooltip content="<strong>首页</strong>" placement="bottom" effect="light" raw-content>
+            <el-menu-item style="font-size: 130%;" index="/main/home"><el-icon size="160%">
+                    <Search />
+                </el-icon></el-menu-item>
+        </el-tooltip>
+        <div style="flex-grow: 0.02;"></div>
+        <el-tooltip content="<strong>大众点评</strong>" placement="bottom" effect="light" raw-content>
+            <el-menu-item style="font-size: 130%;" index="/main/comment"><el-icon size="160%">
+                    <ChatDotRound />
+                </el-icon></el-menu-item>
+        </el-tooltip>
+        <div style="flex-grow: 0.02;"></div>
+        <el-tooltip content="<strong>个人中心</strong>" placement="bottom" effect="light" raw-content>
+            <el-menu-item style="font-size: 130%;" index="/main/mine"><el-icon size="160%">
+                    <User />
+                </el-icon></el-menu-item>
+        </el-tooltip>
+        <div style="flex-grow: 0.01;"></div>
     </el-menu>
     <router-view />
     <div style="text-align: center; color: #cccccc; margin-top: 2%;">
