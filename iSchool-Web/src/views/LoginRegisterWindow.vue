@@ -1,29 +1,31 @@
 <script setup>
-import { useUserInfoerStore } from '@/stores/userInfoer';
-import { ref } from 'vue';
+import { useUserInfoerStore } from '@/stores/userInfoer'
+import { ref } from 'vue'
 const userInfoerStore = useUserInfoerStore()
 const isLogin = ref(true) // true登录，false注册
 const rememberMe = ref(userInfoerStore.userInfo.rememberMe)
 
 // 登录
 const loginForm = ref({
-    account: '',
+    username: '',
     password: ''
 })
 
 if (rememberMe.value) {
-    loginForm.value.account = userInfoerStore.userInfo.account,
+    loginForm.value.username = userInfoerStore.userInfo.username,
         loginForm.value.password = userInfoerStore.userInfo.password
 }
 
 const onLogin = async () => {
     console.log('onLogin')
+    // var res = await login(loginForm.value)
+    // console.log('res', res)
     // ...
 }
 
 // 注册
 const registerForm = ref({
-    account: '',
+    username: '',
     setPassword: '',
     surePassword: ''
 })
@@ -52,7 +54,7 @@ const onForgetPassword = () => {
                         <el-icon :size="30" style="margin-right: 20px;">
                             <User />
                         </el-icon>
-                        <el-input v-model="loginForm.account" placeholder="请输入用户名" />
+                        <el-input v-model="loginForm.username" placeholder="请输入用户名" />
                     </div>
                 </el-form-item>
 
@@ -89,7 +91,7 @@ const onForgetPassword = () => {
                         <el-icon :size="30" style="margin-right: 20px;">
                             <User />
                         </el-icon>
-                        <el-input v-model="registerForm.account" placeholder="请输入用户名" />
+                        <el-input v-model="registerForm.username" placeholder="请输入用户名" />
                     </div>
                 </el-form-item>
 

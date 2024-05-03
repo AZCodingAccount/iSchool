@@ -33,3 +33,5 @@ pnpm build
 ```sh
 pnpm lint
 ```
+
+startup.cmd -m standalones
