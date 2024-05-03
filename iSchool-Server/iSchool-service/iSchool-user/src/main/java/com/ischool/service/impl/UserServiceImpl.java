@@ -3,13 +3,13 @@ package com.ischool.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
-import com.ischool.exception.BusinessException;
+import com.common.dto.UserDto;
+import com.common.exception.BusinessException;
 import com.ischool.mapper.UserMapper;
 import com.ischool.model.ErrorCode;
 import com.ischool.model.dto.LoginDto;
 import com.ischool.model.dto.UpdateUserDto;
 import com.ischool.model.entity.User;
-import com.ischool.model.entity.UserDto;
 import com.ischool.model.enums.UserRoleEnum;
 import com.ischool.model.pojo.JwtProperties;
 import com.ischool.service.UserService;
@@ -38,7 +38,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Autowired
     UserServiceImpl userService;
 
-    public static final String SALT = "ischool";
+    public static final String SALT = "common";
 
     /**
      * @param loginDto

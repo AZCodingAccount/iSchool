@@ -15,6 +15,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>iSchool-user</module>
+        <module>ischool-community</module>
     </modules>
 
     <properties>

@@ -1,10 +1,11 @@
 package com.ischool.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.common.dto.UserDto;
 import com.ischool.model.dto.LoginDto;
 import com.ischool.model.dto.UpdateUserDto;
 import com.ischool.model.entity.User;
-import com.ischool.model.entity.UserDto;
+
 
 /**
 * @author Albert han

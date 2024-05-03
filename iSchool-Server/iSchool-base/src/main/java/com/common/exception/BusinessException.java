@@ -1,4 +1,4 @@
-package com.ischool.exception;
+package com.common.exception;
 
 
 import com.ischool.model.ErrorCode;

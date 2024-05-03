@@ -1,15 +1,16 @@
 package com.ischool.controller;
 
-import com.aliyuncs.ram.model.v20150501.UpdateUserRequest;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.ischool.exception.BusinessException;
+import com.common.dto.UserDto;
+import com.common.exception.BusinessException;
+
+
 import com.ischool.model.BaseResponse;
 import com.ischool.model.ErrorCode;
 import com.ischool.model.Result;
 import com.ischool.model.dto.LoginDto;
 import com.ischool.model.dto.UpdateUserDto;
 import com.ischool.model.entity.User;
-import com.ischool.model.entity.UserDto;
 import com.ischool.model.enums.UserRoleEnum;
 import com.ischool.service.UserService;
 import com.ischool.utils.AliOssUtil;
@@ -30,7 +31,7 @@ import java.util.UUID;
  * @description: 用户控制器
  **/
 @RestController
-@RequestMapping("/api/v1/user")
+@RequestMapping
 @Slf4j
 public class UserController {
 
@@ -42,7 +43,7 @@ public class UserController {
 
     /**
      * @param loginDto
-     * @return com.ischool.model.BaseResponse<com.ischool.model.entity.UserDto>
+     * @return com.common.model.BaseResponse<com.common.dto.UserDto>
      * @description 用户登录
      **/
     @PostMapping("/login")
@@ -56,7 +57,7 @@ public class UserController {
 
     /**
      * @param id
-     * @return com.ischool.model.BaseResponse<com.ischool.model.entity.UserDto>
+     * @return com.common.model.BaseResponse<com.common.dto.UserDto>
      * @description 获取用户登录信息
      **/
     @GetMapping
@@ -69,7 +70,7 @@ public class UserController {
 
     /**
      * @param loginDto
-     * @return com.ischool.model.BaseResponse<java.lang.Object>
+     * @return com.common.model.BaseResponse<java.lang.Object>
      * @description 用户注册
      **/
     @PostMapping("/register")
@@ -81,7 +82,7 @@ public class UserController {
 
     /**
      * @param updateUserDto
-     * @return com.ischool.model.BaseResponse<java.lang.Object>
+     * @return com.common.model.BaseResponse<java.lang.Object>
      * @description 修改用户信息
      **/
     @PutMapping
@@ -96,7 +97,7 @@ public class UserController {
     /**
      * @param id
      * @param role
-     * @return com.ischool.model.BaseResponse<java.lang.Object>
+     * @return com.common.model.BaseResponse<java.lang.Object>
      * @description 普通用户注销
      **/
     @DeleteMapping
@@ -120,7 +121,7 @@ public class UserController {
      * @param file
      * @param id
      * @param role
-     * @return com.ischool.model.BaseResponse<java.lang.String>
+     * @return com.common.model.BaseResponse<java.lang.String>
      **/
     @PostMapping("/upload")
     public BaseResponse<String> upload(MultipartFile file, @RequestHeader("id") Long id, @RequestHeader("role") String role) {

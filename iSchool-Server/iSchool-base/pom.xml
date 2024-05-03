@@ -11,6 +11,7 @@
         <relativePath>../iSchool-parent</relativePath>
     </parent>
 
+
     <artifactId>iSchool-base</artifactId>
 
 

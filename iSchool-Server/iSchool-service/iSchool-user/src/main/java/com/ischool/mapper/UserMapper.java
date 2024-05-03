@@ -3,6 +3,7 @@ package com.ischool.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ischool.model.entity.User;
 
+
 /**
 * @author Albert han
 * @description 针对表【user】的数据库操作Mapper

@@ -25,3 +25,4 @@ spring:
 
   profiles:
     active: dev
+
