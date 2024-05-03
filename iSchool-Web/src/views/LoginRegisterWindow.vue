@@ -3,8 +3,9 @@ import { useUserInfoerStore } from '@/stores/userInfoer'
 import { ref } from 'vue'
 const userInfoerStore = useUserInfoerStore()
 const isLogin = ref(true) // true登录，false注册
-const rememberMe = ref(userInfoerStore.userInfo.rememberMe)
-
+const rememberMe = ref(userInfoerStore.userInfo.rememberMe) // 记住我
+const titleRef = ref(null) // 标题绑定变量
+const boxRef = ref(null) // 盒子绑定变量
 // 登录
 const loginForm = ref({
     username: '',
@@ -12,10 +13,11 @@ const loginForm = ref({
 })
 
 if (rememberMe.value) {
-    loginForm.value.username = userInfoerStore.userInfo.username,
-        loginForm.value.password = userInfoerStore.userInfo.password
+    loginForm.value.username = userInfoerStore.userInfo.username
+    loginForm.value.password = userInfoerStore.userInfo.password
 }
 
+// 登录
 const onLogin = async () => {
     console.log('onLogin')
     // var res = await login(loginForm.value)
@@ -43,8 +45,11 @@ const onForgetPassword = () => {
 </script>
 
 <template>
-    <el-image class="background" src="/img/background/loginRegister.jpg" />
-    <div class="box">
+    <el-image class="background" src="/img/background/loginRegisterBackground.jpg" />
+    <div ref="titleRef" class="title" @click="titleRef.style.top = '-100%'; boxRef.style.top = '28%'">
+        iSchool
+    </div>
+    <div ref="boxRef" class="box">
         <!-- 登录界面 -->
         <div v-show="isLogin">
             <h1 style="text-align: center;">iSchool登录</h1>
@@ -141,15 +146,37 @@ const onForgetPassword = () => {
     z-index: -1;
 }
 
+.title {
+    display: inline-block;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    line-height: 400%;
+    font-size: 200px;
+    /* border: 1px red solid; */
+    font-style: italic;
+    /* background-color: rgba(193, 193, 193, 0.842); */
+    background: linear-gradient(45deg, #b2e68d, #bce689);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: white;
+    transition: all 0.6s;
+}
+
 .box {
     display: inline-block;
     position: fixed;
     width: 30%;
     left: 34%;
-    top: 20%;
+    top: 105%;
     background-color: white;
     border-radius: 10px;
     padding: 20px;
     /* border: 1px red solid; */
+    transition: all 0.6s;
 }
 </style>
