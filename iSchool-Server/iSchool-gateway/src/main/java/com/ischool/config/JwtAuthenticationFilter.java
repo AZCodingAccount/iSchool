@@ -39,6 +39,15 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
             return chain.filter(exchange);  // 不匹配则继续其他过滤器处理
         }
 
+        // 处理knife4j的uri
+        String path = exchange.getRequest().getURI().getPath();
+        if (path.contains("/v3/api-docs")) {
+            String newPath = path.substring(0, path.length() - "/default".length());
+            ServerWebExchange modifiedExchange = exchange.mutate()
+                    .request(exchange.getRequest().mutate().path(newPath).build())
+                    .build();
+            return chain.filter(modifiedExchange);
+        }
         // 提取token
         String token = request.getHeaders().getFirst("token");
 
@@ -61,6 +70,8 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
         }
 
         return chain.filter(exchange.mutate().request(request).build());
+        // return chain.filter(exchange);  // 不匹配则继续其他过滤器处理
+
     }
 
     @Override

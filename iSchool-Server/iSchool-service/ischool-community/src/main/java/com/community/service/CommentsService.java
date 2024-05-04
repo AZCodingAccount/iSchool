@@ -27,4 +27,11 @@ public interface CommentsService extends IService<Comments> {
      * @description 获取某个点评对象的所有一级评论数据
      **/
     List<CommentsVO> getList(Long objId);
+
+    /**
+     * @description 给一级评论点赞
+     * @param commentId
+     * @return void
+     **/
+    void addCommentLikes(Long commentId);
 }

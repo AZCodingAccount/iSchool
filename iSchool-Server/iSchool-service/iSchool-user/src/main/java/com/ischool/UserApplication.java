@@ -10,9 +10,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @create: 2024-04-20 16:08
  * @description: 用户模块启动类
  **/
-@SpringBootApplication()
+@SpringBootApplication
 @MapperScan("com.ischool.mapper")
-
 public class UserApplication {
     public static void main(String[] args) {
         SpringApplication.run(UserApplication.class, args);

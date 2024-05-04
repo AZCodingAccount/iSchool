@@ -13,7 +13,8 @@ import com.community.model.entity.Comments;
 import com.community.model.entity.ReplyComments;
 import com.community.model.vo.CommentsVO;
 import com.community.service.CommentsService;
-import com.common.exception.BusinessException;
+import com.ischool.exception.BusinessException;
+import com.ischool.model.BaseResponse;
 import com.ischool.model.ErrorCode;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -66,6 +67,8 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments>
         comments.setObjId(objId);
         comments.setContent(content);
         this.baseMapper.insert(comments);
+
+        // todo:发送消息给消息队列实时计算搜索词热度
     }
 
     /**
@@ -93,7 +96,8 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments>
             BeanUtils.copyProperties(comment, commentsVO);
             // 1：填充评论对应的头像url和名称
             Long userId = comment.getUserId();
-            UserDto loginUser = userFeignClient.getLoginUser(userId);
+            BaseResponse<UserDto> res = userFeignClient.getLoginUser(userId);
+            UserDto loginUser = res.getData();
             String userAvatar = loginUser.getUserAvatar();
             String nickname = loginUser.getNickname();
             commentsVO.setUserAvatar(userAvatar);
@@ -107,6 +111,28 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments>
             commentsVOList.add(commentsVO);
         }
         return commentsVOList;
+    }
+
+    /**
+     * @param commentId
+     * @return void
+     * @description 给一级评论点赞
+     **/
+    @Override
+    public void addCommentLikes(Long commentId) {
+        // 1: 校验参数
+        Comments comments = this.baseMapper.selectById(commentId);
+        if (comments == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "点赞评论不存在");
+        }
+
+        // 2: 修改数据库
+        comments.setLikes(comments.getLikes() + 1);
+        this.baseMapper.updateById(comments);
+
+
+        // todo:发送消息给消息队列实时计算搜索词热度
+
     }
 }
 

@@ -2,6 +2,7 @@ package com.community.controller;
 
 import com.community.model.dto.AddCommentObjRequest;
 import com.community.model.dto.CommentObjSearchParam;
+import com.community.model.dto.ScoreRequest;
 import com.community.model.entity.CommentObj;
 import com.community.service.CommentObjService;
 
@@ -38,16 +39,28 @@ public class CommentObjController {
         return Result.success();
     }
 
-    // 删改暂时不实现
     /**
+     * @param keyword
+     * @param type
+     * @return com.common.model.BaseResponse<java.util.List < com.community.model.entity.CommentObj>>
      * @description 搜索点评对象
-     * @param commentObjSearchParam
-     * @return com.common.model.BaseResponse<java.util.List<com.community.model.entity.CommentObj>>
      **/
-    @GetMapping
-    public BaseResponse<List<CommentObj>> searchCommentObj(@RequestBody CommentObjSearchParam commentObjSearchParam) {
-        log.info("查询点评对象，查询参数为{}", commentObjSearchParam);
-        List<CommentObj> commentObjs = commentObjService.search(commentObjSearchParam);
+    @GetMapping("/search")
+    public BaseResponse<List<CommentObj>> searchCommentObj(@RequestParam("keyword") String keyword, @RequestParam
+    String type) {
+        log.info("查询点评对象，查询参数为{}:{}", keyword, type);
+        // todo：添加点赞量最高的评论
+        List<CommentObj> commentObjs = commentObjService.search(keyword, type);
         return Result.success(commentObjs);
+    }
+
+    // 删改暂时不实现
+
+    @PutMapping("score")
+    public BaseResponse<Object> score(@RequestBody ScoreRequest scoreRequest,
+                                      @RequestHeader Long id) {
+        log.info("用户{}评分，评分参数为{}", id, scoreRequest);
+        commentObjService.score(scoreRequest, id);
+        return Result.success();
     }
 }

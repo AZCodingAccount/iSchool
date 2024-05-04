@@ -16,6 +16,7 @@
     <modules>
         <module>iSchool-user</module>
         <module>ischool-community</module>
+        <module>ischool-search</module>
     </modules>
 
     <properties>
@@ -27,6 +28,12 @@
             <groupId>com.iSchool</groupId>
             <artifactId>iSchool-base</artifactId>
             <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.iSchool</groupId>
+            <artifactId>iSchool-model</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

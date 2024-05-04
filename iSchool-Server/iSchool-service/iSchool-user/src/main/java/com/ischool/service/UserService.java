@@ -45,4 +45,10 @@ public interface UserService extends IService<User> {
      **/
     UserDto getLoginUser(Long id);
 
+    /**
+     * @description 检查用户id是否合法
+     * @param id
+     * @return java.lang.Boolean
+     **/
+    Boolean checkId(Long id);
 }

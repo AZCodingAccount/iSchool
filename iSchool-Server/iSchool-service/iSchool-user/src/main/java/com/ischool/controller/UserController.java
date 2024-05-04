@@ -2,9 +2,9 @@ package com.ischool.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.common.dto.UserDto;
-import com.common.exception.BusinessException;
 
 
+import com.ischool.exception.BusinessException;
 import com.ischool.model.BaseResponse;
 import com.ischool.model.ErrorCode;
 import com.ischool.model.Result;
@@ -117,11 +117,11 @@ public class UserController {
 
 
     /**
-     * @description 文件上传
      * @param file
      * @param id
      * @param role
      * @return com.common.model.BaseResponse<java.lang.String>
+     * @description 文件上传
      **/
     @PostMapping("/upload")
     public BaseResponse<String> upload(MultipartFile file, @RequestHeader("id") Long id, @RequestHeader("role") String role) {
@@ -143,6 +143,18 @@ public class UserController {
             log.error("文件上传失败", e);
             throw new BusinessException(ErrorCode.OPERATION_ERROR, "文件上传失败，请稍后重试！");
         }
+    }
+
+
+    /**
+     * @param id
+     * @return java.lang.Boolean
+     * @description 检查id是否合法
+     **/
+    @GetMapping("/id")
+    public Boolean checkId(@RequestParam("id") Long id) {
+        log.info("检查id{}是否合法，远程调用", id);
+        return userService.checkId(id);
     }
 
 

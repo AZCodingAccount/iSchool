@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.iSchool</groupId>
         <artifactId>iSchool-service</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-
     <groupId>com.ischool</groupId>
-    <artifactId>iSchool-user</artifactId>
+    <artifactId>ischool-search</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -18,8 +16,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <dependencies>
 
+    <dependencies>
         <!--        nacos依赖-->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
@@ -30,7 +28,20 @@
             <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
         </dependency>
 
+        <!--        &lt;!&ndash;        openfeign依赖&ndash;&gt;-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.cloud</groupId>-->
+        <!--            <artifactId>spring-cloud-starter-openfeign</artifactId>-->
+        <!--            <version>3.1.5</version>-->
+        <!--        </dependency>-->
+        <!--远程调用-->
 
+        <!--        <dependency>-->
+        <!--            <groupId>com.ischool</groupId>-->
+        <!--            <artifactId>ischool-service-client</artifactId>-->
+        <!--            <version>1.0-SNAPSHOT</version>-->
+        <!--            <scope>compile</scope>-->
+        <!--        </dependency>-->
         <!--        <dependency>-->
         <!--            <groupId>org.springframework.cloud</groupId>-->
         <!--            <artifactId>spring-cloud-starter-openfeign</artifactId>-->
@@ -62,49 +73,20 @@
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
         </dependency>
-        <!-- 排除 Spring Boot 依赖的日志包冲突 -->
-        <!--       <dependency>
-                   <groupId>org.springframework.boot</groupId>
-                   <artifactId>spring-boot-starter</artifactId>
-                   <exclusions>
-                       <exclusion>
-                           <groupId>org.springframework.boot</groupId>
-                           <artifactId>spring-boot-starter-logging</artifactId>
-                       </exclusion>
-                   </exclusions>
-               </dependency>-->
-        <!-- Spring Boot 集成 Junit -->
+
+        <!--        测试-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <!--        AliOSS依赖-->
-        <dependency>
-            <groupId>com.aliyun.oss</groupId>
-            <artifactId>aliyun-sdk-oss</artifactId>
-            <version>3.10.2</version>
-        </dependency>
-        <!-- Spring Boot 集成 log4j2 -->
-        <!--        <dependency>-->
-        <!--            <groupId>org.springframework.boot</groupId>-->
-        <!--            <artifactId>spring-boot-starter-log4j2</artifactId>-->
-        <!--        </dependency>-->
-
-        <!--        &lt;!&ndash; Spring Boot 集成 swagger &ndash;&gt;-->
-        <!--        <dependency>-->
-        <!--            <groupId>com.spring4all</groupId>-->
-        <!--            <artifactId>swagger-spring-boot-starter</artifactId>-->
-        <!--        </dependency>-->
+        <!--工具类和注解-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <optional>true</optional>
         </dependency>
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
@@ -132,6 +114,5 @@
             </plugin>
         </plugins>
     </build>
-
 
 </project>

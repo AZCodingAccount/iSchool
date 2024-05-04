@@ -1,9 +1,11 @@
 package com.client.service;
 
 import com.common.dto.UserDto;
+import com.ischool.model.BaseResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * @program: iSchool-Server
@@ -20,6 +22,15 @@ public interface UserFeignClient {
      * @description 获取用户信息
      **/
     @GetMapping
-    UserDto getLoginUser(@RequestHeader("id") Long id);
+    BaseResponse<UserDto> getLoginUser(@RequestHeader("id") Long id);
+
+
+    /**
+     * @param id
+     * @return java.lang.Boolean
+     * @description 检查用户id是否存在
+     **/
+    @GetMapping("/id")
+    Boolean checkId(@RequestParam("id") Long id);
 
 }

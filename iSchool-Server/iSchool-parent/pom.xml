@@ -12,6 +12,7 @@
         <module>../iSchool-service</module>
         <module>../iSchool-base</module>
         <module>../iSchool-model</module>
+        <module>../ischool-service-client</module>
     </modules>
 
 

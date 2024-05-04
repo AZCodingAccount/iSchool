@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import com.common.dto.UserDto;
-import com.common.exception.BusinessException;
+import com.ischool.exception.BusinessException;
 import com.ischool.mapper.UserMapper;
 import com.ischool.model.ErrorCode;
 import com.ischool.model.dto.LoginDto;
@@ -210,6 +210,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(oldUser, userDto);
         return userDto;
+    }
+
+    /**
+     * @param id
+     * @return java.lang.Boolean
+     * @description 检查用户id是否存在
+     **/
+    @Override
+    public Boolean checkId(Long id) {
+        User user = this.baseMapper.selectById(id);
+        return user != null;
     }
 }
 

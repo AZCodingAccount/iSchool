@@ -3,6 +3,7 @@ package com.community.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.community.model.dto.AddCommentObjRequest;
 import com.community.model.dto.CommentObjSearchParam;
+import com.community.model.dto.ScoreRequest;
 import com.community.model.entity.CommentObj;
 
 import java.util.List;
@@ -26,5 +27,13 @@ public interface CommentObjService extends IService<CommentObj> {
      * @param commentObjSearchParam
      * @return java.util.List<com.community.model.entity.CommentObj>
      **/
-    List<CommentObj> search(CommentObjSearchParam commentObjSearchParam);
+    List<CommentObj> search( String keyword,String type);
+
+    /**
+     * @description 点评对象评分
+     * @param scoreRequest
+     * @param id
+     * @return void
+     **/
+    void score(ScoreRequest scoreRequest, Long id);
 }
