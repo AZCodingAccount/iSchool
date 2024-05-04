@@ -1,9 +1,12 @@
 <script setup>
 import { useUserInfoerStore } from '@/stores/userInfoer'
 import { ref } from 'vue'
+import { getLoginUser, login, register } from '@/api/user'
+import router from '@/router';
+import { ElMessage } from 'element-plus';
 const userInfoerStore = useUserInfoerStore()
 const isLogin = ref(true) // true登录，false注册
-const rememberMe = ref(userInfoerStore.userInfo.rememberMe) // 记住我
+const rememberMe = ref(false) // 记住我
 const titleRef = ref(null) // 标题绑定变量
 const boxRef = ref(null) // 盒子绑定变量
 // 登录
@@ -12,6 +15,7 @@ const loginForm = ref({
     password: ''
 })
 
+rememberMe.value = userInfoerStore.userInfo.rememberMe
 if (rememberMe.value) {
     loginForm.value.username = userInfoerStore.userInfo.username
     loginForm.value.password = userInfoerStore.userInfo.password
@@ -19,22 +23,48 @@ if (rememberMe.value) {
 
 // 登录
 const onLogin = async () => {
-    console.log('onLogin')
-    // var res = await login(loginForm.value)
-    // console.log('res', res)
-    // ...
+    if (loginForm.value.username == '' || loginForm.value.password == '') {
+        ElMessage.error({
+            message: '用户名或密码不能为空',
+            grouping: true
+        })
+        return
+    }
+    let res = await login(loginForm.value)
+    userInfoerStore.updateUserInfo({
+        token: res.data,
+        rememberMe: rememberMe.value
+    })
+    res = await getLoginUser()
+    userInfoerStore.updateUserInfo(res.data)
+    router.push('/main')
 }
 
 // 注册
 const registerForm = ref({
     username: '',
-    setPassword: '',
+    password: '',
     surePassword: ''
 })
 
 const onRegister = async () => {
-    console.log('onRegister')
-    // ...
+    if (registerForm.value.username == '' || registerForm.value.password == '') {
+        ElMessage.error({
+            message: '用户名或密码不能为空',
+            grouping: true
+        })
+        return
+    }
+    if (registerForm.value.password != registerForm.value.surePassword) {
+        ElMessage.error({
+            message: '密码确认失败',
+            grouping: true
+        })
+        return
+    }
+    await register(registerForm.value)
+    ElMessage.success('注册成功')
+    isLogin.value = true
 }
 
 // 忘记密码
@@ -104,7 +134,7 @@ const onForgetPassword = () => {
                     <div style="display: flex; width: 100%;">
                         <el-icon :size="30" style="margin-right: 20px;">
                             <Unlock />
-                        </el-icon><el-input v-model="registerForm.setPassword" type="password" placeholder="请输入密码"
+                        </el-icon><el-input v-model="registerForm.password" type="password" placeholder="请输入密码"
                             :show-password="true" />
                     </div>
                 </el-form-item>

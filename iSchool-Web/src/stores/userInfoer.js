@@ -1,20 +1,30 @@
+// import { ElMessage } from 'element-plus'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 export const useUserInfoerStore = defineStore('UserInfoer', () => {
   const userInfo = ref({
-    account: '',
-    password: '',
-    rememberMe: false
+    userId: 0,
+    username: 'Xing Zai',
+    nickname: '小张昵称',
+    // password: '123456',
+    gender: '男',
+    age: 20,
+    userAvatar: '/public/img/myAvatar.jpg',
+    email: '1476652531@qq.com',
+
+    rememberMe: false,
+    token: '',
   })
-  const setUserInfo = (data) => {
-    userInfo.value.account = data.account
-    userInfo.value.password = data.password
-    userInfo.value.rememberMe = data.rememberMe
+
+  const updateUserInfo = (data) => {
+    // data: obj
+    for (let key in data)
+      userInfo.value[key] = data[key]
   }
 
   return {
     userInfo,
-    setUserInfo
+    updateUserInfo
   }
 }, {
   persist: true

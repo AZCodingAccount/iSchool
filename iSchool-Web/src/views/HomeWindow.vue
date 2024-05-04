@@ -156,23 +156,22 @@ const onSendMessage = () => {
             <el-empty v-show="resultData.length == 0" image="/public/img/empty.png" description="无搜索结果" />
             <div v-show="resultData.length != 0" class="result">
                 <el-scrollbar ref="resultScrollbarRef" height="95%">
-                    <div v-for="item in showingResultData" :key="item">
-                        <!-- {{ item }} -->
-                        <el-card style="max-width: 100%; margin-bottom: 2%;" shadow="hover">
-                            <template #header>
-                                <div style="display: flex;">
-                                    <a :href="item.href" target="_blank" style="width: 90%;">
-                                        <el-text style="font-size: 150%; width: 100%;" truncated><span
-                                                v-html="item.title"></span></el-text>
-                                    </a>
-                                    <div style="flex-grow: 1;"></div>
-                                    <div style="color: gray; font-weight: 800;">{{ item.time }}</div>
-                                </div>
-                            </template>
-                            <el-text line-clamp="2"><span v-html="item.description"
-                                    style="font-size: 120%;"></span></el-text>
-                        </el-card>
-                    </div>
+                    <!-- {{ item }} -->
+                    <el-card v-for="item in showingResultData" :key="item" style="max-width: 100%; margin-bottom: 2%;"
+                        shadow="hover">
+                        <template #header>
+                            <div style="display: flex;">
+                                <a :href="item.href" target="_blank" style="width: 90%;">
+                                    <el-text style="font-size: 150%; width: 100%;" truncated><span
+                                            v-html="item.title"></span></el-text>
+                                </a>
+                                <div style="flex-grow: 1;"></div>
+                                <div style="color: gray; font-weight: 800;">{{ item.time }}</div>
+                            </div>
+                        </template>
+                        <el-text line-clamp="2"><span v-html="item.description"
+                                style="font-size: 120%;"></span></el-text>
+                    </el-card>
                 </el-scrollbar>
 
                 <div style="text-align: center; position: absolute; bottom: 0; width: 100%">
@@ -201,7 +200,7 @@ const onSendMessage = () => {
     display: inline-block;
     position: relative;
     width: 55%;
-    height: 610px;
+    height: 590px;
     padding: 1%;
     text-align: left;
 }
