@@ -122,7 +122,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         // 2:查询用户名是否存在
         QueryWrapper<User> queryWrapper = new QueryWrapper<User>().eq("username", username);
-        Integer count = this.baseMapper.selectCount(queryWrapper);
+        Long count = this.baseMapper.selectCount(queryWrapper);
         if (count != 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户名已存在");
         }

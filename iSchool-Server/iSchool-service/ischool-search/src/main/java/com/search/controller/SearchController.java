@@ -45,6 +45,8 @@ public class SearchController {
         return Result.success(pageResult);
     }
 
+
+
     /*
         todo:
             搜索：
@@ -53,5 +55,7 @@ public class SearchController {
                 3: 添加Redis缓存
             数据同步：
                 1：爬虫定时任务定期写入数据
+            Spring AI：
+                1：AI检索+聊天
      */
 }

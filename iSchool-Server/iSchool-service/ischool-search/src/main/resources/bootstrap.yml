@@ -11,7 +11,14 @@ spring:
   #    password: 123456
   application:
     name: ischool-search
+  ai:
+    openai:
+      api-key: sk-YBNqrFIxlQRPIsmD1e65079cBe2146F189F72a4845Bd2f8f
+      base-url: https://jiekou.wlai.vip/
   cloud:
+    config:
+      enabled: true
+      uri: http://127.0.0.1:8848
     nacos:
       server-addr: 127.0.0.1:8848
       discovery:

@@ -103,7 +103,7 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments>
             commentsVO.setUserAvatar(userAvatar);
             commentsVO.setUsername(nickname);
             // 2: 填充对应的回复评论数
-            Integer count = replyCommentsMapper.selectCount(new LambdaQueryWrapper<ReplyComments>()
+            Long count = replyCommentsMapper.selectCount(new LambdaQueryWrapper<ReplyComments>()
                     .eq(ReplyComments::getReplyCommentId, comment.getId()));
 
             commentsVO.setReplyCount(count);

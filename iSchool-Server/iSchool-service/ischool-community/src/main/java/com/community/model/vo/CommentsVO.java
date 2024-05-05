@@ -55,7 +55,7 @@ public class CommentsVO implements Serializable {
     /**
      * 回复数
      */
-    private Integer replyCount;
+    private Long replyCount;
 
     /**
      * 发布时间

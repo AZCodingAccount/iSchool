@@ -2,13 +2,8 @@
 #  port: 8902
 ## 微服务配置
 spring:
-#  # 数据库连接池相关配置
-#  datasource:
-#    type: com.alibaba.druid.pool.DruidDataSource
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://localhost:3306/learn_hall?useSSL=false&serverTimezone=UTC
-#    username: root
-#    password: 123456
+  main:
+    allow-circular-references: true
   application:
     name: ischool-user
   cloud:
@@ -22,6 +17,7 @@ spring:
         group: iSchool
         file-extension: yaml
         refresh-enabled: true
+
 
   profiles:
     active: dev
