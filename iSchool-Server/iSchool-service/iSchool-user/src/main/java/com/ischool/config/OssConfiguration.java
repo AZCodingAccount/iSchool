@@ -1,5 +1,7 @@
 package com.ischool.config;
 
+
+import com.ischool.config.AliOssProperties;
 import com.ischool.utils.AliOssUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

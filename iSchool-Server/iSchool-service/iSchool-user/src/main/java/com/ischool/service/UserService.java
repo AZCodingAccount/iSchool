@@ -1,10 +1,11 @@
 package com.ischool.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.common.dto.UserDto;
 import com.ischool.model.dto.LoginDto;
 import com.ischool.model.dto.UpdateUserDto;
 import com.ischool.model.entity.User;
-import com.ischool.model.entity.UserDto;
+
 
 /**
 * @author Albert han
@@ -44,4 +45,10 @@ public interface UserService extends IService<User> {
      **/
     UserDto getLoginUser(Long id);
 
+    /**
+     * @description 检查用户id是否合法
+     * @param id
+     * @return java.lang.Boolean
+     **/
+    Boolean checkId(Long id);
 }

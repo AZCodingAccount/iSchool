@@ -15,10 +15,14 @@
     <packaging>pom</packaging>
     <modules>
         <module>iSchool-user</module>
+        <module>ischool-community</module>
+        <module>ischool-search</module>
     </modules>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source><maven.compiler.source>8</maven.compiler.source>        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.source>17</maven.compiler.source>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
@@ -26,6 +30,16 @@
             <groupId>com.iSchool</groupId>
             <artifactId>iSchool-base</artifactId>
             <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.iSchool</groupId>
+            <artifactId>iSchool-model</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bootstrap</artifactId>
         </dependency>
     </dependencies>
 

@@ -2,13 +2,13 @@ create database if not exists ischool;
 use ischool;
 create table comments
 (
-    id            bigint   not null
+    id       bigint                   not null
         primary key,
-    obj_id        bigint   not null comment '点评对象id',
-    user_id       bigint   not null comment '用户id',
-    reply_user_id bigint   null comment '回复用户id',
-    content       text     not null comment '评论内容',
-    pub_time      datetime not null comment '发布时间'
+    obj_id   bigint                   not null comment '点评对象id',
+    user_id  bigint                   not null comment '用户id',
+    content  text                     not null comment '评论内容',
+    pub_time datetime default (now()) not null comment '发布时间',
+    likes    int      default 0       null comment '评论点赞数'
 );
 
 create table info
@@ -30,7 +30,20 @@ create table obj
     comment_count int      default 0                 not null comment '评论数',
     score         double   default 10                not null comment '平均评分',
     count         int      default 0                 not null,
-    create_time   datetime default CURRENT_TIMESTAMP not null comment '创建时间'
+    create_time   datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+    name          varchar(255)                       null comment '点评对象名称'
+);
+
+create table reply_comments
+(
+    id               bigint        not null
+        primary key,
+    user_id          bigint        not null comment '当前评论用户id',
+    reply_user_id    bigint        not null comment '回复用户id',
+    content          text          not null comment '评论内容',
+    likes            int default 0 null comment '评论点赞数',
+    pub_time         datetime      not null comment '发布时间',
+    reply_comment_id bigint        null comment '回复的评论id'
 );
 
 create table task
@@ -56,4 +69,6 @@ create table user
     create_time datetime         default CURRENT_TIMESTAMP  not null comment '创建时间',
     nickname    varchar(255)                                null comment '昵称'
 );
+
+
 

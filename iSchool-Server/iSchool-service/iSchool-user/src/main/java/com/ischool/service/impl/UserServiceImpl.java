@@ -3,13 +3,13 @@ package com.ischool.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
+import com.common.dto.UserDto;
 import com.ischool.exception.BusinessException;
 import com.ischool.mapper.UserMapper;
 import com.ischool.model.ErrorCode;
 import com.ischool.model.dto.LoginDto;
 import com.ischool.model.dto.UpdateUserDto;
 import com.ischool.model.entity.User;
-import com.ischool.model.entity.UserDto;
 import com.ischool.model.enums.UserRoleEnum;
 import com.ischool.model.pojo.JwtProperties;
 import com.ischool.service.UserService;
@@ -38,7 +38,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Autowired
     UserServiceImpl userService;
 
-    public static final String SALT = "ischool";
+    public static final String SALT = "common";
 
     /**
      * @param loginDto
@@ -122,7 +122,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         // 2:查询用户名是否存在
         QueryWrapper<User> queryWrapper = new QueryWrapper<User>().eq("username", username);
-        Integer count = this.baseMapper.selectCount(queryWrapper);
+        Long count = this.baseMapper.selectCount(queryWrapper);
         if (count != 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户名已存在");
         }
@@ -210,6 +210,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(oldUser, userDto);
         return userDto;
+    }
+
+    /**
+     * @param id
+     * @return java.lang.Boolean
+     * @description 检查用户id是否存在
+     **/
+    @Override
+    public Boolean checkId(Long id) {
+        User user = this.baseMapper.selectById(id);
+        return user != null;
     }
 }
 
