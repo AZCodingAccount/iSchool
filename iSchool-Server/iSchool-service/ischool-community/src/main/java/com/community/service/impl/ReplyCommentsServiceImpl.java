@@ -152,6 +152,26 @@ public class ReplyCommentsServiceImpl extends ServiceImpl<ReplyCommentsMapper, R
         // todo:发送消息给消息队列实时计算搜索词热度
 
     }
+
+    /**
+     * @description 取消二级评论的点赞
+     * @param commentId
+     * @return void
+     **/
+    @Override
+    public void decreaseCommentLikes(Long commentId) {
+        // 1: 校验参数
+        ReplyComments comments = this.baseMapper.selectById(commentId);
+        if (comments == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "点赞评论不存在");
+        }
+
+        // 2: 修改数据库
+        comments.setLikes(comments.getLikes() - 1);
+        this.baseMapper.updateById(comments);
+
+        // todo:发送消息给消息队列实时计算搜索词热度
+    }
 }
 
 

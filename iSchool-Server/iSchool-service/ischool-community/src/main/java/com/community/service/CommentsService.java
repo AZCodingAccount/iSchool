@@ -34,4 +34,11 @@ public interface CommentsService extends IService<Comments> {
      * @return void
      **/
     void addCommentLikes(Long commentId);
+
+    /**
+     * @description 取消一级评论点赞
+     * @param commentId
+     * @return void
+     **/
+    void decreaseCommentLikes(Long commentId);
 }

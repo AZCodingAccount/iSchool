@@ -35,4 +35,11 @@ public interface ReplyCommentsService extends IService<ReplyComments> {
      * @return void
      **/
     void addCommentLikes(Long commentId);
+
+    /**
+     * @description 用户取消点赞
+     * @param commentId
+     * @return void
+     **/
+    void decreaseCommentLikes(Long commentId);
 }

@@ -58,7 +58,7 @@ public class SearchController {
      * @description 生成ai评论
      **/
     @GetMapping("/ai")
-    public BaseResponse<Object> aiSearch(@RequestParam("keyword") String keyword) {
+    public BaseResponse<String> aiSearch(@RequestParam("keyword") String keyword) {
         log.info("用户搜索，搜索信息为：{}", keyword);
         // 使用雪花算法生成一个id，用于追踪这个搜索信息
         String id = IdUtil.getSnowflakeNextIdStr();
@@ -66,7 +66,7 @@ public class SearchController {
         message.put("id", id);
         message.put("message", keyword);
         aiMessageProducer.sendMessage(message);
-        return Result.success();
+        return Result.success(id);
     }
 
 

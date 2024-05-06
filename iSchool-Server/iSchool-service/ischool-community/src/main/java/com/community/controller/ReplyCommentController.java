@@ -67,4 +67,16 @@ public class ReplyCommentController {
         return Result.success();
     }
 
+    /**
+     * @param commentId
+     * @return com.ischool.model.BaseResponse<java.lang.Object>
+     * @description 取消二级评论点赞
+     **/
+    @PutMapping("like/{commentId}")
+    public BaseResponse<Object> decreaseCommentLikes(@PathVariable Long commentId) {
+        log.info("用户取消点赞，点赞评论id为{}", commentId);
+        replyCommentsService.decreaseCommentLikes(commentId);
+        return Result.success();
+    }
+
 }
