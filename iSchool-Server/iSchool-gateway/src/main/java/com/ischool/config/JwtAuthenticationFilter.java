@@ -33,12 +33,6 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
         URI uri = request.getURI();
         log.info("经过了JwtAuthenticationFilter请求uri为{}", uri);
 
-        // 只对不匹配 /user/login和/user/register ** 的 URL 应用此过滤器
-        if (uri.getPath().startsWith("/user/login")
-                || uri.getPath().startsWith("/user/register")) {
-            return chain.filter(exchange);  // 不匹配则继续其他过滤器处理
-        }
-
         // 处理knife4j的uri
         String path = exchange.getRequest().getURI().getPath();
         if (path.contains("/v3/api-docs")) {
@@ -48,6 +42,17 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
                     .build();
             return chain.filter(modifiedExchange);
         }
+
+        // 只对不匹配 /user/login和/user/register ** 的 URL 应用此过滤器
+        // todo：后续设置白名单
+        if (uri.getPath().startsWith("/user/login")
+                || uri.getPath().startsWith("/user/register")
+                || uri.getPath().startsWith("/search/page")) {
+            return chain.filter(exchange);  // 不匹配则继续其他过滤器处理
+        }
+
+
+        // todo: ai聊天计费、限流
         // 提取token
         String token = request.getHeaders().getFirst("token");
 

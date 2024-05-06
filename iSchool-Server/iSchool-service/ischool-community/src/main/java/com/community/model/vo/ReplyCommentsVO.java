@@ -18,6 +18,10 @@ public class ReplyCommentsVO implements Serializable {
      * 评论id
      */
     private Long id;
+    /**
+     * 发送评论的用户id
+     */
+    private Integer userId;
 
     /**
      * 评论内容

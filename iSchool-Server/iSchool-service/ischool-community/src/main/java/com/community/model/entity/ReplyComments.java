@@ -52,6 +52,5 @@ public class ReplyComments implements Serializable {
      */
     private LocalDateTime pubTime;
 
-    @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

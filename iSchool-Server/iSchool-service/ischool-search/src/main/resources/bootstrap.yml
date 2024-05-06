@@ -11,6 +11,11 @@ spring:
   #    password: 123456
   application:
     name: ischool-search
+  data:
+    redis:
+      port: 6379
+      host: localhost
+      database: 0
   ai:
     openai:
       api-key: sk-YBNqrFIxlQRPIsmD1e65079cBe2146F189F72a4845Bd2f8f
