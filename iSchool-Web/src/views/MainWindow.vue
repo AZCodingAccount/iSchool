@@ -1,5 +1,8 @@
 <script setup>
+import { useUserInfoerStore } from '@/stores/userInfoer';
+
 // import { ref } from 'vue'
+const userInfoerStore = useUserInfoerStore()
 
 </script>
 
@@ -11,25 +14,27 @@
                 <img style="height: 100%;" src="/public/img/code.png" alt="logo">
                 <div style="font-size: 30px; margin: 3%; font-style: italic; line-height: 155%;">iSchool</div>
             </div>
-            <div style="flex-grow: 1;"></div>
+            <div style="flex-grow: 100;"></div>
             <el-tooltip content="<strong>首页</strong>" placement="bottom" effect="light" raw-content>
-                <el-menu-item style="font-size: 130%;" index="/main/home"><el-icon size="160%">
+                <el-menu-item index="/main/home"><el-icon size="160%">
                         <Search />
                     </el-icon></el-menu-item>
             </el-tooltip>
-            <div style="flex-grow: 0.02;"></div>
+            <div style="flex-grow: 2;"></div>
             <el-tooltip content="<strong>大众点评</strong>" placement="bottom" effect="light" raw-content>
-                <el-menu-item style="font-size: 130%;" index="/main/comment"><el-icon size="160%">
-                        <ChatDotRound />
+                <el-menu-item index="/main/comment"><el-icon size="160%">
+                        <Star />
                     </el-icon></el-menu-item>
             </el-tooltip>
-            <div style="flex-grow: 0.02;"></div>
+            <div style="flex-grow: 2;"></div>
             <el-tooltip content="<strong>个人中心</strong>" placement="bottom" effect="light" raw-content>
-                <el-menu-item style="font-size: 130%;" index="/main/mine"><el-icon size="160%">
-                        <User />
-                    </el-icon></el-menu-item>
+                <el-menu-item index="/main/mine">
+                    <div class="avatar">
+                        <img style="height: 100%; vertical-align: top;" :src="userInfoerStore.userInfo.userAvatar">
+                    </div>
+                </el-menu-item>
             </el-tooltip>
-            <div style="flex-grow: 0.01;"></div>
+            <div style="flex-grow: 1;"></div>
         </el-menu>
     </div>
 
@@ -55,5 +60,14 @@
     background-color: white;
     padding: 10px;
     /* width: 100%; */
+}
+
+.avatar {
+    display: inline-block;
+    border: 1px rgb(202, 202, 202) solid;
+    width: 40px;
+    height: 40px;
+    border-radius: 40px;
+    overflow: hidden;
 }
 </style>

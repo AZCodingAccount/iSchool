@@ -139,7 +139,7 @@ const onSendMessage = () => {
         <el-input size="large" v-model="searchMessage" style="max-width: 600px" placeholder="输入您要搜索的内容"
             class="input-with-select" clearable @keyup.enter="onSearch">
             <template #append>
-                <el-button type="primary" @click="onSearch">
+                <el-button @click="onSearch">
                     <el-icon>
                         <Search />
                     </el-icon>搜索</el-button>
@@ -153,11 +153,11 @@ const onSendMessage = () => {
     <div class="searchBox">
         <!-- 搜索结果 -->
         <div v-loading="isLoading">
-            <el-empty v-show="resultData.length == 0" image="/public/img/empty.png" description="无搜索结果" />
+            <el-empty v-show="resultData.length == 0" image="/public/img/empty_search.png" description="无搜索结果" />
             <div v-show="resultData.length != 0" class="result">
                 <el-scrollbar ref="resultScrollbarRef" height="95%">
                     <!-- {{ item }} -->
-                    <el-card v-for="item in showingResultData" :key="item" style="max-width: 100%; margin-bottom: 2%;"
+                    <el-card v-for="item in showingResultData" :key="item" style="width: 100%; margin-bottom: 2%;"
                         shadow="hover">
                         <template #header>
                             <div style="display: flex;">

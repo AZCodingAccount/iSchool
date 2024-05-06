@@ -335,5 +335,294 @@
       "time": "2024-5-21 9:00",
       "href": "..."
     }
+  ],
+  "commentObj": [
+    {
+      "id": 0,
+      "name": "服务器架构设计",
+      "type": "课程",
+      "commentCount": 60,
+      "score": 10.0,
+      "count": 20,
+      "stared": 0,
+      "createTime": "2024-05-04 09:00:00"
+    },
+    {
+      "id": 1,
+      "name": "王老师",
+      "type": "老师",
+      "commentCount": 3,
+      "score": 9.7,
+      "count": 20,
+      "stared": 0,
+      "createTime": "2024-05-04 09:00:00"
+    },
+    {
+      "id": 2,
+      "name": "大学生数学建模",
+      "type": "竞赛",
+      "commentCount": 60,
+      "score": 8.8,
+      "count": 2,
+      "stared": 0,
+      "createTime": "2024-05-04 09:00:00"
+    },
+    {
+      "id": 3,
+      "name": "教务处",
+      "type": "部门",
+      "commentCount": 6,
+      "score": 9.9,
+      "count": 20,
+      "stared": 0,
+      "createTime": "2024-05-04 09:00:00"
+    }
+  ],
+  "comment1": [
+    {
+      "id": 0,
+      "objId": 0,
+      "userId": 0,
+      "content": "这是一个模拟评论，这是一个模拟评论，哈哈哈",
+      "likes": 0,
+      "liked": false,
+      "userAvatar": "/public/img/myAvatar.jpg",
+      "username": "xiao lin",
+      "replyCount": 10,
+      "pubTime": "2024-05-21"
+    },
+    {
+      "id": 1,
+      "objId": 0,
+      "userId": 0,
+      "content": "这是一个模拟评论，这是一个模拟评论，哈哈哈",
+      "likes": 120,
+      "liked": true,
+      "userAvatar": "/public/img/myAvatar.jpg",
+      "username": "xiao lin",
+      "replyCount": 10,
+      "pubTime": "2024-05-21"
+    },
+    {
+      "id": 2,
+      "objId": 0,
+      "userId": 0,
+      "content": "这是一个模拟评论，这是kongge     一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，\n      这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈\n      哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈",
+      "likes": 10,
+      "liked": false,
+      "userAvatar": "/public/img/myAvatar.jpg",
+      "username": "xiao lin",
+      "replyCount": 10,
+      "pubTime": "2024-05-21"
+    },
+    {
+      "id": 3,
+      "objId": 0,
+      "userId": 0,
+      "content": "这是一个模拟评论，这是一个模拟评论，哈哈哈",
+      "likes": 66,
+      "liked": false,
+      "userAvatar": "/public/img/myAvatar.jpg",
+      "username": "xiao lin",
+      "replyCount": 10,
+      "pubTime": "2024-05-21"
+    },
+    {
+      "id": 4,
+      "objId": 0,
+      "userId": 0,
+      "content": "这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈这是一个模拟评论，这是一个模拟评论，哈哈哈",
+      "likes": 0,
+      "liked": false,
+      "userAvatar": "/public/img/myAvatar.jpg",
+      "username": "xiao lin",
+      "replyCount": 10,
+      "pubTime": "2024-05-21"
+    },
+    {
+      "id": 5,
+      "objId": 0,
+      "userId": 0,
+      "content": "这是一个模拟评论，这是一个模拟评论，哈哈哈",
+      "likes": 0,
+      "liked": true,
+      "userAvatar": "/public/img/myAvatar.jpg",
+      "username": "xiao lin",
+      "replyCount": 5,
+      "pubTime": "2024-05-21"
+    },
+    {
+      "id": 6,
+      "objId": 0,
+      "userId": 0,
+      "content": "6",
+      "likes": 0,
+      "liked": false,
+      "userAvatar": "/public/img/myAvatar.jpg",
+      "username": "你好",
+      "replyCount": 110,
+      "pubTime": "2024-05-21"
+    },
+    {
+      "id": 7,
+      "objId": 0,
+      "userId": 0,
+      "content": "这是一个模拟评论，这是一个模拟评论，哈哈哈",
+      "likes": 0,
+      "liked": false,
+      "userAvatar": "/public/img/myAvatar.jpg",
+      "username": "xiao lin",
+      "replyCount": 10,
+      "pubTime": "2024-05-21"
+    },
+    {
+      "id": 8,
+      "objId": 0,
+      "userId": 0,
+      "content": "这是一个模拟评论，这是一个模拟评论，哈哈哈",
+      "likes": 0,
+      "liked": false,
+      "userAvatar": "/public/img/myAvatar.jpg",
+      "username": "xiao lin",
+      "replyCount": 10,
+      "pubTime": "2024-05-21"
+    },
+    {
+      "id": 9,
+      "objId": 0,
+      "userId": 0,
+      "content": "这是一个模拟评论，这是一个模拟评论，哈哈哈",
+      "likes": 0,
+      "liked": true,
+      "userAvatar": "/public/img/myAvatar.jpg",
+      "username": "xiao lin",
+      "replyCount": 10,
+      "pubTime": "2024-05-21"
+    },
+    {
+      "id": 10,
+      "objId": 0,
+      "userId": 0,
+      "content": "这是一个模拟评论，这是一个模拟评论，哈哈哈",
+      "likes": 0,
+      "liked": false,
+      "userAvatar": "/public/img/myAvatar.jpg",
+      "username": "xiao lin",
+      "replyCount": 1,
+      "pubTime": "2024-05-21"
+    },
+    {
+      "id": 11,
+      "objId": 0,
+      "userId": 0,
+      "content": "这是一个模拟评论，这是一个模拟评论，哈哈哈",
+      "likes": 0,
+      "liked": false,
+      "userAvatar": "/public/img/myAvatar.jpg",
+      "username": "xiao lin xiao lin xiao lin xiao lin xiao lin xiao lin ",
+      "replyCount": 50,
+      "pubTime": "2024-05-21"
+    }
+  ],
+  "comment2": [
+    {
+      "id": 20,
+      "content": "二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论二级评论",
+      "likes": 144,
+      "liked": true,
+      "userAvatar": "/public/img/myAvatar.jpg",
+      "username": "xiao lin",
+      "userId": 9,
+      "replyUsername": "好的",
+      "pubTime": "2024-05-21"
+    },
+    {
+      "id": 21,
+      "content": "二级评论",
+      "likes": 19,
+      "liked": false,
+      "userAvatar": "/public/img/myAvatar.jpg",
+      "username": "xiao lin",
+      "userId": 8,
+      "replyUsername": "好的",
+      "pubTime": "2024-05-21"
+    },
+    {
+      "id": 22,
+      "content": "二级评论",
+      "likes": 1900,
+      "liked": true,
+      "userAvatar": "/public/img/myAvatar.jpg",
+      "username": "xiao lin",
+      "userId": 7,
+      "replyUsername": "好的",
+      "pubTime": "2024-05-21"
+    },
+    {
+      "id": 23,
+      "content": "二级评论",
+      "likes": 19,
+      "liked": false,
+      "userAvatar": "/public/img/myAvatar.jpg",
+      "username": "xiao lin",
+      "userId": 6,
+      "replyUsername": "好的",
+      "pubTime": "2024-05-21"
+    },
+    {
+      "id": 24,
+      "content": "二级评论",
+      "likes": 19,
+      "liked": false,
+      "userAvatar": "/public/img/myAvatar.jpg",
+      "username": "xiao lin",
+      "userId": 5,
+      "replyUsername": "好的",
+      "pubTime": "2024-05-21"
+    },
+    {
+      "id": 25,
+      "content": "二级评论",
+      "likes": 19,
+      "liked": false,
+      "userAvatar": "/public/img/myAvatar.jpg",
+      "username": "xiao lin",
+      "userId": 4,
+      "replyUsername": "好的",
+      "pubTime": "2024-05-21"
+    },
+    {
+      "id": 26,
+      "content": "二级评论",
+      "likes": 19,
+      "liked": true,
+      "userAvatar": "/public/img/myAvatar.jpg",
+      "username": "xiao lin",
+      "userId": 3,
+      "replyUsername": "好的",
+      "pubTime": "2024-05-21"
+    },
+    {
+      "id": 27,
+      "content": "二级评论",
+      "likes": 19,
+      "liked": false,
+      "userAvatar": "/public/img/myAvatar.jpg",
+      "username": "xiao lin",
+      "userId": 2,
+      "replyUsername": "好的",
+      "pubTime": "2024-05-21"
+    },
+    {
+      "id": 28,
+      "content": "二级评论",
+      "likes": 9,
+      "liked": false,
+      "userAvatar": "/public/img/myAvatar.jpg",
+      "username": "xiao lin",
+      "userId": 1,
+      "replyUsername": "好的",
+      "pubTime": "2024-05-21"
+    }
   ]
 }

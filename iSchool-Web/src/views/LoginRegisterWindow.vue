@@ -40,13 +40,13 @@ const onLogin = async () => {
     router.push('/main')
 }
 
-// 注册
 const registerForm = ref({
     username: '',
     password: '',
     surePassword: ''
 })
 
+// 注册
 const onRegister = async () => {
     if (registerForm.value.username == '' || registerForm.value.password == '') {
         ElMessage.error({

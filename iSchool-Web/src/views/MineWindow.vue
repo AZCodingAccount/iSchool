@@ -1,11 +1,12 @@
 <script setup>
-import { useUserInfoerStore } from '@/stores/userInfoer';
+import { useUserInfoerStore } from '@/stores/userInfoer'
 import { ref } from 'vue'
-import { ElMessage } from 'element-plus';
+import { ElMessage } from 'element-plus'
 
 import { myMessage } from '@/assets/testData.json' // 测试数据引用
 // import { sleep } from '@/utils/time'
-import { updateUserInfo, upload } from '@/api/user';
+import { deleteUser, updateUserInfo, upload } from '@/api/user'
+import router from '@/router'
 
 
 const userInfoerStore = useUserInfoerStore()
@@ -51,11 +52,51 @@ const onAvatar = async (rawFile) => {
     userInfoerStore.updateUserInfo({ userAvatar: res.data })
 }
 
+const showingExitDialog = ref(false)
+const onExit = () => {
+    userInfoerStore.updateUserInfo({ token: '' })
+    showingExitDialog.value = false
+    router.push('/login')
+}
 
+const showingLogoutDialog = ref(false)
+const onLogout = async () => {
+    await deleteUser()
+    ElMessage.error('账号注销成功')
+    userInfoerStore.cleanUserInfo()
+    showingLogoutDialog.value = false
+    router.push('/login')
+}
 
 </script>
 
 <template>
+    <div style="display: inline-block; position: fixed; z-index: 1; right: 3%; bottom: 5%; line-height: 60px;">
+        <div><el-button type="info" size="large" round @click="showingExitDialog = true">退出</el-button></div>
+        <div><el-button type="danger" size="large" round @click="showingLogoutDialog = true">注销</el-button></div>
+    </div>
+    <!-- 退出对话框 -->
+    <el-dialog v-model="showingExitDialog" title="退出" width="500" center>
+        <div style="text-align: center; font-size: 30px; padding: 10px;">您确定要退出登录吗？</div>
+        <template #footer>
+            <div>
+                <el-button @click="showingExitDialog = false" size="large">取消</el-button>
+                <el-button type="primary" @click="onExit" size="large">确定</el-button>
+            </div>
+        </template>
+    </el-dialog>
+    <!-- 注销对话框 -->
+    <el-dialog v-model="showingLogoutDialog" title="注销" width="500" center>
+        <div style="text-align: center; font-size: 30px; padding: 10px;">您确定要注销账号吗？</div>
+        <template #footer>
+            <div>
+                <el-button @click="showingLogoutDialog = false" size="large">取消</el-button>
+                <el-button type="danger" @click="onLogout" size="large">确定</el-button>
+            </div>
+        </template>
+    </el-dialog>
+
+
     <div style="text-align: center;">
         <div style="display: inline-block; width: 80%; margin-top: 4%;">
             <div style="display: flex;">
@@ -63,7 +104,7 @@ const onAvatar = async (rawFile) => {
                     <el-tooltip content="<strong>更改头像</strong>" placement="bottom" effect="dark" raw-content>
                         <el-upload :show-file-list="false" :before-upload="onAvatar" list-type="picture"
                             accept="image/*">
-                            <div class="avater">
+                            <div class="avatar">
                                 <img style="height: 100%;" :src="userInfoerStore.userInfo.userAvatar" alt="头像">
                             </div>
                         </el-upload>
@@ -139,6 +180,8 @@ const onAvatar = async (rawFile) => {
                             </div>
                         </template>
                         <el-scrollbar height="690px">
+                            <el-empty v-show="myMessage.length == 0" image="/public/img/empty_message.png"
+                                description="没有消息" />
                             <el-card v-for="item in myMessage" :key="item"
                                 style="max-width: 100%; margin-bottom: 2%; text-align: left;" shadow="hover">
                                 <template #header>
@@ -172,7 +215,7 @@ const onAvatar = async (rawFile) => {
     z-index: -1;
 }
 
-.avater {
+.avatar {
     display: inline-block;
     border: 3px rgb(202, 202, 202) solid;
     width: 350px;

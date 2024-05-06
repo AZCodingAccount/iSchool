@@ -4,15 +4,15 @@ import { ref } from 'vue'
 export const useUserInfoerStore = defineStore('UserInfoer', () => {
   const userInfo = ref({
     userId: 0,
-    username: 'Xing Zai',
+    username: '2104060415',
     nickname: '小张昵称',
-    // password: '123456',
+    password: '123456',
     gender: '男',
     age: 20,
     userAvatar: '/public/img/myAvatar.jpg',
     email: '1476652531@qq.com',
 
-    rememberMe: false,
+    rememberMe: true,
     token: '',
   })
 
@@ -22,9 +22,27 @@ export const useUserInfoerStore = defineStore('UserInfoer', () => {
       userInfo.value[key] = data[key]
   }
 
+  const cleanUserInfo = () => {
+    let obj = {
+      userId: -1,
+      username: '',
+      nickname: '',
+      password: '',
+      gender: '',
+      age: -1,
+      userAvatar: '',
+      email: '',
+      rememberMe: false,
+      token: ''
+    }
+    for (let key in obj)
+      userInfo.value[key] = obj[key]
+  }
+
   return {
     userInfo,
-    updateUserInfo
+    updateUserInfo,
+    cleanUserInfo
   }
 }, {
   persist: true
