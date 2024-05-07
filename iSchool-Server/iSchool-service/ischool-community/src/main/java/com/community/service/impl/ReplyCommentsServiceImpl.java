@@ -199,6 +199,10 @@ public class ReplyCommentsServiceImpl extends ServiceImpl<ReplyCommentsMapper, R
         List<MessageDto> messageDtoList = replyComments.stream().map(item -> {
             MessageDto messageDto = new MessageDto();
             BeanUtils.copyProperties(item, messageDto);
+            // 获取userNickname
+            UserDto userDto = userFeignClient.getLoginUser(item.getUserId()).getData();
+            String nickname = userDto.getNickname();
+            messageDto.setUserNickname(nickname);
             return messageDto;
         }).toList();
 

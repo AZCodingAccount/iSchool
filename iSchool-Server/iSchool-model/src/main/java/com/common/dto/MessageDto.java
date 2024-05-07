@@ -19,6 +19,11 @@ public class MessageDto {
      * 当前评论用户id
      */
     private Long userId;
+
+    /**
+     * 当前评论用户昵称
+     */
+    private String userNickname;
     /**
      * 当前评论对象id
      */
