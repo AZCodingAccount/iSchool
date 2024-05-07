@@ -3,6 +3,7 @@ package com.community.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.client.service.UserFeignClient;
+import com.common.dto.SocialDataDto;
 import com.common.dto.UserDto;
 import com.community.mapper.CommentObjMapper;
 import com.community.mapper.CommentsMapper;
@@ -152,6 +153,40 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments>
         comments.setLikes(comments.getLikes() - 1);
         this.baseMapper.updateById(comments);
 
+    }
+
+    /**
+     * @param id
+     * @return com.common.dto.SocialDataDto
+     * @description 获取一级评论的点赞和评论
+     **/
+    @Override
+    public SocialDataDto getSocialData(Long id) {
+        // 1: 校验参数
+        Boolean checked = userFeignClient.checkId(id);
+
+        if (checked == null || !checked) {
+            return null;
+        }
+
+        // 获取数据
+        SocialDataDto socialDataDto = new SocialDataDto();
+        LambdaQueryWrapper<Comments> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Comments::getUserId, id);
+        List<Comments> commentsList = this.baseMapper.selectList(queryWrapper);
+
+        // 获取评论数量
+        int commentsNum = commentsList.size();
+        int likesNum = 0;
+        // 获取点赞数量
+        for (Comments comments : commentsList) {
+            likesNum += comments.getLikes();
+        }
+
+        socialDataDto.setTotalComments(commentsNum);
+        socialDataDto.setTotalLikes(likesNum);
+
+        return socialDataDto;
     }
 }
 

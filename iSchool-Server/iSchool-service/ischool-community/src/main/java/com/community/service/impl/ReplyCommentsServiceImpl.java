@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import com.client.service.UserFeignClient;
+import com.common.dto.MessageDto;
+import com.common.dto.SocialDataDto;
 import com.common.dto.UserDto;
 import com.community.mapper.ReplyCommentsMapper;
 import com.community.model.dto.AddReplyCommentRequest;
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Albert han
@@ -51,12 +54,14 @@ public class ReplyCommentsServiceImpl extends ServiceImpl<ReplyCommentsMapper, R
         Long commentId = addReplyCommentRequest.getCommentId();
         String replyContent = addReplyCommentRequest.getReplyContent();
         Long replyUserId = addReplyCommentRequest.getReplyUserId();
-        if (commentId == null || replyUserId == null || StringUtils.isBlank(replyContent)) {
+        Long objId = addReplyCommentRequest.getObjId();
+        if (commentId == null || replyUserId == null || objId == null || StringUtils.isBlank(replyContent)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
 
         // 2: 添加评论
         ReplyComments replyComments = new ReplyComments();
+        replyComments.setObjId(objId);
         replyComments.setUserId(id);
         replyComments.setReplyCommentId(replyUserId);
         replyComments.setContent(replyContent);
@@ -154,9 +159,9 @@ public class ReplyCommentsServiceImpl extends ServiceImpl<ReplyCommentsMapper, R
     }
 
     /**
-     * @description 取消二级评论的点赞
      * @param commentId
      * @return void
+     * @description 取消二级评论的点赞
      **/
     @Override
     public void decreaseCommentLikes(Long commentId) {
@@ -171,6 +176,97 @@ public class ReplyCommentsServiceImpl extends ServiceImpl<ReplyCommentsMapper, R
         this.baseMapper.updateById(comments);
 
         // todo:发送消息给消息队列实时计算搜索词热度
+    }
+
+    /**
+     * @param id
+     * @return java.util.List<com.common.dto.MessageDto>
+     * @description 获取用户未读消息列表
+     **/
+    @Override
+    public List<MessageDto> getUnreadMessageList(Long id) {
+        // 1:校验参数
+        Boolean checked = userFeignClient.checkId(id);
+        if (!checked) {
+            return new ArrayList<>();
+        }
+
+        // 2：查询数据
+        LambdaQueryWrapper<ReplyComments> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ReplyComments::getReplyUserId, id)
+                .eq(ReplyComments::getReaded, 0);
+        List<ReplyComments> replyComments = this.baseMapper.selectList(queryWrapper);
+        List<MessageDto> messageDtoList = replyComments.stream().map(item -> {
+            MessageDto messageDto = new MessageDto();
+            BeanUtils.copyProperties(item, messageDto);
+            return messageDto;
+        }).toList();
+
+        // 3：返回结果
+        return messageDtoList;
+    }
+
+    /**
+     * @param id
+     * @param messageId
+     * @return void
+     * @description 标记已读消息
+     **/
+    @Override
+    public Boolean readMessage(Long id, Long messageId) {
+        // 校验参数
+        if (id == null || messageId == null) {
+            return false;
+        }
+        // 校验用户或者消息是否存在
+        Boolean checked = userFeignClient.checkId(id);
+        ReplyComments replyComments = this.baseMapper.selectById(messageId);
+        if (!checked || replyComments == null) {
+            return false;
+        }
+
+        // 2: 操作数据库
+        ReplyComments comments = new ReplyComments();
+        comments.setReplyUserId(id);
+        comments.setId(messageId);
+        comments.setReaded(1);
+        int i = this.baseMapper.updateById(comments);
+        return i >= 1;
+    }
+
+    /**
+     * @param id
+     * @return com.common.dto.SocialDataDto
+     * @description 获取二级评论的点赞和评论
+     **/
+    @Override
+    public SocialDataDto getSocialData(Long id) {
+        // 1: 校验参数
+        Boolean checked = userFeignClient.checkId(id);
+
+        if (checked == null || !checked) {
+            return null;
+        }
+
+        // 获取数据
+        SocialDataDto socialDataDto = new SocialDataDto();
+        LambdaQueryWrapper<ReplyComments> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ReplyComments::getReplyCommentId, id);
+        List<ReplyComments> commentsList = this.baseMapper.selectList(queryWrapper);
+
+        // 获取评论数量
+        int commentsNum = commentsList.size();
+        int likesNum = 0;
+        // 获取点赞数量
+        for (ReplyComments comments : commentsList) {
+            likesNum += comments.getLikes();
+        }
+
+        socialDataDto.setTotalComments(commentsNum);
+        socialDataDto.setTotalLikes(likesNum);
+
+        return socialDataDto;
+
     }
 }
 

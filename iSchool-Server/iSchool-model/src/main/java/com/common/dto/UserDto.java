@@ -46,7 +46,15 @@ public class UserDto implements Serializable {
     private String email;
 
 
+    /**
+     * 用户获赞总数
+     */
+    private Integer totalLikes;
 
+    /**
+     * 用户被评论总数
+     */
+    private Integer totalComments;
 
     private static final long serialVersionUID = 1L;
 }

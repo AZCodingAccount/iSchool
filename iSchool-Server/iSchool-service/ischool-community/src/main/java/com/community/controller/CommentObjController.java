@@ -46,7 +46,7 @@ public class CommentObjController {
      * @description 搜索点评对象
      **/
     @GetMapping("/search")
-    public BaseResponse<List<CommentObj>> searchCommentObj(@RequestParam("keyword") String keyword, @RequestParam
+    public BaseResponse<List<CommentObj>> searchCommentObj(@RequestParam("keyword") String keyword, @RequestParam("type")
     String type) {
         log.info("查询点评对象，查询参数为{}:{}", keyword, type);
         // todo：添加点赞量最高的评论

@@ -23,6 +23,10 @@ public class ReplyComments implements Serializable {
     private Long id;
 
     /**
+     * 当前评论对象id
+     */
+    private Long objId;
+    /**
      * 当前评论用户id
      */
     private Long userId;
@@ -46,6 +50,11 @@ public class ReplyComments implements Serializable {
      * 评论点赞数
      */
     private Integer likes;
+
+    /**
+     * 评论是否已读
+     */
+    private Integer readed;
 
     /**
      * 发布时间
