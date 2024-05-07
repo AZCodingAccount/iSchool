@@ -56,5 +56,10 @@ public class UserDto implements Serializable {
      */
     private Integer totalComments;
 
+    /**
+     * 用户被评论总数
+     */
+    private Integer unReadCommentsCount;
+
     private static final long serialVersionUID = 1L;
 }
