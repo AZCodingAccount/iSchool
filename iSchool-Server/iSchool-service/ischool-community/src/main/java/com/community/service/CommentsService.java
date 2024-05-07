@@ -1,6 +1,7 @@
 package com.community.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.common.dto.SocialDataDto;
 import com.community.model.dto.AddCommentRequest;
 import com.community.model.entity.Comments;
 import com.community.model.vo.CommentsVO;
@@ -41,4 +42,11 @@ public interface CommentsService extends IService<Comments> {
      * @return void
      **/
     void decreaseCommentLikes(Long commentId);
+
+    /**
+     * @description 获取一级评论下的点赞和评论
+     * @param id
+     * @return com.common.dto.SocialDataDto
+     **/
+    SocialDataDto getSocialData(Long id);
 }

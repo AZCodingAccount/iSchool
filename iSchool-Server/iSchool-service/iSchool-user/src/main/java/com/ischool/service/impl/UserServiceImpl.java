@@ -3,6 +3,8 @@ package com.ischool.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
+import com.client.service.CommunityFeignClient;
+import com.common.dto.SocialDataDto;
 import com.common.dto.UserDto;
 import com.ischool.exception.BusinessException;
 import com.ischool.mapper.UserMapper;
@@ -37,6 +39,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Autowired
     UserServiceImpl userService;
+
+    @Autowired
+    CommunityFeignClient communityFeignClient;
 
     public static final String SALT = "common";
 
@@ -206,9 +211,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "用户不存在");
         }
 
-        // 2：拼装数据
+        // 2：获取总点赞和总回复
+        SocialDataDto socialData = communityFeignClient.getSocialData(id);
+        Integer totalLikes = socialData.getTotalLikes();
+        Integer totalComments = socialData.getTotalComments();
+
+        // 3：拼装数据
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(oldUser, userDto);
+
+        userDto.setTotalLikes(totalLikes);
+        userDto.setTotalComments(totalComments);
         return userDto;
     }
 

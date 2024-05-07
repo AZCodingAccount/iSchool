@@ -11,6 +11,10 @@ import lombok.Data;
 @Data
 public class AddReplyCommentRequest {
     /*
+     * 点评对象id
+     */
+    private Long objId;
+    /*
      * 回复的评论id
      */
     private Long commentId;

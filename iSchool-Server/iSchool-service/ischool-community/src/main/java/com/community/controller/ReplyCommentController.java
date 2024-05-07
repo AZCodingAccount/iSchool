@@ -1,5 +1,6 @@
 package com.community.controller;
 
+import com.common.dto.MessageDto;
 import com.community.model.dto.AddCommentRequest;
 import com.community.model.dto.AddReplyCommentRequest;
 import com.community.model.vo.CommentsVO;
@@ -35,8 +36,7 @@ public class ReplyCommentController {
      * @description 添加二级评论信息
      **/
     @PostMapping
-    public BaseResponse<Object> addComment(@RequestBody AddReplyCommentRequest addReplyCommentRequest,
-                                           @RequestHeader("id") Long id) {
+    public BaseResponse<Object> addComment(@RequestBody AddReplyCommentRequest addReplyCommentRequest, @RequestHeader("id") Long id) {
         log.info("添加二级评论信息，评论信息为:{}", addReplyCommentRequest);
         replyCommentsService.add(addReplyCommentRequest, id);
         return Result.success();
@@ -72,7 +72,7 @@ public class ReplyCommentController {
      * @return com.ischool.model.BaseResponse<java.lang.Object>
      * @description 取消二级评论点赞
      **/
-    @PutMapping("like/{commentId}")
+    @DeleteMapping("like/{commentId}")
     public BaseResponse<Object> decreaseCommentLikes(@PathVariable Long commentId) {
         log.info("用户取消点赞，点赞评论id为{}", commentId);
         replyCommentsService.decreaseCommentLikes(commentId);

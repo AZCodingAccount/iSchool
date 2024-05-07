@@ -24,12 +24,12 @@ Vue框架+Ant Design组件库
 
 数据库：Redis、ElasticSearch、MySQL
 
-中间件：kafka消息队列、RPC框架Dubbo、分布式任务调度框架 xxl-job
+中间件：RabbitMQ消息队列、OpenFeign远程调用、分布式任务调度框架 xxl-job
 
-生成式AI接口，GPT4-turbo
+生成式AI接口，SpringAI框架调用openai
 
 爬虫技术
 
-### 开发周期 2024-4-11—2024-4-25
+### 开发周期 2024-5-01—2024-5-14
 
 两周 

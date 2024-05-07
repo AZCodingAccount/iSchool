@@ -1,6 +1,8 @@
 package com.ischool.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.client.service.CommunityFeignClient;
+import com.common.dto.MessageDto;
 import com.common.dto.UserDto;
 
 
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -40,6 +43,9 @@ public class UserController {
 
     @Autowired
     AliOssUtil aliOssUtil;
+
+    @Autowired
+    CommunityFeignClient communityFeignClient;
 
     /**
      * @param loginDto
@@ -149,7 +155,7 @@ public class UserController {
     /**
      * @param id
      * @return java.lang.Boolean
-     * @description 检查id是否合法
+     * @description 检查用户id是否合法
      **/
     @GetMapping("/id")
     public Boolean checkId(@RequestParam("id") Long id) {
@@ -157,5 +163,36 @@ public class UserController {
         return userService.checkId(id);
     }
 
+
+    /**
+     * @param
+     * @return com.ischool.model.Result<List < MessageDto>>
+     * @description 获取所有未读的信息
+     **/
+    @GetMapping("/messages")
+    public BaseResponse<List<MessageDto>> getMessageList(@RequestHeader("id") Long id) {
+        log.info("获取用户{}所有未读信息", id);
+        if (!checkId(id)) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "用户不存在");
+        }
+        List<MessageDto> unreadMessageList = communityFeignClient.getUnreadMessageList(id);
+        return Result.success(unreadMessageList);
+    }
+
+    /**
+     * @param messageId
+     * @return com.ischool.model.Result<java.lang.Boolean>
+     * @description 当前消息已读
+     **/
+    @PutMapping("/read/messages")
+    public BaseResponse<Object> readMessage(@RequestParam("messageId") Long messageId,
+                                            @RequestHeader("id") Long id) {
+        log.info("用户{}将消息{}标记为已读", id, messageId);
+        Boolean b = communityFeignClient.readMessage(id, messageId);
+        if (!b) {
+            throw new BusinessException(ErrorCode.OPERATION_ERROR, "标记消息为已读失败");
+        }
+        return Result.success();
+    }
 
 }
