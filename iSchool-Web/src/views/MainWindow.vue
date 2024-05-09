@@ -1,9 +1,8 @@
 <script setup>
 import { useUserInfoerStore } from '@/stores/userInfoer';
-
 // import { ref } from 'vue'
-const userInfoerStore = useUserInfoerStore()
 
+const userInfoerStore = useUserInfoerStore()
 </script>
 
 <template>
@@ -29,9 +28,12 @@ const userInfoerStore = useUserInfoerStore()
             <div style="flex-grow: 2;"></div>
             <el-tooltip content="<strong>个人中心</strong>" placement="bottom" effect="light" raw-content>
                 <el-menu-item index="/main/mine">
-                    <div class="avatar">
-                        <img style="height: 100%; vertical-align: top;" :src="userInfoerStore.userInfo.userAvatar">
-                    </div>
+                    <el-badge style="margin-top: -10px;" :is-dot="userInfoerStore.userInfo.unReadCommentsCount != 0"
+                        :offset="[-5, 19]">
+                        <div class="avatar">
+                            <img style="height: 100%; vertical-align: top;" :src="userInfoerStore.userInfo.userAvatar">
+                        </div>
+                    </el-badge>
                 </el-menu-item>
             </el-tooltip>
             <div style="flex-grow: 1;"></div>

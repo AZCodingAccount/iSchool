@@ -1,10 +1,11 @@
 <script setup>
-import { addComment, addCommentLikes_1, addCommentObj, addComment_1, getCommentsList, getCommentsList_1, score, searchCommentObj } from '@/api/comment';
+import { addComment, addCommentLikes_1, addCommentObj, addComment_1, decreaseCommentLikes, decreaseCommentLikes_1, getCommentsList, getCommentsList_1, score, searchCommentObj } from '@/api/comment';
 import { ElMessage } from 'element-plus'
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 
 import { commentObj, comment1, comment2 } from '@/assets/testData.json' // 测试数据引用
 import { sleep } from '@/utils/time'
+import router from '@/router'
 
 const commentObjData = ref([]) // 点评对象数据
 const keyword = ref('') // 搜索内容
@@ -18,7 +19,8 @@ const typeColor = (typeName) => { // 根据标签名决定标签颜色
 const isLoading = ref(false) // 是否在加载中
 const resultScrollbarRef = ref(null) // 滚动条绑定变量
 const onSearch = async () => { // 搜索
-    // console.log('on search', keyword.value, type.value)
+    toStatus(1)
+    selectedCommentObj.value = { id: -1 }
     isLoading.value = true
     try {
         // var res = await searchCommentObj(keyword.value, type.value)
@@ -33,7 +35,24 @@ const onSearch = async () => { // 搜索
     isLoading.value = false
     resultScrollbarRef.value.setScrollTop(0)
 }
-onSearch() // 最开始展示全部的搜索结果
+onMounted(() => {
+    onSearch().then(() => { // 最开始展示全部的搜索结果
+        // console.log('router', router.currentRoute.value.query)
+        if (router.currentRoute.value.query.objId != undefined) {
+            let objId = router.currentRoute.value.query.objId
+            // console.log('objId', objId)
+            // console.log('commentObjData', commentObjData.value)
+            let lit_commentObj = commentObjData.value.filter((item) => { return item.id == objId })
+            // console.log('lit_commentObj', lit_commentObj)
+            if (lit_commentObj.length !== 1) {
+                ElMessage.error('点评对象定位失败')
+                return
+            }
+            onSelectCommentObj(lit_commentObj[0])
+            resultScrollbarRef.value.setScrollTop(commentObjData.value.indexOf(lit_commentObj[0]) * 175)
+        }
+    })
+})
 
 const showingAddCommentDialog = ref(false) // 是否显示添加点评对象对话框
 const formAddCommentObj = ref({ // 添加点评对象信息表单
@@ -70,6 +89,7 @@ const onSelectCommentObj = async (commentObj) => { // 选择点评对象
     // }
     selectedCommentObj.value = commentObj
     isLoading_comment1.value = true
+    // resultScrollbarRef.value.setScrollTop(commentObjData.value.indexOf(commentObj) * 175)
     input1Ref.value.focus()
     toStatus(2)
     try {
@@ -80,6 +100,7 @@ const onSelectCommentObj = async (commentObj) => { // 选择点评对象
     catch { isLoading_comment1.value = false; return; }
     commentData1.value = res.data
     isLoading_comment1.value = false
+    comment1ScrollbarRef.value.setScrollTop(0)
 }
 
 
@@ -97,14 +118,26 @@ const likeImgUrl = (isLike) => { // 点赞的图标
     return '/public/img/like.png'
 }
 const onLikeComment1 = async (commentObj) => { // 给一级评论点赞
-    if (commentObj.liked) return
+    if (commentObj.liked) { // 取消点赞
+        // await decreaseCommentLikes_1(commentObj.id)
+        await sleep(1000) // test
+        commentObj.liked = false
+        commentObj.likes -= 1
+        return
+    }
     // await addCommentLikes_1(commentObj.id)
     await sleep(1000) // test
     commentObj.liked = true
     commentObj.likes += 1
 }
 const onLikeComment2 = async (commentObj) => {
-    if (commentObj.liked) return
+    if (commentObj.liked) { // 取消点赞
+        // await decreaseCommentLikes(commentObj.id)
+        await sleep(1000) // test
+        commentObj.liked = false
+        commentObj.likes -= 1
+        return
+    }
     // await addCommentLikes_1(commentObj.id)
     await sleep(1000) // test
     commentObj.liked = true
@@ -112,11 +145,12 @@ const onLikeComment2 = async (commentObj) => {
 }
 const selectedComment1 = ref({ id: -1 }) // 当前选择的一级评论
 const selectedComment = ref({ id: -1 }) // 当前选择的评论
+const comment1ScrollbarRef = ref(null) // 一级评论滚动窗口绑定变量
+const comment2ScrollbarRef = ref(null) // 一级评论滚动窗口绑定变量
 const isLoading_comment2 = ref(false) // 是否在加载二级评论数据
 const commentData2 = ref([]) // 所有二级评论数据
 const onSelectComment = async (commentObj, commentLevel) => { // 选择或取消选择评论
-    if (selectedComment.value.id == commentObj.id) {
-        // 取消对评论的选择
+    if (selectedComment.value.id == commentObj.id) { // 取消对评论的选择
         selectedComment.value = { id: -1 }
         if (commentLevel == 1) {
             selectedComment1.value = { id: -1 }
@@ -129,7 +163,7 @@ const onSelectComment = async (commentObj, commentLevel) => { // 选择或取消
     commentSendTo.value = commentLevel
     input1Ref.value.focus()
     toStatus(3)
-    if (commentLevel == 1) {
+    if (commentLevel == 1) { // 选的是一级评论
         selectedComment1.value = commentObj
         // 刷新二级评论数据
         isLoading_comment2.value = true
@@ -141,8 +175,8 @@ const onSelectComment = async (commentObj, commentLevel) => { // 选择或取消
         catch { isLoading_comment2.value = false; return; }
         commentData2.value = res.data
         isLoading_comment2.value = false
+        comment2ScrollbarRef.value.setScrollTop(0)
     }
-
 }
 const onSendComment = async () => { // 一级评论输入框发送信息
     if (messageComment.value == '') {
@@ -166,13 +200,15 @@ const onSendComment = async () => { // 一级评论输入框发送信息
         catch { isLoading_comment1.value = false; return; }
         commentData1.value = res1.data
         isLoading_comment1.value = false
+        // comment1ScrollbarRef.value.setScrollTop(0)
+        selectedCommentObj.value.commentCount += 1
     } else { // 回复某一级或二级评论
         await addComment({
             commentId: selectedComment.value.id,
             replyContent: messageComment.value,
             replyUserId: selectedComment.value.userId
         })
-        selectedComment.value.replyCount += 1
+        selectedComment1.value.replyCount += 1
         // 刷新二级评论数据
         isLoading_comment2.value = true
         try {
@@ -260,10 +296,10 @@ const toStatus = (status) => {
                 <el-empty style="height: 509px;" v-show="commentObjData.length == 0"
                     image="/public/img/empty_commentObj.png" description="无点评" />
                 <div v-show="commentObjData.length != 0" class="result">
-                    <el-scrollbar ref="resultScrollbarRef" height="100%">
+                    <el-scrollbar ref="resultScrollbarRef" wrap-style="transition: all 0.5s;" height="100%">
                         <!-- {{ item }} -->
                         <el-card
-                            :style="{ width: '99.5%', marginBottom: '2%', backgroundColor: item.id == selectedCommentObj.id ? '#eeeeee' : '' }"
+                            :style="{ width: '99.5%', marginBottom: '10px', backgroundColor: item.id == selectedCommentObj.id ? '#eeeeee' : '' }"
                             v-for="item in commentObjData" :key="item" shadow="hover">
                             <template #header>
                                 <div style="display: flex; line-height: 30px;" @click="onSelectCommentObj(item)">
@@ -323,7 +359,7 @@ const toStatus = (status) => {
                             <div style="text-align: center;">
                                 <div style="font-size: 25px; font-weight: 600; color: #f7ba2a">{{
                                     selectedCommentObj.score
-                                    }}
+                                }}
                                     <img style="height: 20px;" src="/public/img/star.png">
                                 </div>
                                 <div style="color: gray;"><span style="font-weight: 700;">{{
@@ -338,7 +374,7 @@ const toStatus = (status) => {
                     </div>
                 </template>
                 <div v-loading="isLoading_comment1" style="height: 365px;">
-                    <el-scrollbar height="100%">
+                    <el-scrollbar ref="comment1ScrollbarRef" height="100%">
                         <!-- 一级评论 -->
                         <div :style="{ borderBottom: '1px lightgray solid', padding: '10px 2px', backgroundColor: item.id === selectedComment.id ? '#eeeeee' : '' }"
                             v-for="item in commentData1" :key="item">
@@ -371,7 +407,7 @@ const toStatus = (status) => {
                                     <img style="height: 25px;" :src="likeImgUrl(item.liked)">
                                     <span :style="{ color: item.liked ? '#f3c668' : '', marginLeft: '5px' }">{{
                                         item.likes
-                                        }}</span>
+                                    }}</span>
                                 </el-link>
                             </div>
                         </div>
@@ -411,7 +447,7 @@ const toStatus = (status) => {
                                 <img style="height: 40px;" :src="likeImgUrl(selectedComment1.liked)">
                                 <span :style="{ color: selectedComment1.liked ? '#f3c668' : '', marginLeft: '5px' }">{{
                                     selectedComment1.likes
-                                    }}</span>
+                                }}</span>
                             </el-link>
                         </div>
                         <el-scrollbar style="margin-top: 10px;" height="75px">
@@ -420,7 +456,7 @@ const toStatus = (status) => {
                     </div>
                 </template>
                 <div v-loading="isLoading_comment2" style="height: 393px;">
-                    <el-scrollbar max-height="100%">
+                    <el-scrollbar ref="comment2ScrollbarRef" max-height="100%">
                         <!-- 二级评论 -->
                         <div :style="{ borderBottom: '1px lightgray solid', padding: '10px 2px', backgroundColor: item.id === selectedComment.id ? '#eeeeee' : '' }"
                             v-for="item in commentData2" :key="item">
@@ -452,7 +488,7 @@ const toStatus = (status) => {
                                     <img style="height: 25px;" :src="likeImgUrl(item.liked)">
                                     <span :style="{ color: item.liked ? '#f3c668' : '', marginLeft: '5px' }">{{
                                         item.likes
-                                        }}</span>
+                                    }}</span>
                                 </el-link>
                             </div>
                         </div>

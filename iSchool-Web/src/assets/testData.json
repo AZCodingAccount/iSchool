@@ -241,99 +241,174 @@
       "href": "..."
     }
   ],
-  "homeResultData_AI": "## 概述\n本项目结构以该项目为例[AZCodingAccount/iGomokuGame: 一个在线五子棋游戏 (github.com)]\n- 项目总开发文档：[Albert Zhang](https://github.com/AZCodingAccount)\n- 前端项目开发文档：[qwq007 ](https://github.com/qwq007)",
+  "homeResultData_AI": [
+    {
+      "sender": "ai",
+      "message": "## 概述\n本项目结构以该项目为例[AZCodingAccount/iGomokuGame: 一个在线五子棋游戏 (github.com)]\n- 项目总开发文档：[Albert Zhang](https://github.com/AZCodingAccount)\n- 前端项目开发文档：[qwq007 ](https://github.com/qwq007)"
+    },
+    {
+      "sender": "user",
+      "message": "你好"
+    },
+    {
+      "sender": "ai",
+      "message": "- 项目总开发文档：[Albert Zhang](https://github.com/AZCodingAccount)\n- 前端项目开发文档：[qwq007 ](https://github.com/qwq007)"
+    },
+    {
+      "sender": "user",
+      "message": "非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好非常好"
+    },
+    {
+      "sender": "ai",
+      "message": "## 概述"
+    },
+    {
+      "sender": "user",
+      "message": "概述"
+    },
+    {
+      "sender": "ai",
+      "message": "## 概述"
+    },
+    {
+      "sender": "user",
+      "message": "概述"
+    },
+    {
+      "sender": "ai",
+      "message": "## 概述\n本项目结构以该项目为例[AZCodingAccount/iGomokuGame: 一个在线五子棋游戏 (github.com)]"
+    },
+    {
+      "sender": "user",
+      "message": "成功上岸"
+    },
+    {
+      "sender": "ai",
+      "message": "- 前端项目开发文档：[qwq007 ](https://github.com/qwq007)"
+    }
+  ],
   "lit_school": ["哈尔滨理工大学", "哈尔滨工业大学", "哈尔滨工程大学", "黑龙江大学"],
-  "myMessage": [
+  "myMessage1": [
     {
-      "username": "1张三",
-      "title": "服务器架构设计",
-      "message": "你说的对，但是我认为意大利面就应该要拌42号混凝土",
-      "time": "2024-05-21 21:00",
-      "href": "https://www.baidu.com/"
+      "id": 0,
+      "userId": 0,
+      "userNickname": "0张三",
+      "objId": 0,
+      "replyUserId": 10,
+      "replyCommentId": 0,
+      "content": "我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息我的消息",
+      "likes": 10,
+      "pubTime": "2024-05-07 10:00:00"
     },
     {
-      "username": "2张三",
-      "title": "服务器架构设计",
-      "message": "你说的对，但是我认为意大利面就应该要拌42号混凝土",
-      "time": "2024-5-21 9:00",
-      "href": "..."
+      "id": 1,
+      "userId": 1,
+      "userNickname": "1张三",
+      "objId": 1,
+      "replyUserId": 9,
+      "replyCommentId": 1,
+      "content": "我的消息",
+      "likes": 0,
+      "pubTime": "2024-05-07 10:00:00"
     },
     {
-      "username": "3张三",
-      "title": "java",
-      "message": "你说的对，但是我认为意大利面就应该要拌42号混凝土",
-      "time": "2024-5-21 9:00",
-      "href": "..."
+      "id": 2,
+      "userId": 2,
+      "userNickname": "2张三",
+      "objId": 2,
+      "replyUserId": 8,
+      "replyCommentId": 2,
+      "content": "我的消息",
+      "likes": 110,
+      "pubTime": "2024-05-07 10:00:00"
     },
     {
-      "username": "4张三",
-      "title": "服务器架构设计",
-      "message": "你说的对，但是我认为意大利面就应该要拌42号混凝土",
-      "time": "2024-5-21 9:00",
-      "href": "..."
+      "id": 3,
+      "userId": 3,
+      "userNickname": "3张三",
+      "objId": 3,
+      "replyUserId": 7,
+      "replyCommentId": 3,
+      "content": "我的消息",
+      "likes": 23,
+      "pubTime": "2024-05-07 10:00:00"
     },
     {
-      "username": "5张三",
-      "title": "服务器架构设计",
-      "message": "你说的对，但是我认为意大利面就应该要拌42号混凝土",
-      "time": "2024-5-21 9:00",
-      "href": "..."
+      "id": 4,
+      "userId": 4,
+      "userNickname": "4张三",
+      "objId": 4,
+      "replyUserId": 6,
+      "replyCommentId": 4,
+      "content": "我的消息",
+      "likes": 40,
+      "pubTime": "2024-05-07 10:00:00"
     },
     {
-      "username": "6张三",
-      "title": "python",
-      "message": "你说的对，但是我认为意大利面就应该要拌42号混凝土",
-      "time": "2024-5-21 9:00",
-      "href": "..."
+      "id": 5,
+      "userId": 5,
+      "userNickname": "5张三",
+      "objId": 5,
+      "replyUserId": 5,
+      "replyCommentId": 5,
+      "content": "我的消息",
+      "likes": 5,
+      "pubTime": "2024-05-07 10:00:00"
     },
     {
-      "username": "7张三",
-      "title": "服务器架构设计",
-      "message": "你说的对，但是我认为意大利面就应该要拌42号混凝土",
-      "time": "2024-5-21 9:00",
-      "href": "..."
+      "id": 6,
+      "userId": 6,
+      "userNickname": "6张三",
+      "objId": 6,
+      "replyUserId": 4,
+      "replyCommentId": 6,
+      "content": "我的消息",
+      "likes": 9,
+      "pubTime": "2024-05-07 10:00:00"
     },
     {
-      "username": "8张三",
-      "title": "服务器架构设计",
-      "message": "你说的对，但是我认为意大利面就应该要拌42号混凝土",
-      "time": "2024-5-21 9:00",
-      "href": "..."
+      "id": 7,
+      "userId": 7,
+      "userNickname": "7张三",
+      "objId": 7,
+      "replyUserId": 3,
+      "replyCommentId": 7,
+      "content": "我的消息",
+      "likes": 1,
+      "pubTime": "2024-05-07 10:00:00"
     },
     {
-      "username": "9张三",
-      "title": "服务器架构设计",
-      "message": "你说的对，但是我认为意大利面就应该要拌42号混凝土你说的对，但是我认为意大利面就应该要拌42号混凝土你说的对，但是我认为意大利面就应该要拌42号混凝土你说的对，但是我认为意大利面就应该要拌42号混凝土你说的对，但是我认为意大利面就应该要拌42号混凝土你说的对，但是我认为意大利面就应该要拌42号混凝土你说的对，但是我认为意大利面就应该要拌42号混凝土",
-      "time": "2024-5-21 9:00",
-      "href": "..."
+      "id": 8,
+      "userId": 8,
+      "userNickname": "8张三",
+      "objId": 0,
+      "replyUserId": 2,
+      "replyCommentId": 8,
+      "content": "我的消息",
+      "likes": 12,
+      "pubTime": "2024-05-07 10:00:00"
     },
     {
-      "username": "10张三",
-      "title": "服务器架构设计",
-      "message": "你说的对，但是我认为意大利面就应该要拌42号混凝土",
-      "time": "2024-5-21 9:00",
-      "href": "..."
+      "id": 9,
+      "userId": 9,
+      "userNickname": "9张三",
+      "objId": 1,
+      "replyUserId": 1,
+      "replyCommentId": 9,
+      "content": "我的消息",
+      "likes": 43,
+      "pubTime": "2024-05-07 10:00:00"
     },
     {
-      "username": "11张三",
-      "title": "服务器架构设计",
-      "message": "你说的对，但是我认为意大利面就应该要拌42号混凝土",
-      "time": "2024-5-21 9:00",
-      "href": "..."
-    },
-    {
-      "username": "12张三",
-      "title": "服务器架构设计",
-      "message": "你说的对，但是我认为意大利面就应该要拌42号混凝土",
-      "time": "2024-5-21 9:00",
-      "href": "..."
-    },
-    {
-      "username": "13张三",
-      "title": "服务器架构设计",
-      "message": "你说的对，但是我认为意大利面就应该要拌42号混凝土",
-      "time": "2024-5-21 9:00",
-      "href": "..."
+      "id": 10,
+      "userId": 10,
+      "userNickname": "10张三",
+      "objId": 2,
+      "replyUserId": 0,
+      "replyCommentId": 10,
+      "content": "我的消息",
+      "likes": 0,
+      "pubTime": "2024-05-07 10:00:00"
     }
   ],
   "commentObj": [
@@ -374,6 +449,46 @@
       "commentCount": 6,
       "score": 9.9,
       "count": 20,
+      "stared": 0,
+      "createTime": "2024-05-04 09:00:00"
+    },
+    {
+      "id": 4,
+      "name": "大学生数学建模",
+      "type": "竞赛",
+      "commentCount": 60,
+      "score": 8.8,
+      "count": 2,
+      "stared": 0,
+      "createTime": "2024-05-04 09:00:00"
+    },
+    {
+      "id": 5,
+      "name": "大学生数学建模",
+      "type": "竞赛",
+      "commentCount": 60,
+      "score": 8.8,
+      "count": 2,
+      "stared": 0,
+      "createTime": "2024-05-04 09:00:00"
+    },
+    {
+      "id": 6,
+      "name": "大学生数学建模",
+      "type": "竞赛",
+      "commentCount": 60,
+      "score": 8.8,
+      "count": 2,
+      "stared": 0,
+      "createTime": "2024-05-04 09:00:00"
+    },
+    {
+      "id": 7,
+      "name": "大学生数学建模",
+      "type": "竞赛",
+      "commentCount": 60,
+      "score": 8.8,
+      "count": 2,
       "stared": 0,
       "createTime": "2024-05-04 09:00:00"
     }
@@ -533,7 +648,7 @@
       "userAvatar": "/public/img/myAvatar.jpg",
       "username": "xiao lin",
       "userId": 9,
-      "replyUsername": "好的",
+      "replyUsername": "不是很好",
       "pubTime": "2024-05-21"
     },
     {

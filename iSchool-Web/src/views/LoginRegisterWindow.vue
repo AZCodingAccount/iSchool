@@ -1,7 +1,7 @@
 <script setup>
 import { useUserInfoerStore } from '@/stores/userInfoer'
 import { ref } from 'vue'
-import { getLoginUser, login, register } from '@/api/user'
+import { getLoginUser_1, login, register } from '@/api/user'
 import router from '@/router';
 import { ElMessage } from 'element-plus';
 const userInfoerStore = useUserInfoerStore()
@@ -9,14 +9,14 @@ const isLogin = ref(true) // true登录，false注册
 const rememberMe = ref(false) // 记住我
 const titleRef = ref(null) // 标题绑定变量
 const boxRef = ref(null) // 盒子绑定变量
-// 登录
-const loginForm = ref({
+
+const loginForm = ref({ // 登录表单
     username: '',
     password: ''
 })
 
 rememberMe.value = userInfoerStore.userInfo.rememberMe
-if (rememberMe.value) {
+if (rememberMe.value) { // 若选中了“记住我”，则自动填上用户名和密码
     loginForm.value.username = userInfoerStore.userInfo.username
     loginForm.value.password = userInfoerStore.userInfo.password
 }
@@ -35,12 +35,12 @@ const onLogin = async () => {
         token: res.data,
         rememberMe: rememberMe.value
     })
-    res = await getLoginUser()
+    res = await getLoginUser_1()
     userInfoerStore.updateUserInfo(res.data)
     router.push('/main')
 }
 
-const registerForm = ref({
+const registerForm = ref({ // 注册表单
     username: '',
     password: '',
     surePassword: ''

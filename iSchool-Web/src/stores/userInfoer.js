@@ -11,6 +11,9 @@ export const useUserInfoerStore = defineStore('UserInfoer', () => {
     age: 20,
     userAvatar: '/public/img/myAvatar.jpg',
     email: '1476652531@qq.com',
+    totalLikes: 0,
+    totalComments: 1,
+    unReadCommentsCount: 0,
 
     rememberMe: true,
     token: '',
