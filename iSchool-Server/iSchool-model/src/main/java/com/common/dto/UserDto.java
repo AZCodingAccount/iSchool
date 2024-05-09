@@ -1,24 +1,19 @@
-package com.ischool.model.entity;
+package com.common.dto;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+
 
 import java.io.Serializable;
-import java.util.Date;
 
 import lombok.Data;
 
 /**
  * 返回给前端的数据
  */
-@TableName(value = "user")
 @Data
 public class UserDto implements Serializable {
     /**
      * 用户id
      */
-    @TableId
     private Long userId;
 
     /**
@@ -51,8 +46,20 @@ public class UserDto implements Serializable {
     private String email;
 
 
+    /**
+     * 用户获赞总数
+     */
+    private Integer totalLikes;
 
+    /**
+     * 用户被评论总数
+     */
+    private Integer totalComments;
 
-    @TableField(exist = false)
+    /**
+     * 用户被评论总数
+     */
+    private Integer unReadCommentsCount;
+
     private static final long serialVersionUID = 1L;
 }

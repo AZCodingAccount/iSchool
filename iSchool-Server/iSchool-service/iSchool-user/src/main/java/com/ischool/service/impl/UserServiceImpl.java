@@ -3,13 +3,16 @@ package com.ischool.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
+import com.client.service.CommunityFeignClient;
+import com.common.dto.MessageDto;
+import com.common.dto.SocialDataDto;
+import com.common.dto.UserDto;
 import com.ischool.exception.BusinessException;
 import com.ischool.mapper.UserMapper;
 import com.ischool.model.ErrorCode;
 import com.ischool.model.dto.LoginDto;
 import com.ischool.model.dto.UpdateUserDto;
 import com.ischool.model.entity.User;
-import com.ischool.model.entity.UserDto;
 import com.ischool.model.enums.UserRoleEnum;
 import com.ischool.model.pojo.JwtProperties;
 import com.ischool.service.UserService;
@@ -22,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -38,7 +42,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Autowired
     UserServiceImpl userService;
 
-    public static final String SALT = "ischool";
+    @Autowired
+    CommunityFeignClient communityFeignClient;
+
+    public static final String SALT = "common";
 
     /**
      * @param loginDto
@@ -122,7 +129,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         // 2:查询用户名是否存在
         QueryWrapper<User> queryWrapper = new QueryWrapper<User>().eq("username", username);
-        Integer count = this.baseMapper.selectCount(queryWrapper);
+        Long count = this.baseMapper.selectCount(queryWrapper);
         if (count != 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户名已存在");
         }
@@ -206,10 +213,34 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "用户不存在");
         }
 
-        // 2：拼装数据
+        // 2：获取总点赞和总回复
+        SocialDataDto socialData = communityFeignClient.getSocialData(id);
+        Integer totalLikes = socialData.getTotalLikes();
+        Integer totalComments = socialData.getTotalComments();
+
+        // 4: 获取未读信息个数
+        List<MessageDto> unreadMessageList = communityFeignClient.getUnreadMessageList(id);
+        int count = unreadMessageList.size();
+
+        // 5：拼装数据
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(oldUser, userDto);
+
+        userDto.setTotalLikes(totalLikes);
+        userDto.setTotalComments(totalComments);
+        userDto.setUnReadCommentsCount(count);
         return userDto;
+    }
+
+    /**
+     * @param id
+     * @return java.lang.Boolean
+     * @description 检查用户id是否存在
+     **/
+    @Override
+    public Boolean checkId(Long id) {
+        User user = this.baseMapper.selectById(id);
+        return user != null;
     }
 }
 
