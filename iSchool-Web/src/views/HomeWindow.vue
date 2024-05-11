@@ -1,6 +1,7 @@
 <script setup>
 import { ElMessage } from 'element-plus'
-import { ref } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
+import { MdPreview } from 'md-editor-v3'
 
 import { homeResultData, homeResultData_AI } from '@/assets/testData.json' // 测试数据引用
 import { sleep } from '@/utils/time'
@@ -13,8 +14,7 @@ const showingResultData = ref([]) // 正在展示的查询结果
 const resultScrollbarRef = ref(null) // 滚动条绑定变量
 const currentPage = ref(1) // 分页框显示的当前页码
 const isLoading = ref(false) // 是否在加载中
-const onChangePage = (curPage) => {
-    // console.log('on change page', curPage)
+const onChangePage = (curPage) => { // 切换搜索页面
     let startIndex = (curPage - 1) * numShowingDataOnOnePage
     let endIndex = startIndex + numShowingDataOnOnePage <= resultData.value.length ? startIndex + numShowingDataOnOnePage : resultData.value.length
     showingResultData.value = resultData.value.slice(startIndex, endIndex)
@@ -22,10 +22,9 @@ const onChangePage = (curPage) => {
 }
 const onSearch = async () => { // 搜索信息
     if (searchMessage.value == '') {
-        ElMessage({
+        ElMessage.error({
             message: '搜索内容不能为空',
             grouping: true,
-            type: 'error'
         })
         return
     }
@@ -37,7 +36,6 @@ const onSearch = async () => { // 搜索信息
         var res = { // 访问请求
             data: {
                 homeResultData: homeResultData, // 搜索结果
-                homeResultData_AI: homeResultData_AI // AI返回结果
             }
         }
     }
@@ -51,37 +49,56 @@ const onSearch = async () => { // 搜索信息
     onChangePage(1)
     currentPage.value = 1
     isLoading.value = false
-    // console.log('AI', homeResultData_AI)
 }
 
 const chatBoxRef = ref(null) // 聊天窗口绑定变量
 const chatSmallWindowRef = ref(null) // 聊天小窗口绑定变量
 const chatMessage = ref('') // 聊天信息
 const chatPlaceholder = ref('') // 聊天框为空时显示的信息（悬浮信息）
+const chatData = ref([]) // 聊天信息
+const chatScrollbarRef = ref(null) // 聊天窗口滚动条绑定变量
+const onClickChatButton = () => { // 点击机器人按钮
+    chatBoxRef.value.style.right = '1%'
+    console.log('onClickChatButton', chatScrollbarRef.value.wrapRef.scrollHeight)
+    chatScrollbarRef.value.setScrollTop(chatScrollbarRef.value.wrapRef.scrollHeight)
+}
 // 聊天信息为空时点击发送，会发送悬浮信息，若悬浮信息也为空，会提示“不能发送空白信息”
-const onSendMessage = () => {
+const onSendMessage = async () => { // 发送信息
+    var message = ''
     if (chatMessage.value != '') { // 发送聊天信息
-        console.log('send chatMessage', chatMessage.value)
+        message = chatMessage.value
+        // console.log('send chatMessage', chatMessage.value)
     } else if (chatPlaceholder.value != '') { // 发送悬浮信息
-        console.log('send chatPlaveholder', chatPlaceholder.value)
+        message = chatPlaceholder.value
+        // console.log('send chatPlaveholder', chatPlaceholder.value)
     } else {
-        ElMessage({
+        ElMessage.error({
             message: '不能发送空白信息',
-            grouping: true,
-            type: 'error'
+            grouping: true
         })
         return
     }
+    chatData.value.push({
+        sender: 'user',
+        message: message
+    })
+    nextTick(() => { // 回到底部
+        chatScrollbarRef.value.setScrollTop(chatScrollbarRef.value.wrapRef.scrollHeight)
+    })
     // 清空聊天框信息
     chatMessage.value = ''
     chatPlaceholder.value = ''
     chatSmallWindowRef.value.style.top = '-100%' // 弹出聊天小窗口
 }
+
+onMounted(() => { // test
+    chatData.value = homeResultData_AI
+})
 </script>
 
 <template>
     <!-- 机器人按钮 -->
-    <div class="robotButton" @click="chatBoxRef.style.right = '1%'">
+    <div class="robotButton" @click="onClickChatButton">
         <img style="height: 100%;" src="/public/img/chatRobot.png" alt="chatRobot">
     </div>
     <!-- 机器人聊天窗口 -->
@@ -97,8 +114,17 @@ const onSendMessage = () => {
             </el-button>
         </div>
         <!-- main -->
-        <div style="height: 84.5%; border: 1px black solid;">
-
+        <div style="height: 84.5%;">
+            <el-scrollbar ref="chatScrollbarRef" max-height="100%">
+                <div v-for="item in chatData" :key="item"
+                    :style="{ 'textAlign': item.sender == 'ai' ? 'left' : 'right' }">
+                    <div class="chatBubble"
+                        :style="{ 'backgroundColor': item.sender == 'ai' ? 'white' : '', 'backgroundImage': item.sender == 'user' ? 'linear-gradient(90deg, #5ba0e7, #2c67c0)' : '' }">
+                        <MdPreview v-if="item.sender == 'ai'" v-model="item.message" />
+                        <div v-else>{{ item.message }}</div>
+                    </div>
+                </div>
+            </el-scrollbar>
         </div>
         <div style="flex-grow: 1;"></div>
         <!-- footer -->
@@ -139,7 +165,7 @@ const onSendMessage = () => {
         <el-input size="large" v-model="searchMessage" style="max-width: 600px" placeholder="输入您要搜索的内容"
             class="input-with-select" clearable @keyup.enter="onSearch">
             <template #append>
-                <el-button type="primary" @click="onSearch">
+                <el-button @click="onSearch">
                     <el-icon>
                         <Search />
                     </el-icon>搜索</el-button>
@@ -153,26 +179,25 @@ const onSendMessage = () => {
     <div class="searchBox">
         <!-- 搜索结果 -->
         <div v-loading="isLoading">
-            <el-empty v-show="resultData.length == 0" image="/public/img/empty.png" description="无搜索结果" />
+            <el-empty v-show="resultData.length == 0" image="/public/img/empty_search.png" description="无搜索结果" />
             <div v-show="resultData.length != 0" class="result">
                 <el-scrollbar ref="resultScrollbarRef" height="95%">
-                    <div v-for="item in showingResultData" :key="item">
-                        <!-- {{ item }} -->
-                        <el-card style="max-width: 100%; margin-bottom: 2%;" shadow="hover">
-                            <template #header>
-                                <div style="display: flex;">
-                                    <a :href="item.href" target="_blank" style="width: 90%;">
-                                        <el-text style="font-size: 150%; width: 100%;" truncated><span
-                                                v-html="item.title"></span></el-text>
-                                    </a>
-                                    <div style="flex-grow: 1;"></div>
-                                    <div style="color: gray; font-weight: 800;">{{ item.time }}</div>
-                                </div>
-                            </template>
-                            <el-text line-clamp="2"><span v-html="item.description"
-                                    style="font-size: 120%;"></span></el-text>
-                        </el-card>
-                    </div>
+                    <!-- {{ item }} -->
+                    <el-card v-for="item in showingResultData" :key="item" style="width: 98%; margin-bottom: 2%;"
+                        shadow="hover">
+                        <template #header>
+                            <div style="display: flex;">
+                                <a :href="item.href" target="_blank" style="width: 90%;">
+                                    <el-text style="font-size: 150%; width: 100%;" truncated><span
+                                            v-html="item.title"></span></el-text>
+                                </a>
+                                <div style="flex-grow: 1;"></div>
+                                <div style="color: gray; font-weight: 800;">{{ item.time }}</div>
+                            </div>
+                        </template>
+                        <el-text line-clamp="2"><span v-html="item.description"
+                                style="font-size: 120%;"></span></el-text>
+                    </el-card>
                 </el-scrollbar>
 
                 <div style="text-align: center; position: absolute; bottom: 0; width: 100%">
@@ -201,7 +226,7 @@ const onSendMessage = () => {
     display: inline-block;
     position: relative;
     width: 55%;
-    height: 610px;
+    height: 590px;
     padding: 1%;
     text-align: left;
 }
@@ -228,7 +253,7 @@ const onSendMessage = () => {
     height: 88%;
     border: 2px rgb(208, 208, 208) solid;
     border-radius: 15px;
-    background: rgba(234, 234, 234, 0.8);
+    background: rgba(234, 234, 234, 0.9);
     top: 8%;
     right: -22%;
     padding: 10px;
@@ -244,5 +269,17 @@ const onSendMessage = () => {
     top: -5%;
     transition: all 0.5s;
     /* z-index: -1; */
+}
+
+.chatBubble {
+    display: inline-block;
+    max-width: 80%;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    text-align: left;
+    box-shadow: 1px 1px 1px 1px 1px;
+    /* background-image: linear-gradient(90deg, #5ba0e7, #2c67c0); */
+    /* border: 1px red solid; */
 }
 </style>
