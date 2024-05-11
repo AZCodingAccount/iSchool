@@ -1,23 +1,38 @@
 <script setup>
 import { ElMessage } from 'element-plus'
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, nextTick } from 'vue'
 import { MdPreview } from 'md-editor-v3'
 
 import { homeResultData, homeResultData_AI } from '@/assets/testData.json' // 测试数据引用
 import { sleep } from '@/utils/time'
+import { aiSearch, aiSearchRes, chat, searchAnnouncement } from '@/api/home'
 
 const numShowingDataOnOnePage = 10 // 单页展示的查询结果数量
 
 const searchMessage = ref('') // 搜索内容
-const resultData = ref([]) // 所有查询结果
-const showingResultData = ref([]) // 正在展示的查询结果
+const searchingKeyword = ref('') // 当前正在搜索的关键字
+const resultData = ref({ // 搜索结果
+    items: [],
+    counts: 0,
+    pageNum: 1,
+    pageSize: numShowingDataOnOnePage
+}) // 所有查询结果
+// const showingResultData = ref([]) // 正在展示的查询结果
 const resultScrollbarRef = ref(null) // 滚动条绑定变量
 const currentPage = ref(1) // 分页框显示的当前页码
 const isLoading = ref(false) // 是否在加载中
-const onChangePage = (curPage) => { // 切换搜索页面
-    let startIndex = (curPage - 1) * numShowingDataOnOnePage
-    let endIndex = startIndex + numShowingDataOnOnePage <= resultData.value.length ? startIndex + numShowingDataOnOnePage : resultData.value.length
-    showingResultData.value = resultData.value.slice(startIndex, endIndex)
+const onChangePage = async () => { // 切换搜索页面
+    isLoading.value = true
+    try {
+        // var res = await searchAnnouncement(searchingKeyword.value, currentPage.value, numShowingDataOnOnePage)
+        await sleep(1000) // test
+        var res = { // 访问请求
+            data: homeResultData, // 搜索结果
+        }
+    }
+    catch { isLoading.value = false; return; }
+    isLoading.value = false
+    resultData.value = res.data
     resultScrollbarRef.value.setScrollTop(0)
 }
 const onSearch = async () => { // 搜索信息
@@ -29,51 +44,87 @@ const onSearch = async () => { // 搜索信息
         return
     }
     // console.log('on search', searchMessage.value)
-    chatPlaceholder.value = searchMessage.value
+    if (isChatting.value)
+        chatPlaceholder.value = searchMessage.value
+    searchingKeyword.value = searchMessage.value
     isLoading.value = true
     try {
-        await sleep(1000)
-        var res = { // 访问请求
-            data: {
-                homeResultData: homeResultData, // 搜索结果
-            }
-        }
+        // var res = await searchAnnouncement(searchMessage.value, 1, numShowingDataOnOnePage)
+        // await aiSearch(searchMessage.value)
+        await sleep(1000) // test
+        var res = { data: homeResultData }
     }
-    catch { // 请求错误时关闭加载画面
-        isLoading.value = false;
-        return
-    }
-
-    // console.log('res', res)
-    resultData.value = res.data.homeResultData
-    onChangePage(1)
-    currentPage.value = 1
+    catch { isLoading.value = false; return; }
     isLoading.value = false
+    // console.log('res', res)
+    resultData.value = res.data
+    currentPage.value = 1
+
+    if (isFirstTimeClick.value) // 若还没有点击过机器人按钮
+        setRobatButtonStatus(1) // 让机器人探头
 }
 
 const chatBoxRef = ref(null) // 聊天窗口绑定变量
 const chatSmallWindowRef = ref(null) // 聊天小窗口绑定变量
+const isChatting = ref(false) // 是否在聊天状态
 const chatMessage = ref('') // 聊天信息
 const chatPlaceholder = ref('') // 聊天框为空时显示的信息（悬浮信息）
 const chatData = ref([]) // 聊天信息
 const chatScrollbarRef = ref(null) // 聊天窗口滚动条绑定变量
+const isResulting = ref(false) // ai是否正在回复消息
+const getAiResult = async (keyword) => { // 获取AI搜索建议
+    chatData.value.push({
+        sender: 'ai',
+        message: ''
+    })
+
+    isResulting.value = true
+
+    // var res = { code: 0 }
+    var res = { code: 1 } // test
+    await sleep(2000)
+    chatData.value[chatData.value.length - 1].message = '你好啊'
+
+    try {
+        while (res.code != 1) {
+            res = await aiSearchRes(keyword)
+            chatData.value[chatData.value.length - 1].message = res.data
+            await sleep(500) // 每隔半秒刷新一次ai返回结果
+        }
+    } catch { ElMessage.error('回答生成中断') }
+    isResulting.value = false
+    chatSmallWindowRef.value.style.top = '-100%' // 弹出聊天小窗口
+}
+const isFirstTimeClick = ref(true) // 是否第一次点击机器人按钮
 const onClickChatButton = () => { // 点击机器人按钮
+    setRobatButtonStatus(2) // 机器人按钮完整出现
+    if (isFirstTimeClick.value) { // 第一次点击机器人按钮，获取AI搜索建议
+        isFirstTimeClick.value = false
+        chatData.value.push({
+            sender: 'user',
+            message: searchingKeyword.value
+        })
+        getAiResult(searchingKeyword.value)
+    }
     chatBoxRef.value.style.right = '1%'
-    console.log('onClickChatButton', chatScrollbarRef.value.wrapRef.scrollHeight)
     chatScrollbarRef.value.setScrollTop(chatScrollbarRef.value.wrapRef.scrollHeight)
 }
+
+const toChat = () => { // 点击 进一步聊聊
+    chatSmallWindowRef.value.style.top = '-5%' // 收起小窗口
+    isChatting.value = true
+}
+
 // 聊天信息为空时点击发送，会发送悬浮信息，若悬浮信息也为空，会提示“不能发送空白信息”
-const onSendMessage = async () => { // 发送信息
+const onSendMessage = async () => { // 发送聊天信息
     var message = ''
-    if (chatMessage.value != '') { // 发送聊天信息
+    if (chatMessage.value != '') {
         message = chatMessage.value
-        // console.log('send chatMessage', chatMessage.value)
-    } else if (chatPlaceholder.value != '') { // 发送悬浮信息
+    } else if (chatPlaceholder.value != '') {
         message = chatPlaceholder.value
-        // console.log('send chatPlaveholder', chatPlaceholder.value)
     } else {
         ElMessage.error({
-            message: '不能发送空白信息',
+            message: '发送信息不能为空',
             grouping: true
         })
         return
@@ -88,18 +139,44 @@ const onSendMessage = async () => { // 发送信息
     // 清空聊天框信息
     chatMessage.value = ''
     chatPlaceholder.value = ''
-    chatSmallWindowRef.value.style.top = '-100%' // 弹出聊天小窗口
+
+    isResulting.value = true
+    try {
+        let res = await chat(message)
+        chatData.value.push({
+            sender: 'ai',
+            message: res.data
+        })
+    } catch {
+        isResulting.value = false
+        chatData.value.pop()
+        chatPlaceholder.value = message // 当信息发送失败时，发送的信息会作为悬浮信息显示在输入框中
+        return
+    }
+    isResulting.value = false
 }
 
-onMounted(() => { // test
-    chatData.value = homeResultData_AI
-})
+const robotButtonRef = ref(null) // 机器人按钮的绑定变量
+const setRobatButtonStatus = (status) => {
+    if (status == 0)
+        robotButtonRef.value.style.right = '-120px'
+    if (status == 1)
+        robotButtonRef.value.style.right = '-25px'
+    if (status == 2)
+        robotButtonRef.value.style.right = '55px'
+}
+
+// onMounted(() => { // test
+//     chatData.value = homeResultData_AI
+// })
 </script>
 
 <template>
     <!-- 机器人按钮 -->
-    <div class="robotButton" @click="onClickChatButton">
-        <img style="height: 100%;" src="/public/img/chatRobot.png" alt="chatRobot">
+    <div ref="robotButtonRef" class="robotButton" @click="onClickChatButton">
+        <el-tooltip style="height: 100%;" effect="dark" content="AI智达" placement="left">
+            <img style="height: 100%;" src="/public/img/chatRobot.png" alt="chatRobot">
+        </el-tooltip>
     </div>
     <!-- 机器人聊天窗口 -->
     <div class="chatBox" ref="chatBoxRef">
@@ -134,12 +211,12 @@ onMounted(() => { // test
                 <div style="display: flex; color: gray; font-size: 14px;">
                     <div>没有满意的信息？试试</div>
                     <div style="flex-grow: 1;"></div>
-                    <el-button @click="chatSmallWindowRef.style.top = '-5%'" size="small" circle><el-icon>
+                    <!-- <el-button @click="chatSmallWindowRef.style.top = '-5%'" size="small" circle><el-icon>
                             <CloseBold />
-                        </el-icon></el-button>
+                        </el-icon></el-button> -->
                 </div>
-                <div style="display: flex; margin-top: -2%;">
-                    <el-link href="" target="_blank" type="primary">进一步聊聊</el-link>
+                <div style="display: flex; margin-top: -1%;">
+                    <el-link @click="toChat" target="_blank" type="primary">进一步聊聊</el-link>
                     <div style="flex-grow: 1; text-align: center;">|</div>
                     <el-link href="" target="_blank" type="primary">站外搜索</el-link>
                     <div style="flex-grow: 1; text-align: center;">|</div>
@@ -149,10 +226,11 @@ onMounted(() => { // test
             </div>
 
             <el-input v-model="chatMessage" size="large" style="width: 80%" :placeholder="chatPlaceholder"
-                @keyup.enter="onSendMessage" />
+                @keyup.enter="onSendMessage" :disabled="!isChatting" />
 
             <div style="flex-grow: 1;"></div>
-            <el-button style="z-index: 1;" type="primary" size="large" @click="onSendMessage">发送</el-button>
+            <el-button style="z-index: 1;" type="primary" size="large" @click="onSendMessage" :disabled="!isChatting"
+                :loading="isResulting"><span v-show="!isResulting">发送</span></el-button>
         </div>
     </div>
 
@@ -179,34 +257,33 @@ onMounted(() => { // test
     <div class="searchBox">
         <!-- 搜索结果 -->
         <div v-loading="isLoading">
-            <el-empty v-show="resultData.length == 0" image="/public/img/empty_search.png" description="无搜索结果" />
-            <div v-show="resultData.length != 0" class="result">
+            <el-empty v-show="resultData.counts == 0" image="/public/img/empty_search.png" description="无搜索结果" />
+            <div v-show="resultData.counts != 0" class="result">
                 <el-scrollbar ref="resultScrollbarRef" height="95%">
                     <!-- {{ item }} -->
-                    <el-card v-for="item in showingResultData" :key="item" style="width: 98%; margin-bottom: 2%;"
+                    <el-card v-for="item in resultData.items" :key="item" style="width: 98%; margin-bottom: 2%;"
                         shadow="hover">
                         <template #header>
                             <div style="display: flex;">
-                                <a :href="item.href" target="_blank" style="width: 90%;">
+                                <a :href="item.url" target="_blank" style="width: 90%;">
                                     <el-text style="font-size: 150%; width: 100%;" truncated><span
                                             v-html="item.title"></span></el-text>
                                 </a>
                                 <div style="flex-grow: 1;"></div>
-                                <div style="color: gray; font-weight: 800;">{{ item.time }}</div>
+                                <div style="color: gray; font-weight: 800;">{{ item.pubTime }}</div>
                             </div>
                         </template>
-                        <el-text line-clamp="2"><span v-html="item.description"
-                                style="font-size: 120%;"></span></el-text>
+                        <el-text line-clamp="2"><span v-html="item.content" style="font-size: 120%;"></span></el-text>
                     </el-card>
                 </el-scrollbar>
 
                 <div style="text-align: center; position: absolute; bottom: 0; width: 100%">
                     <div style="display: inline-block;">
                         <el-pagination ref="pageRef" background layout="prev, pager, next"
-                            :page-size="numShowingDataOnOnePage" :total="resultData.length" @change="onChangePage"
-                            :hide-on-single-page="resultData.length == 0" v-model:current-page="currentPage" />
+                            :page-size="numShowingDataOnOnePage" :total="resultData.counts" @change="onChangePage"
+                            :hide-on-single-page="resultData.counts == 0" v-model:current-page="currentPage" />
                     </div>
-                    <span style="margin-left: 2%; color: gray">搜索结果：<span>{{ resultData.length }}</span></span>
+                    <span style="margin-left: 2%; color: gray">搜索结果：<span>{{ resultData.counts }}</span></span>
                 </div>
             </div>
         </div>
@@ -215,14 +292,11 @@ onMounted(() => { // test
 </template>
 <style scoped>
 .searchBox {
-    /* border: 2px red solid; */
     text-align: center;
     padding: 0.3%;
-    /* max-height: 580px; */
 }
 
 .result {
-    /* border: 2px green solid; */
     display: inline-block;
     position: relative;
     width: 55%;
@@ -233,16 +307,16 @@ onMounted(() => { // test
 
 .robotButton {
     position: fixed;
-    bottom: 10%;
-    right: 5%;
+    bottom: 160px;
+    right: -120px;
     display: inline-block;
     border: 1px gray solid;
-    /* box-shadow: 1px 1px 1px; */
     border-radius: 100px;
     overflow: hidden;
     width: 100px;
     height: 100px;
     z-index: 2001;
+    transition: all 0.5s;
 }
 
 .chatBox {
@@ -263,12 +337,9 @@ onMounted(() => { // test
 
 .chatSmallWindow {
     position: absolute;
-    /* height: 70%; */
     width: 100%;
-    /* border: 1px red solid; */
     top: -5%;
     transition: all 0.5s;
-    /* z-index: -1; */
 }
 
 .chatBubble {
@@ -278,8 +349,5 @@ onMounted(() => { // test
     padding: 10px;
     margin-bottom: 10px;
     text-align: left;
-    box-shadow: 1px 1px 1px 1px 1px;
-    /* background-image: linear-gradient(90deg, #5ba0e7, #2c67c0); */
-    /* border: 1px red solid; */
 }
 </style>
