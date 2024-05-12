@@ -7,10 +7,10 @@ import 'element-plus/theme-chalk/el-message.css'
 let baseURL = ''
 // 根据不同环境配置不同的url
 if (import.meta.env.MODE === 'development') {
-  baseURL = 'http://localhost:8901'
-  // baseURL = 'http://localhost:8080'
+  // baseURL = 'http://localhost:8901'
+  baseURL = 'http://192.168.24.191:8901'
 } else {
-  baseURL = 'http://logistics:8080'
+  baseURL = 'http://localhost:8901'
 }
 
 const instance = axios.create({
@@ -33,7 +33,10 @@ instance.interceptors.response.use(
   (res) => {
     if (res.data.code === 1)
       return res.data
+
     ElMessage({ message: res.data.msg || '未知异常（一般是输入数据不合规）', type: 'error' })
+    if (res.data.code === 40100)// 如果是40100，跳转到登录页面
+      router.push('/login')
     return Promise.reject(res.data)
   },
   (err) => {
@@ -41,9 +44,9 @@ instance.interceptors.response.use(
       ElMessage({ message: '服务器无法访问，请稍后再试。', type: 'error' })
     } else {
       ElMessage({ message: err.response.data.msg || '未知异常（一般是输入数据不合规）', type: 'error' })
-      if (err.response?.status === 401) {// 如果是401，跳转到登录页面
-        router.push('/login')
-      }
+      // if (err.response?.status === 40100) {// 如果是40100，跳转到登录页面
+      //   router.push('/login')
+      // }
     }
     return Promise.reject(err)
   }

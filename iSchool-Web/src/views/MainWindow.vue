@@ -10,7 +10,7 @@ const userInfoerStore = useUserInfoerStore()
         <el-menu :default-active="home" mode="horizontal" :ellipsis="false" :router="true">
             <!-- logo -->
             <div style="display: flex; margin-left: 2%;">
-                <img style="height: 100%;" src="/public/img/code.png" alt="logo">
+                <img style="height: 100%;" src="/public/img/code.png">
                 <div style="font-size: 30px; margin: 3%; font-style: italic; line-height: 155%;">iSchool</div>
             </div>
             <div style="flex-grow: 100;"></div>
@@ -43,7 +43,7 @@ const userInfoerStore = useUserInfoerStore()
     <router-view />
     <div class="footer">
         <a href="https://github.com/AZCodingAccount/iSchool">
-            <img src="/public/img/github.png" alt="github" style="width: 50px;"></a>
+            <img style="width: 50px;" src="/public/img/github.png"></a>
         <div>我们<span style="font-weight: 700;">不</span>开展任何盈利活动，如果您发现本系统不支持您的学校，请点击上方去Github提出issue</div>
         <div>CopyRight © 2024 Search plus所有. ALL Right Reseved</div>
     </div>
@@ -58,9 +58,9 @@ const userInfoerStore = useUserInfoerStore()
     /* display: inline-block; */
     text-align: center;
     color: #cccccc;
-    margin-top: 2%;
+    margin-top: 3px;
     background-color: white;
-    padding: 10px;
+    /* padding: 3px; */
     /* width: 100%; */
 }
 
