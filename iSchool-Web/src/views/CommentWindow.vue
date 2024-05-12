@@ -261,8 +261,8 @@ const toStatus = (status) => {
         </el-form>
         <template #footer>
             <div>
-                <el-button @click="showingAddCommentDialog = false" size="large">取消</el-button>
                 <el-button type="primary" @click="onAddCommentObj" size="large">添加</el-button>
+                <el-button @click="showingAddCommentDialog = false" size="large">取消</el-button>
             </div>
         </template>
     </el-dialog>
@@ -450,7 +450,7 @@ const toStatus = (status) => {
                                 }}</span>
                             </el-link>
                         </div>
-                        <el-scrollbar style="margin-top: 10px;" height="75px">
+                        <el-scrollbar style="margin-top: 10px;" height="72px">
                             {{ selectedComment1.content }}
                         </el-scrollbar>
                     </div>
