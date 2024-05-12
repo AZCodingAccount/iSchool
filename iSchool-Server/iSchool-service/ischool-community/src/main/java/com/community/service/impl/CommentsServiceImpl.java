@@ -99,8 +99,15 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments>
             Long userId = comment.getUserId();
             BaseResponse<UserDto> res = userFeignClient.getLoginUser(userId);
             UserDto loginUser = res.getData();
-            String userAvatar = loginUser.getUserAvatar();
-            String nickname = loginUser.getNickname();
+            String userAvatar ="";
+            String nickname = "";
+            if (loginUser != null) {
+                 userAvatar = loginUser.getUserAvatar();
+                 nickname = loginUser.getNickname();
+            } else {
+                 userAvatar = "";
+                 nickname = "用户已注销";
+            }
             commentsVO.setUserAvatar(userAvatar);
             commentsVO.setUsername(nickname);
             // 2: 填充对应的回复评论数

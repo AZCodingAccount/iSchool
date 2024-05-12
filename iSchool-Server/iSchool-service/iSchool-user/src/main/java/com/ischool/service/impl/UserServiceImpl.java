@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import com.client.service.CommunityFeignClient;
+import com.common.dto.MessageDto;
 import com.common.dto.SocialDataDto;
 import com.common.dto.UserDto;
 import com.ischool.exception.BusinessException;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -216,12 +218,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Integer totalLikes = socialData.getTotalLikes();
         Integer totalComments = socialData.getTotalComments();
 
-        // 3：拼装数据
+        // 4: 获取未读信息个数
+        List<MessageDto> unreadMessageList = communityFeignClient.getUnreadMessageList(id);
+        int count = unreadMessageList.size();
+
+        // 5：拼装数据
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(oldUser, userDto);
 
         userDto.setTotalLikes(totalLikes);
         userDto.setTotalComments(totalComments);
+        userDto.setUnReadCommentsCount(count);
         return userDto;
     }
 
@@ -234,6 +241,30 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public Boolean checkId(Long id) {
         User user = this.baseMapper.selectById(id);
         return user != null;
+    }
+
+    /**
+     * @param id
+     * @return com.common.dto.UserDto
+     * @description 获取用户信息
+     **/
+    @Override
+    public UserDto getUser(Long id) {
+        // 1：校验参数
+        if (id <= 0) {
+            return null;
+        }
+
+        User oldUser = getById(id);
+        if (oldUser == null) {
+            return null;
+        }
+
+
+        // 5：拼装数据
+        UserDto userDto = new UserDto();
+        BeanUtils.copyProperties(oldUser, userDto);
+        return userDto;
     }
 }
 

@@ -15,6 +15,10 @@ public class AddReplyCommentRequest {
      */
     private Long objId;
     /*
+     * 父级评论id
+     */
+    private Long parentCommentId;
+    /*
      * 回复的评论id
      */
     private Long commentId;

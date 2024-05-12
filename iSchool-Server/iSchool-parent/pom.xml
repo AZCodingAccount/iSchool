@@ -25,7 +25,7 @@
         <spring-cloud.version>2023.0.1</spring-cloud.version>
         <spring-boot.version>3.2.4</spring-boot.version>
         <spring-cloud-alibaba.version>2023.0.1.0</spring-cloud-alibaba.version>
-        <org.projectlombok.version>1.18.8</org.projectlombok.version>
+        <org.projectlombok.version>1.18.30</org.projectlombok.version>
         <fastjson.version>1.2.83</fastjson.version>
         <druid-spring-boot-starter.version>1.2.20</druid-spring-boot-starter.version>
         <mysql-connector-java.version>8.0.30</mysql-connector-java.version>
@@ -143,6 +143,10 @@
                     <source>17</source>
                     <!--指定项目编译后的jdk的版本-->
                     <target>17</target>
+                    <compilerArgs>
+                        <arg>--add-exports</arg>
+                        <arg>jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
+                    </compilerArgs>
                     <!--配置注解预编译-->
                     <annotationProcessorPaths>
                         <path>

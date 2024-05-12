@@ -10,9 +10,11 @@ import com.common.dto.SocialDataDto;
 import com.common.dto.UserDto;
 import com.community.mapper.ReplyCommentsMapper;
 import com.community.model.dto.AddReplyCommentRequest;
+import com.community.model.entity.CommentObj;
 import com.community.model.entity.Comments;
 import com.community.model.entity.ReplyComments;
 import com.community.model.vo.ReplyCommentsVO;
+import com.community.service.CommentObjService;
 import com.community.service.CommentsService;
 import com.community.service.ReplyCommentsService;
 import com.ischool.exception.BusinessException;
@@ -37,6 +39,9 @@ public class ReplyCommentsServiceImpl extends ServiceImpl<ReplyCommentsMapper, R
         implements ReplyCommentsService {
 
     @Autowired
+    CommentObjService commentObjService;
+
+    @Autowired
     CommentsService commentsService;
 
     @Autowired
@@ -55,7 +60,8 @@ public class ReplyCommentsServiceImpl extends ServiceImpl<ReplyCommentsMapper, R
         String replyContent = addReplyCommentRequest.getReplyContent();
         Long replyUserId = addReplyCommentRequest.getReplyUserId();
         Long objId = addReplyCommentRequest.getObjId();
-        if (commentId == null || replyUserId == null || objId == null || StringUtils.isBlank(replyContent)) {
+        Long parentCommentId = addReplyCommentRequest.getParentCommentId();
+        if (parentCommentId == null || commentId == null || replyUserId == null || objId == null || StringUtils.isBlank(replyContent)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
 
@@ -63,9 +69,10 @@ public class ReplyCommentsServiceImpl extends ServiceImpl<ReplyCommentsMapper, R
         ReplyComments replyComments = new ReplyComments();
         replyComments.setObjId(objId);
         replyComments.setUserId(id);
-        replyComments.setReplyCommentId(replyUserId);
+        replyComments.setReplyUserId(replyUserId);
         replyComments.setContent(replyContent);
         replyComments.setReplyCommentId(commentId);
+        replyComments.setParentCommentId(parentCommentId);
         this.baseMapper.insert(replyComments);
 
         // todo:发送消息给消息队列更新实时热度
@@ -91,7 +98,7 @@ public class ReplyCommentsServiceImpl extends ServiceImpl<ReplyCommentsMapper, R
 
         // 2: 查询数据库
         LambdaQueryWrapper<ReplyComments> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(ReplyComments::getReplyCommentId, replyCommentId);
+        queryWrapper.eq(ReplyComments::getParentCommentId, replyCommentId);
         // 降序排列
         queryWrapper.orderByDesc(ReplyComments::getPubTime);
         List<ReplyComments> replyCommentsList = this.baseMapper.selectList(queryWrapper);
@@ -129,7 +136,7 @@ public class ReplyCommentsServiceImpl extends ServiceImpl<ReplyCommentsMapper, R
             if (replyUserInfo == null) {
                 replyUsername = "用户已注销";
             } else {
-                replyUsername = replyUserInfo.getUsername();
+                replyUsername = replyUserInfo.getNickname();
             }
             replyCommentsVO.setReplyUsername(replyUsername);
             replyCommentsVOList.add(replyCommentsVO);
@@ -199,6 +206,14 @@ public class ReplyCommentsServiceImpl extends ServiceImpl<ReplyCommentsMapper, R
         List<MessageDto> messageDtoList = replyComments.stream().map(item -> {
             MessageDto messageDto = new MessageDto();
             BeanUtils.copyProperties(item, messageDto);
+            // 获取userNickname
+            UserDto userDto = userFeignClient.getLoginUser(item.getUserId()).getData();
+            String nickname = userDto.getNickname();
+            // 获取当前评论对象
+            CommentObj commentObj = commentObjService.getBaseMapper().selectById(messageDto.getObjId());
+            String objName = commentObj.getName();
+            messageDto.setObjName(objName);
+            messageDto.setUserNickname(nickname);
             return messageDto;
         }).toList();
 

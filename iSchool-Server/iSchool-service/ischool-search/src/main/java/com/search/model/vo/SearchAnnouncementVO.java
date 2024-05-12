@@ -3,6 +3,7 @@ package com.search.model.vo;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -28,7 +29,7 @@ public class SearchAnnouncementVO {
     /**
      * 公告发布时间
      */
-    private LocalDateTime pubTime;
+    private LocalDate pubTime;
 
     /**
      * 公告url
