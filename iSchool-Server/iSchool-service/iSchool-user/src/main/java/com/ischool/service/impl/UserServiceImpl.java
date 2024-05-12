@@ -242,6 +242,30 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         User user = this.baseMapper.selectById(id);
         return user != null;
     }
+
+    /**
+     * @param id
+     * @return com.common.dto.UserDto
+     * @description 获取用户信息
+     **/
+    @Override
+    public UserDto getUser(Long id) {
+        // 1：校验参数
+        if (id <= 0) {
+            return null;
+        }
+
+        User oldUser = getById(id);
+        if (oldUser == null) {
+            return null;
+        }
+
+
+        // 5：拼装数据
+        UserDto userDto = new UserDto();
+        BeanUtils.copyProperties(oldUser, userDto);
+        return userDto;
+    }
 }
 
 

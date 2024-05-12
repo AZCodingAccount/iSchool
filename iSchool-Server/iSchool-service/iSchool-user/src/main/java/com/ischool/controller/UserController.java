@@ -165,6 +165,19 @@ public class UserController {
 
 
     /**
+     * @param id
+     * @return com.common.model.BaseResponse<com.common.dto.UserDto>
+     * @description 获取用户信息——》远程调用
+     **/
+    @GetMapping("/rpc")
+    public BaseResponse<UserDto> getUser(@RequestHeader("id") Long id) {
+        log.info("获取id为{}的用户登录信息，远程调用", id);
+        UserDto userDto = userService.getUser(id);
+        return Result.success(userDto);
+    }
+
+
+    /**
      * @param
      * @return com.ischool.model.Result<List < MessageDto>>
      * @description 获取所有未读的信息
@@ -194,5 +207,6 @@ public class UserController {
         }
         return Result.success();
     }
+
 
 }

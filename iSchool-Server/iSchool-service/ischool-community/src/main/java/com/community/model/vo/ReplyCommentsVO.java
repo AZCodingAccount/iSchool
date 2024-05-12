@@ -22,10 +22,11 @@ public class ReplyCommentsVO implements Serializable {
      * 当前评论对象id
      */
     private Long objId;
+
     /**
      * 发送评论的用户id
      */
-    private Integer userId;
+    private Long userId;
 
     /**
      * 评论内容
@@ -48,6 +49,10 @@ public class ReplyCommentsVO implements Serializable {
      */
     private String username;
 
+    /**
+     * 回复的id
+     */
+    private Long replyUserId;
     /**
      * 回复的用户名
      */

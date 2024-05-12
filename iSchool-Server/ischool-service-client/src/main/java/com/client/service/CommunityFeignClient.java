@@ -2,6 +2,7 @@ package com.client.service;
 
 import com.common.dto.MessageDto;
 import com.common.dto.SocialDataDto;
+import com.ischool.config.FeignClientConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -15,7 +16,7 @@ import java.util.List;
  * @create: 2024-05-07 10:36
  * @description: 社区远程调用类
  **/
-@FeignClient(name = "ischool-community", path = "/api/v1/community")
+@FeignClient(name = "ischool-community", path = "/api/v1/community", configuration = FeignClientConfig.class)
 
 public interface CommunityFeignClient {
 

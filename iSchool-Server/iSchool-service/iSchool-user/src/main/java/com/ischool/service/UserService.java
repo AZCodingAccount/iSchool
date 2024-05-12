@@ -8,10 +8,10 @@ import com.ischool.model.entity.User;
 
 
 /**
-* @author Albert han
-* @description 针对表【user】的数据库操作Service
-* @createDate 2024-05-02 13:46:01
-*/
+ * @author Albert han
+ * @description 针对表【user】的数据库操作Service
+ * @createDate 2024-05-02 13:46:01
+ */
 public interface UserService extends IService<User> {
 
     /**
@@ -46,9 +46,16 @@ public interface UserService extends IService<User> {
     UserDto getLoginUser(Long id);
 
     /**
-     * @description 检查用户id是否合法
      * @param id
      * @return java.lang.Boolean
+     * @description 检查用户id是否合法
      **/
     Boolean checkId(Long id);
+
+    /**
+     * @param id
+     * @return com.common.dto.UserDto
+     * @description 获取用户嘻嘻
+     **/
+    UserDto getUser(Long id);
 }
