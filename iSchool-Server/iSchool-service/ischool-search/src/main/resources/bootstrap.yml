@@ -42,6 +42,16 @@ spring:
         group: iSchool
         file-extension: yaml
         refresh-enabled: true
-
   profiles:
     active: dev
+
+  # xxl.job.admin.addresses
+  # xxl.job.executor.appname
+  # xxl.job.executor.port
+#xxl:
+#  job:
+#    admin:
+#      addresses: http://127.0.0.1:9000/xxl-job-admin
+#    executor:
+#      appname: xxl-job-executor-sample
+#      port: 9001

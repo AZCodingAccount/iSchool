@@ -16,7 +16,7 @@ import java.util.List;
  * @create: 2024-05-07 10:36
  * @description: 社区远程调用类
  **/
-@FeignClient(name = "ischool-community", path = "/api/v1/community", configuration = FeignClientConfig.class)
+@FeignClient(name = "ischool-community", path = "/api/v1/community")
 
 public interface CommunityFeignClient {
 
