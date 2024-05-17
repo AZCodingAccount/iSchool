@@ -27,5 +27,11 @@ public class RedisKeyConstant {
      */
     public static final String USER_SEARCH_LIST = "search:user:";
 
+    /*
+     * 信息同步key缓存
+     * 格式 sync:end:article:id: 4720
+     */
+    public static final String SYNC_END_ARTICLE_ID = "sync:end:article:id";
+
 
 }

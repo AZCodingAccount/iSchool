@@ -20,9 +20,9 @@ spring:
     openai:
       api-key: sk-YBNqrFIxlQRPIsmD1e65079cBe2146F189F72a4845Bd2f8f
       base-url: https://jiekou.wlai.vip/
-#      chat:
-#        options:
-#          model:
+  #      chat:
+  #        options:
+  #          model:
   rabbitmq:
     host: localhost
     port: 5672
@@ -42,12 +42,38 @@ spring:
         group: iSchool
         file-extension: yaml
         refresh-enabled: true
+  mail:
+    host: smtp.qq.com
+    port: 25
+    username: 1592127378@qq.com
+    password: dqkuywkyorrdjbfj
+    from: 1592127378@qq.com
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
+
   profiles:
     active: dev
 
   # xxl.job.admin.addresses
   # xxl.job.executor.appname
   # xxl.job.executor.port
+  #  spring.mail.host=smtp.qq.com
+  #  spring.mail.port=25
+  #  spring.mail.username=xxx@qq.com
+  #  spring.mail.from=xxx@qq.com
+  #  spring.mail.password=xxx
+  #  spring.mail.properties.mail.smtp.auth=true
+  #  spring.mail.properties.mail.smtp.starttls.enable=true
+  #  spring.mail.properties.mail.smtp.starttls.required=true
+  #  spring.mail.properties.mail.smtp.socketFactory.class=javax.net.ssl.SSLSocketFactory
+
 #xxl:
 #  job:
 #    admin:
