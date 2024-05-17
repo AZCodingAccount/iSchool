@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @create: 2024-05-03 23:12
  * @description: 用户微服务提供的接口
  **/
-@FeignClient(name = "ischool-user", path = "/api/v1/user", configuration = FeignClientConfig.class)
+@FeignClient(name = "ischool-user", path = "/api/v1/user")
 public interface UserFeignClient {
 
     /**
