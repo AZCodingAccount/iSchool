@@ -1,4 +1,4 @@
-package com.search.demo.rabbitmq;
+package com.search.rabbitmq;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;

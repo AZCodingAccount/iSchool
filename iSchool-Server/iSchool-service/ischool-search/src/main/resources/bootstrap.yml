@@ -42,21 +42,10 @@ spring:
         group: iSchool
         file-extension: yaml
         refresh-enabled: true
-  mail:
-    host: smtp.qq.com
-    port: 25
-    username: 1592127378@qq.com
-    password: dqkuywkyorrdjbfj
-    from: 1592127378@qq.com
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-            required: true
-          socketFactory:
-            class: javax.net.ssl.SSLSocketFactory
+  elasticsearch:
+    uris: http://localhost:9200
+    username: elastic
+    password: 123456
 
   profiles:
     active: dev

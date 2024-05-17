@@ -1,4 +1,4 @@
-package com.search.demo.springai;
+package com.search.springai;
 
 import jakarta.annotation.Resource;
 import org.springframework.ai.chat.ChatResponse;

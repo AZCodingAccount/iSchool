@@ -1,4 +1,4 @@
-package com.search.demo.springai;
+package com.search.springai;
 
 
 import org.junit.jupiter.api.Test;

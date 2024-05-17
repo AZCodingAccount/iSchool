@@ -132,6 +132,13 @@
             <artifactId>xxl-job-core</artifactId>
             <version>2.4.1</version>
         </dependency>
+
+        <!--        es 对应 es7.17.15   4.4.18-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
+            <version>2.7.18</version>
+        </dependency>
     </dependencies>
     <!--    继承这个父项目-->
     <dependencyManagement>
