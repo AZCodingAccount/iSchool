@@ -1,10 +1,12 @@
 package com.search.service;
 
 import com.ischool.model.PageResult;
+import com.search.model.dto.SearchAnnouncementRequest;
 import com.search.model.entity.Info;
 import com.search.model.vo.SearchAnnouncementVO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -21,5 +23,5 @@ public interface InfoService extends IService<Info> {
      * @return java.util.List<com.search.model.vo.SearchAnnouncementVO>
      * @description MySQL普通查询公告信息
      **/
-    PageResult<SearchAnnouncementVO> search(String keyword, Integer pageNum, Integer pageSize);
+    PageResult<SearchAnnouncementVO> search(SearchAnnouncementRequest searchAnnouncementRequest, String school);
 }

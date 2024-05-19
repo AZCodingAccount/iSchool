@@ -78,11 +78,13 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
             Claims claims = JwtUtil.parseJWT(jwtProperties.getSecretKey(), token);
             Long userId = (Long) claims.get("userId");
             String userRole = String.valueOf(claims.get("userRole"));
+            String schoolName = String.valueOf(claims.get("school"));
             log.info("解析用户token，userId为{}，userRole为{}", userId, userRole);
             // 可以根据需要将用户信息添加到请求头中
             request = exchange.getRequest().mutate()
                     .header("id", String.valueOf(userId))
                     .header("role", userRole)
+                    .header("school", schoolName)
                     .build();
         } catch (Exception e) {
             log.error("Token解析失败", e);

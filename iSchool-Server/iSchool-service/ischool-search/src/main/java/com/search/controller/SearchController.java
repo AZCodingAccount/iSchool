@@ -7,6 +7,7 @@ import com.ischool.model.ErrorCode;
 import com.ischool.model.PageResult;
 import com.ischool.model.Result;
 import com.search.ai.AIUtil;
+import com.search.model.dto.SearchAnnouncementRequest;
 import com.search.model.vo.SearchAnnouncementVO;
 import com.search.mq.AiMessageProducer;
 import com.search.redis.RedisKeyConstant;
@@ -15,8 +16,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,10 +51,12 @@ public class SearchController {
      * @description MySQL普通分页查询公告信息
      **/
     @GetMapping("/page")
-    public BaseResponse<PageResult<SearchAnnouncementVO>> searchAnnouncement(@RequestParam("keyword") String keyword,
-                                                                             @RequestParam("pageNum") Integer pageNum,
-                                                                             @RequestParam("pageSize") Integer pageSize) {
-        log.info("用户搜索，搜索信息为：{}，分页查询：{}，{}", keyword, pageNum, pageSize);
+    public BaseResponse<PageResult<SearchAnnouncementVO>> searchAnnouncement(SearchAnnouncementRequest searchAnnouncementRequest,
+                                                                             @RequestHeader("school") String school) {
+        log.info("用户搜索，搜索信息为：{}", searchAnnouncementRequest);
+        Integer pageNum = searchAnnouncementRequest.getPageNum();
+        Integer pageSize = searchAnnouncementRequest.getPageSize();
+        String keyword = searchAnnouncementRequest.getKeyword();
         // 首先看是否命中缓存
         String key = RedisKeyConstant.USER_SEARCH_LIST + pageSize + ":" + keyword;
         Object object = redisTemplate.opsForValue().get(key);
@@ -59,7 +64,9 @@ public class SearchController {
             // 直接返回
             return Result.success((PageResult<SearchAnnouncementVO>) object);
         }
-        PageResult<SearchAnnouncementVO> pageResult = infoService.search(keyword, pageNum, pageSize);
+        // 使用es优化
+        PageResult<SearchAnnouncementVO> pageResult = infoService.search(searchAnnouncementRequest, school);
+
         // 如果pageNum=1，那我就把当前值缓存下来
         if (pageNum == 1) {
             redisTemplate.opsForValue().set(key, pageResult);

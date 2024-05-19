@@ -4,20 +4,21 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
 import lombok.Data;
 
 /**
- * 
  * @TableName info
  */
-@TableName(value ="info")
+@TableName(value = "info")
 @Data
 public class Info implements Serializable {
     /**
-     * 
+     *
      */
     @TableId
     private Long id;
@@ -41,6 +42,11 @@ public class Info implements Serializable {
      * 公告url
      */
     private String url;
+
+    /**
+     * 公告所属学校
+     */
+    private String school;
 
     /**
      * 创建时间
