@@ -94,8 +94,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (roleEnum != null) {
             role = roleEnum.getText();
         }
+        String school = user.getSchool();
 
         claims.put("userRole", role); // 标识用户或管理员
+        claims.put("school", school);
         return JwtUtil.createJWT(
                 jwtProperties.getSecretKey(),
                 jwtProperties.getTtl(),
@@ -187,9 +189,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setUsername(oldUser.getUsername());
 
         // 3: 加密
-        String encryptPassword = DigestUtils.md5DigestAsHex((SALT + password).getBytes());
-        user.setPassword(encryptPassword);
-
+        if (StringUtils.isNotBlank(password)) {
+            String encryptPassword = DigestUtils.md5DigestAsHex((SALT + password).getBytes());
+            user.setPassword(encryptPassword);
+        }
 
         // 3: 更新用户信息
         updateById(user);

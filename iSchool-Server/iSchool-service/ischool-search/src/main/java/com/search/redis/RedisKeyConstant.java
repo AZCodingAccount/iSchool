@@ -29,9 +29,9 @@ public class RedisKeyConstant {
 
     /*
      * 信息同步key缓存
-     * 格式 sync:end:article:id: 4720
+     * 格式 sync:end:article:id:{schoolName} 4720
      */
-    public static final String SYNC_END_ARTICLE_ID = "sync:end:article:id";
+    public static final String SYNC_END_ARTICLE_ID = "sync:end:article:id:";
 
 
 }

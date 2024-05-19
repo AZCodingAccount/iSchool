@@ -44,6 +44,10 @@ public class UpdateUserDto implements Serializable {
      * 用户邮箱
      */
     private String email;
+    /**
+     * 用户学校
+     */
+    private String school;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

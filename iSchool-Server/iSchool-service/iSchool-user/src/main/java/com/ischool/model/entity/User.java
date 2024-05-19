@@ -58,6 +58,10 @@ public class User implements Serializable {
      * 用户角色，1学生、2管理员
      */
     private Integer role;
+    /**
+     * 用户学校
+     */
+    private String school;
 
     /**
      * 创建时间

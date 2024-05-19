@@ -1,0 +1,34 @@
+# 创建ES中的info表
+PUT announcement
+{
+  "mappings": {
+    "properties": {
+      "title": {
+        "type": "text",
+        "analyzer": "ik_smart"
+      },
+      "content": {
+        "type": "text",
+        "analyzer": "ik_max_word"
+      },
+      "pubTime": {
+        "type": "date"
+      },
+      "url": {
+        "type": "keyword",
+        "index": false
+      },
+      "createTime": {
+        "type": "date",
+        "index": false
+      },
+      "articleId": {
+        "type": "integer",
+        "index": false
+      },
+      "school": {
+        "type": "keyword"
+      }
+    }
+  }
+}
