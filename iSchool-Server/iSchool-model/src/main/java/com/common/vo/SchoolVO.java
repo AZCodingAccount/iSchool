@@ -1,8 +1,6 @@
 package com.common.vo;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+
 import lombok.Data;
 
 import java.io.Serializable;
@@ -24,6 +22,5 @@ public class SchoolVO implements Serializable {
      * 学校名称
      */
     private String schoolName;
-    @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

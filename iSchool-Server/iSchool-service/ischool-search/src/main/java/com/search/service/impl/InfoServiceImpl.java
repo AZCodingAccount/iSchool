@@ -1,24 +1,38 @@
 package com.search.service.impl;
 
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.ErrorResponse;
+import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
+import co.elastic.clients.elasticsearch.core.SearchRequest;
+import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.search.Highlight;
+import co.elastic.clients.elasticsearch.core.search.HighlightField;
+import co.elastic.clients.elasticsearch.core.search.Hit;
+import co.elastic.clients.json.JsonData;
+import co.elastic.clients.transport.Endpoint;
+import co.elastic.clients.transport.endpoints.SimpleEndpoint;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-
 import com.ischool.exception.BusinessException;
 import com.ischool.model.ErrorCode;
 import com.ischool.model.PageResult;
+import com.search.es.AnnouncementESDTO;
 import com.search.mapper.InfoMapper;
 import com.search.model.dto.SearchAnnouncementRequest;
 import com.search.model.entity.Info;
 import com.search.model.vo.SearchAnnouncementVO;
 import com.search.service.InfoService;
 import org.apache.commons.lang3.StringUtils;
+
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,12 +46,12 @@ import java.util.stream.Collectors;
 public class InfoServiceImpl extends ServiceImpl<InfoMapper, Info>
         implements InfoService {
 
+    @Autowired
+    private ElasticsearchClient elasticsearchClient;
+
     /**
-     * @param keyword
-     * @param pageNum
-     * @param pageSize
-     * @param startDate
-     * @param endDate
+     * @param searchAnnouncementRequest
+     * @param school
      * @return com.ischool.model.PageResult<com.search.model.vo.SearchAnnouncementVO>
      * @description MySQL普通查询
      **/
@@ -90,6 +104,144 @@ public class InfoServiceImpl extends ServiceImpl<InfoMapper, Info>
             return searchAnnouncementVO;
         }).sorted(Comparator.comparing(SearchAnnouncementVO::getPubTime)).collect(Collectors.toList());
         return new PageResult<>(searchAnnouncementVOList, total, current, size);
+    }
+
+
+    public PageResult<SearchAnnouncementVO> searchFromES(SearchAnnouncementRequest request, String school) {
+        // 1：校验参数
+        if (request.getPageNum() <= 0 || request.getPageSize() <= 0 || request.getPageSize() >= 100) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "分页参数不合法");
+        }
+
+        // 2：构建查询条件
+        BoolQuery.Builder boolQueryBuilder = new BoolQuery.Builder();
+
+        if (request.getKeyword() != null && !request.getKeyword().isEmpty()) {
+            boolQueryBuilder.must(new Query.Builder()
+                    .bool(b -> b
+                            .should(new Query.Builder().match(m -> m.field("title").boost(3F).query(request.getKeyword())).build())
+                            .should(new Query.Builder().match(m -> m.field("content").query(request.getKeyword())).build())
+                    ).build());
+        }
+
+        if (request.getStartDate() != null) {
+            boolQueryBuilder.filter(new Query.Builder()
+                    .range(r -> r
+                            .field("pubTime")
+                            .gte(JsonData.of(request.getStartDate().toString()))
+                    ).build());
+        }
+        if (request.getEndDate() != null) {
+            boolQueryBuilder.filter(new Query.Builder()
+                    .range(r -> r
+                            .field("pubTime")
+                            .lte(JsonData.of(request.getEndDate().toString()))
+                    ).build());
+        }
+
+        if (school != null && !school.isEmpty()) {
+            boolQueryBuilder.filter(new Query.Builder()
+                    .term(t -> t
+                            .field("school")
+                            .value(school)
+                    ).build());
+        }
+
+        Query boolQuery = new Query.Builder().bool(boolQueryBuilder.build()).build();
+
+        // 3：构建高亮显示
+        Highlight.Builder highlightBuilder = new Highlight.Builder()
+                .preTags("<span style=\"color: red; font-weight: bold;\">")
+                .postTags("</span>")
+                .fields("title", new HighlightField.Builder().build())
+                .fields("content", new HighlightField.Builder().build());
+
+        // 4：执行查询
+        try {
+            SearchRequest searchRequest = new SearchRequest.Builder()
+                    .index("announcement")
+                    .query(boolQuery)
+                    .from((request.getPageNum() - 1) * request.getPageSize())
+                    .size(request.getPageSize())
+                    .highlight(highlightBuilder.build())  // 添加高亮显示
+                    .build();
+
+            SearchResponse<AnnouncementESDTO> searchResponse = elasticsearchClient.search(searchRequest, AnnouncementESDTO.class);
+
+            // 5：处理查询结果
+            long total = 0;
+            if (searchResponse.hits().total() != null) {
+                total = searchResponse.hits().total().value();
+            }
+            List<SearchAnnouncementVO> searchAnnouncementVOList = searchResponse.hits().hits().stream()
+                    .map(hit -> {
+                        SearchAnnouncementVO vo = new SearchAnnouncementVO();
+                        AnnouncementESDTO announcement = hit.source();
+                        if (announcement != null) {
+                            BeanUtils.copyProperties(announcement, vo);
+                            // 处理高亮字段
+                            if (hit.highlight() != null) {
+                                if (hit.highlight().containsKey("title")) {
+                                    vo.setTitle(String.join("", hit.highlight().get("title")));
+                                }
+                                if (hit.highlight().containsKey("content")) {
+                                    vo.setContent(String.join("", hit.highlight().get("content")));
+                                }
+                            }
+                        }
+                        return vo;
+                    })
+                    .collect(Collectors.toList());
+
+            return new PageResult<>(searchAnnouncementVOList, total, request.getPageNum(), request.getPageSize());
+        } catch (IOException e) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "ElasticSearch 查询失败");
+        }
+    }
+
+    /**
+     * @param school
+     * @param batchSize
+     * @return java.util.List<com.search.es.AnnouncementESDTO>
+     * @description 根据学校和单次查询值查询数据
+     **/
+    @Override
+    public List<AnnouncementESDTO> findBySchoolLimitBatchSize(String school, int batchSize, int batchNum) {
+        int offset = (batchNum - 1) * batchSize;
+
+        LambdaQueryWrapper<Info> queryWrapper = new LambdaQueryWrapper<Info>()
+                .eq(Info::getSchool, school)
+                .last("LIMIT " + offset + ", " + batchSize);
+        List<Info> infoList = this.baseMapper.selectList(queryWrapper);
+        return getAnnouncementESDTOS(infoList);
+    }
+
+    /**
+     * @param infoList
+     * @return java.util.List<com.search.es.AnnouncementESDTO>
+     * @description 过滤数据
+     **/
+    private static List<AnnouncementESDTO> getAnnouncementESDTOS(List<Info> infoList) {
+        return infoList.stream().map(item -> {
+            AnnouncementESDTO announcementESDTO = new AnnouncementESDTO();
+            BeanUtils.copyProperties(item, announcementESDTO);
+            return announcementESDTO;
+        }).toList();
+    }
+
+    /**
+     * @param school
+     * @param lastEndArticleId
+     * @return java.util.List<com.search.es.AnnouncementESDTO>
+     * @description 根据id和学校查询数据
+     **/
+    @Override
+    public List<AnnouncementESDTO> findBySchoolAndIdGreaterThan(String school, Long lastEndArticleId) {
+        LambdaQueryWrapper<Info> queryWrapper = new LambdaQueryWrapper<Info>()
+                .eq(Info::getSchool, school)
+                .gt(Info::getArticleId, lastEndArticleId);
+        List<Info> infoList = this.baseMapper.selectList(queryWrapper);
+        return getAnnouncementESDTOS(infoList);
     }
 }
 

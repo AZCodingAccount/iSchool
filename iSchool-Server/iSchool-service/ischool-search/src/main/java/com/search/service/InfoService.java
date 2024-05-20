@@ -1,12 +1,12 @@
 package com.search.service;
 
 import com.ischool.model.PageResult;
+import com.search.es.AnnouncementESDTO;
 import com.search.model.dto.SearchAnnouncementRequest;
 import com.search.model.entity.Info;
 import com.search.model.vo.SearchAnnouncementVO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
-import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -17,11 +17,33 @@ import java.util.List;
 public interface InfoService extends IService<Info> {
 
     /**
-     * @param keyword
-     * @param pageNum
-     * @param pageSize
-     * @return java.util.List<com.search.model.vo.SearchAnnouncementVO>
-     * @description MySQL普通查询公告信息
+     * @param searchAnnouncementRequest
+     * @param school
+     * @return com.ischool.model.PageResult<com.search.model.vo.SearchAnnouncementVO>
+     * @description MySQL分页查询
      **/
     PageResult<SearchAnnouncementVO> search(SearchAnnouncementRequest searchAnnouncementRequest, String school);
+
+    /**
+     * @param searchAnnouncementRequest
+     * @param school
+     * @return com.ischool.model.PageResult<com.search.model.vo.SearchAnnouncementVO>
+     * @description 使用es查询
+     **/
+    PageResult<SearchAnnouncementVO> searchFromES(SearchAnnouncementRequest searchAnnouncementRequest, String school);
+
+    /**
+     * @param school
+     * @return java.util.List<com.search.es.AnnouncementESDTO>
+     * @description 根据学校和批量值查询数据
+     **/
+    List<AnnouncementESDTO> findBySchoolLimitBatchSize(String school, int batchSize, int batchNum);
+
+    /**
+     * @param school
+     * @param lastEndArticleId
+     * @return java.util.List<com.search.es.AnnouncementESDTO>
+     * @description 根据上次同步完成的id查询数据
+     **/
+    List<AnnouncementESDTO> findBySchoolAndIdGreaterThan(String school, Long lastEndArticleId);
 }

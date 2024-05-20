@@ -1,29 +1,16 @@
 package com.search.controller;
 
-import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.IdUtil;
 import com.ischool.model.BaseResponse;
-import com.ischool.model.ErrorCode;
 import com.ischool.model.PageResult;
 import com.ischool.model.Result;
-import com.search.ai.AIUtil;
 import com.search.model.dto.SearchAnnouncementRequest;
 import com.search.model.vo.SearchAnnouncementVO;
-import com.search.mq.AiMessageProducer;
 import com.search.redis.RedisKeyConstant;
 import com.search.service.InfoService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 /**
  * @program: iSchool-Server
@@ -64,8 +51,11 @@ public class SearchController {
             // 直接返回
             return Result.success((PageResult<SearchAnnouncementVO>) object);
         }
-        // 使用es优化
-        PageResult<SearchAnnouncementVO> pageResult = infoService.search(searchAnnouncementRequest, school);
+        // 简单MySQL
+        // PageResult<SearchAnnouncementVO> pageResult = infoService.search(searchAnnouncementRequest, school);
+
+        // 使用es
+        PageResult<SearchAnnouncementVO> pageResult = infoService.searchFromES(searchAnnouncementRequest, school);
 
         // 如果pageNum=1，那我就把当前值缓存下来
         if (pageNum == 1) {

@@ -22,6 +22,7 @@ public class GlobalExceptionHandler {
      * */
     @ExceptionHandler(BusinessException.class)
     public BaseResponse<?> businessExceptionHandler(BusinessException e) {
+        // e.printStackTrace();
         log.error("BusinessException", e);
         return Result.error(e.getCode(), e.getMessage());
     }

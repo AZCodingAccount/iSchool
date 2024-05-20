@@ -45,6 +45,6 @@ public interface UserFeignClient {
      * @description 获取所有学校列表
      **/
     @GetMapping("/schools")
-    List<SchoolVO> getSchoolList();
+    BaseResponse<List<SchoolVO>> getSchoolList();
 
 }

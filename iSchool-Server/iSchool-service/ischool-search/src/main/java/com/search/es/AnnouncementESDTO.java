@@ -1,5 +1,9 @@
 package com.search.es;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.ischool.config.CustomLocalDateDeserializer;
+import com.ischool.config.CustomLocalDateTimeDeserializer;
 import lombok.Data;
 import nonapi.io.github.classgraph.json.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -18,8 +22,10 @@ import java.util.Date;
  **/
 @Document(indexName = "announcement")
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AnnouncementESDTO {
     private static final String DATE_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    private static final String DATE_PATTERN = "yyyy-MM-dd";
     @Id
     private Long id;
 
@@ -27,12 +33,14 @@ public class AnnouncementESDTO {
 
     private String content;
 
-    @Field(index = true, store = true, type = FieldType.Date, format = {}, pattern = DATE_TIME_PATTERN)
-    private LocalDateTime pubTime;
+    @Field(index = true, store = true, type = FieldType.Date, format = {}, pattern = DATE_PATTERN)
+    @JsonDeserialize(using = CustomLocalDateDeserializer.class)
+    private LocalDate pubTime;
 
     private String url;
 
     @Field(index = false, store = true, type = FieldType.Date, format = {}, pattern = DATE_TIME_PATTERN)
+    @JsonDeserialize(using = CustomLocalDateTimeDeserializer.class)
     private LocalDateTime createTime;
 
     private Long articleId;

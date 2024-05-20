@@ -43,6 +43,12 @@ public class Info implements Serializable {
      */
     private String url;
 
+
+    /**
+     * 公告在原始数据库的id
+     */
+    private Long articleId;
+
     /**
      * 公告所属学校
      */
