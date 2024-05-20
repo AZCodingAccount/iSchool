@@ -57,8 +57,7 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
         // 只对不匹配 /user/login和/user/register ** 的 URL 应用此过滤器
         // todo：后续设置白名单
         if (uri.getPath().startsWith("/user/login")
-                || uri.getPath().startsWith("/user/register")
-                || uri.getPath().startsWith("/search/page")) {
+                || uri.getPath().startsWith("/user/register")) {
             return chain.filter(exchange);  // 不匹配则继续其他过滤器处理
         }
 
@@ -67,6 +66,11 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
         // 提取token
         String token = request.getHeaders().getFirst("token");
         log.info("token为{}", token);
+
+        // 处理搜索
+        if (token == null && uri.getPath().startsWith("/search/page")) {
+            return chain.filter(exchange);  // 不匹配则继续其他过滤器处理
+        }
         if (token == null || token.isEmpty()) {
             log.error("Token为空");
             BaseResponse<?> errorResult = Result.error(ErrorCode.NOT_LOGIN_ERROR, "Token解析失败");
@@ -78,11 +82,16 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
             Claims claims = JwtUtil.parseJWT(jwtProperties.getSecretKey(), token);
             Long userId = (Long) claims.get("userId");
             String userRole = String.valueOf(claims.get("userRole"));
+            String schoolName = "HRBUST";
+            if (claims.get("school") != null) {
+                schoolName = String.valueOf(claims.get("school"));
+            }
             log.info("解析用户token，userId为{}，userRole为{}", userId, userRole);
             // 可以根据需要将用户信息添加到请求头中
             request = exchange.getRequest().mutate()
                     .header("id", String.valueOf(userId))
                     .header("role", userRole)
+                    .header("school", schoolName)
                     .build();
         } catch (Exception e) {
             log.error("Token解析失败", e);

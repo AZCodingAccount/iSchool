@@ -1,6 +1,8 @@
 package com.search.job;
 
+import com.search.es.SyncESService;
 import com.xxl.job.core.handler.annotation.XxlJob;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,8 +14,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class XxlDemo {
 
+    @Autowired
+    SyncESService esService;
+
     @XxlJob("demoJobHandler")
     public void test() {
         System.out.println("hello");
     }
+
 }

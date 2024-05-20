@@ -1,12 +1,15 @@
 package com.client.service;
 
 import com.common.dto.UserDto;
+import com.common.vo.SchoolVO;
 import com.ischool.config.FeignClientConfig;
 import com.ischool.model.BaseResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 
 /**
@@ -34,5 +37,14 @@ public interface UserFeignClient {
      **/
     @GetMapping("/id")
     Boolean checkId(@RequestParam("id") Long id);
+
+
+    /**
+     * @param
+     * @return java.util.List<com.common.vo.SchoolVO>
+     * @description 获取所有学校列表
+     **/
+    @GetMapping("/schools")
+    BaseResponse<List<SchoolVO>> getSchoolList();
 
 }
