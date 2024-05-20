@@ -64,6 +64,19 @@ public class SearchController {
         return Result.success(pageResult);
     }
 
+    @GetMapping("/{id}")
+    public BaseResponse<SearchAnnouncementVO> searchAnnoById(@PathVariable("id") Long id) {
+        log.info("搜索id为{}的公告", id);
+        String key = RedisKeyConstant.USER_SEARCH_BY_ID + id;
+        Object object = redisTemplate.opsForValue().get(key);
+        if (object != null) {   // 命中缓存
+            return Result.success((SearchAnnouncementVO) object);
+        }
+        SearchAnnouncementVO searchAnnouncementVO = infoService.searchByIdFromES(id);
+        // 缓存起来
+        redisTemplate.opsForValue().set(key, searchAnnouncementVO);
+        return Result.success(searchAnnouncementVO);
+    }
 
     /*
         todo:

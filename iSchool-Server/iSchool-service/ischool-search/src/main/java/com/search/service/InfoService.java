@@ -46,4 +46,11 @@ public interface InfoService extends IService<Info> {
      * @description 根据上次同步完成的id查询数据
      **/
     List<AnnouncementESDTO> findBySchoolAndIdGreaterThan(String school, Long lastEndArticleId);
+
+    /**
+     * @param id
+     * @return com.search.model.vo.SearchAnnouncementVO
+     * @description 从es中根据id查询
+     **/
+    SearchAnnouncementVO searchByIdFromES(Long id);
 }

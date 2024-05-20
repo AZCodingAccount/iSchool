@@ -29,6 +29,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -243,6 +244,46 @@ public class InfoServiceImpl extends ServiceImpl<InfoMapper, Info>
         List<Info> infoList = this.baseMapper.selectList(queryWrapper);
         return getAnnouncementESDTOS(infoList);
     }
+
+    @Override
+    public SearchAnnouncementVO searchByIdFromES(Long id) {
+        // 1：校验参数
+        if (id == null || id <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "ID参数不合法");
+        }
+
+        // 2：构建查询条件
+        Query idQuery = new Query.Builder()
+                .term(t -> t
+                        .field("_id")
+                        .value(id)
+                ).build();
+
+        // 3：执行查询
+        try {
+            SearchRequest searchRequest = new SearchRequest.Builder()
+                    .index("announcement")
+                    .query(idQuery)
+                    .build();
+
+            SearchResponse<AnnouncementESDTO> searchResponse = elasticsearchClient.search(searchRequest, AnnouncementESDTO.class);
+
+            // 4：处理查询结果
+            if (!searchResponse.hits().hits().isEmpty()) {
+                Hit<AnnouncementESDTO> hit = searchResponse.hits().hits().get(0);
+                SearchAnnouncementVO vo = new SearchAnnouncementVO();
+                AnnouncementESDTO announcement = hit.source();
+                if (announcement != null) {
+                    BeanUtils.copyProperties(announcement, vo);
+                    return vo;
+                }
+            }
+            return null;  // 如果没有找到对应的文档，返回null
+        } catch (IOException e) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "ElasticSearch 查询失败");
+        }
+    }
+
 }
 
 
