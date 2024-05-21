@@ -1,7 +1,6 @@
 package com.common.dto;
 
 
-
 import java.io.Serializable;
 
 import lombok.Data;
@@ -44,6 +43,11 @@ public class UserDto implements Serializable {
      * 用户邮箱
      */
     private String email;
+
+    /**
+     * 用户所属学校
+     */
+    private String school;
 
 
     /**

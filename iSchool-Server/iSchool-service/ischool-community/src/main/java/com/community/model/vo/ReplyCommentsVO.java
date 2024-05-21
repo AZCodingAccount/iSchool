@@ -40,6 +40,11 @@ public class ReplyCommentsVO implements Serializable {
     private Integer likes;
 
     /**
+     * 用户是否点赞
+     */
+    private Boolean liked;
+
+    /**
      * 用户头像
      */
     private String userAvatar;
@@ -57,6 +62,11 @@ public class ReplyCommentsVO implements Serializable {
      * 回复的用户名
      */
     private String replyUsername;
+
+    /**
+     * 回复的用户头像
+     */
+    private String replyUserAvatar;
 
     /**
      * 发布时间

@@ -49,9 +49,10 @@ public class ReplyCommentController {
      * @description 获取某一级评论下的所有二级评论
      **/
     @GetMapping("{replyCommentId}")
-    public BaseResponse<List<ReplyCommentsVO>> getCommentsList(@PathVariable Long replyCommentId) {
-        log.info("获取一级评论{}下的所有评论", replyCommentId);
-        List<ReplyCommentsVO> replyCommentsVOList = replyCommentsService.getList(replyCommentId);
+    public BaseResponse<List<ReplyCommentsVO>> getCommentsList(@PathVariable Long replyCommentId,
+                                                               @RequestHeader("id") Long userId) {
+        log.info("用户{}获取一级评论{}下的所有评论", userId, replyCommentId);
+        List<ReplyCommentsVO> replyCommentsVOList = replyCommentsService.getList(userId, replyCommentId);
         return Result.success(replyCommentsVOList);
     }
 
@@ -61,9 +62,10 @@ public class ReplyCommentController {
      * @description 给二级评论点赞
      **/
     @PutMapping("like/{commentId}")
-    public BaseResponse<Object> addCommentLikes(@PathVariable Long commentId) {
-        log.info("用户点赞，点赞评论id为{}", commentId);
-        replyCommentsService.addCommentLikes(commentId);
+    public BaseResponse<Object> addCommentLikes(@PathVariable Long commentId,
+                                                @RequestHeader("id") Long userId) {
+        log.info("用户{}点赞，点赞评论id为{}", userId, commentId);
+        replyCommentsService.addCommentLikes(userId, commentId);
         return Result.success();
     }
 
@@ -73,9 +75,10 @@ public class ReplyCommentController {
      * @description 取消二级评论点赞
      **/
     @DeleteMapping("like/{commentId}")
-    public BaseResponse<Object> decreaseCommentLikes(@PathVariable Long commentId) {
-        log.info("用户取消点赞，点赞评论id为{}", commentId);
-        replyCommentsService.decreaseCommentLikes(commentId);
+    public BaseResponse<Object> decreaseCommentLikes(@PathVariable Long commentId,
+                                                     @RequestHeader("id") Long userId) {
+        log.info("用户{}取消点赞，点赞评论id为{}", userId, commentId);
+        replyCommentsService.decreaseCommentLikes(userId, commentId);
         return Result.success();
     }
 

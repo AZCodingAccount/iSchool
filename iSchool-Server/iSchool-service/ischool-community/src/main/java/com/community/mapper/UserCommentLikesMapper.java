@@ -1,7 +1,8 @@
-package generator.mapper;
+package com.community.mapper;
 
-import generator.domain.UserCommentLikes;
+
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.community.model.entity.UserCommentLikes;
 
 /**
 * @author Albert han

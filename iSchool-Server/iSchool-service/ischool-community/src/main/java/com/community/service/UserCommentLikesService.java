@@ -1,7 +1,8 @@
-package generator.service;
+package com.community.service;
 
-import generator.domain.UserCommentLikes;
+
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.community.model.entity.UserCommentLikes;
 
 /**
 * @author Albert han

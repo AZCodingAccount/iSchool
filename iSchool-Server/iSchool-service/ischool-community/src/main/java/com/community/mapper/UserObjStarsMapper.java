@@ -1,7 +1,8 @@
-package generator.mapper;
+package com.community.mapper;
 
-import generator.domain.UserObjStars;
+
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.community.model.entity.UserObjStars;
 
 /**
 * @author Albert han

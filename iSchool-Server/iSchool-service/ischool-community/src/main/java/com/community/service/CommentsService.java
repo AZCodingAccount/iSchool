@@ -30,23 +30,23 @@ public interface CommentsService extends IService<Comments> {
     List<CommentsVO> getList(Long objId);
 
     /**
+     * @param commentId
+     * @return void
      * @description 给一级评论点赞
-     * @param commentId
-     * @return void
      **/
-    void addCommentLikes(Long commentId);
+    void addCommentLikes(Long userId, Long commentId);
 
     /**
+     * @param commentId
+     * @return void
      * @description 取消一级评论点赞
-     * @param commentId
-     * @return void
      **/
-    void decreaseCommentLikes(Long commentId);
+    void decreaseCommentLikes(Long userId,Long commentId);
 
     /**
-     * @description 获取一级评论下的点赞和评论
      * @param id
      * @return com.common.dto.SocialDataDto
+     * @description 获取一级评论下的点赞和评论
      **/
     SocialDataDto getSocialData(Long id);
 }

@@ -9,10 +9,12 @@ import com.common.dto.MessageDto;
 import com.common.dto.SocialDataDto;
 import com.common.dto.UserDto;
 import com.community.mapper.ReplyCommentsMapper;
+import com.community.mapper.UserCommentLikesMapper;
 import com.community.model.dto.AddReplyCommentRequest;
 import com.community.model.entity.CommentObj;
 import com.community.model.entity.Comments;
 import com.community.model.entity.ReplyComments;
+import com.community.model.entity.UserCommentLikes;
 import com.community.model.vo.ReplyCommentsVO;
 import com.community.service.CommentObjService;
 import com.community.service.CommentsService;
@@ -46,6 +48,9 @@ public class ReplyCommentsServiceImpl extends ServiceImpl<ReplyCommentsMapper, R
 
     @Autowired
     UserFeignClient userFeignClient;
+
+    @Autowired
+    UserCommentLikesMapper userCommentLikesMapper;
 
     /**
      * @param addReplyCommentRequest
@@ -84,7 +89,7 @@ public class ReplyCommentsServiceImpl extends ServiceImpl<ReplyCommentsMapper, R
      * @description 获取某一一级评论下的所有二级评论
      **/
     @Override
-    public List<ReplyCommentsVO> getList(Long replyCommentId) {
+    public List<ReplyCommentsVO> getList(Long userId, Long replyCommentId) {
 
         // 1：参数校验
         if (replyCommentId == null || replyCommentId < 0) {
@@ -111,8 +116,8 @@ public class ReplyCommentsServiceImpl extends ServiceImpl<ReplyCommentsMapper, R
             ReplyCommentsVO replyCommentsVO = new ReplyCommentsVO();
             BeanUtils.copyProperties(replyComments, replyCommentsVO);
             // 3.1: 填充用户头像和评论用户名
-            Long userId = replyComments.getUserId();
-            BaseResponse<UserDto> res = userFeignClient.getLoginUser(userId);
+            Long commentsUserId = replyComments.getUserId();
+            BaseResponse<UserDto> res = userFeignClient.getLoginUser(commentsUserId);
             UserDto userDto = res.getData();
             String userAvatar = "";
             String username = "";
@@ -122,6 +127,7 @@ public class ReplyCommentsServiceImpl extends ServiceImpl<ReplyCommentsMapper, R
             } else {  // 用户已注销
                 userAvatar = "";
                 username = "用户已注销";
+                replyCommentsVO.setUserId(0L);
             }
             replyCommentsVO.setUserAvatar(userAvatar);
             replyCommentsVO.setUsername(username);
@@ -133,12 +139,27 @@ public class ReplyCommentsServiceImpl extends ServiceImpl<ReplyCommentsMapper, R
             Long replyCommentUserId = replyComment.getUserId();
             UserDto replyUserInfo = userFeignClient.getLoginUser(replyCommentUserId).getData();
             String replyUsername = "";
+            String replyUserAvatar = "";
             if (replyUserInfo == null) {
                 replyUsername = "用户已注销";
             } else {
                 replyUsername = replyUserInfo.getNickname();
+                replyUserAvatar = replyUserInfo.getUserAvatar();
+                replyCommentsVO.setReplyUserId(0L);
             }
             replyCommentsVO.setReplyUsername(replyUsername);
+            replyCommentsVO.setReplyUserAvatar(replyUserAvatar);
+
+            // 3.3: 填充用户是否点赞
+            Long commentId = replyComments.getId();
+            UserCommentLikes userCommentLikes = userCommentLikesMapper.selectOne(new LambdaQueryWrapper<UserCommentLikes>()
+                    .eq(UserCommentLikes::getUserId, userId)
+                    .eq(UserCommentLikes::getCommentId, commentId));
+            Boolean liked = Boolean.FALSE;
+            if (userCommentLikes != null) {
+                liked = Boolean.TRUE;
+            }
+            replyCommentsVO.setLiked(liked);
             replyCommentsVOList.add(replyCommentsVO);
         }
         return replyCommentsVOList;
@@ -150,7 +171,7 @@ public class ReplyCommentsServiceImpl extends ServiceImpl<ReplyCommentsMapper, R
      * @description 给二级评论点赞
      **/
     @Override
-    public void addCommentLikes(Long commentId) {
+    public void addCommentLikes(Long userId, Long commentId) {
         // 1: 校验参数
         ReplyComments comments = this.baseMapper.selectById(commentId);
         if (comments == null) {
@@ -160,6 +181,13 @@ public class ReplyCommentsServiceImpl extends ServiceImpl<ReplyCommentsMapper, R
         // 2: 修改数据库
         comments.setLikes(comments.getLikes() + 1);
         this.baseMapper.updateById(comments);
+
+        // 3: 添加点赞记录
+        UserCommentLikes userCommentLikes = new UserCommentLikes();
+        userCommentLikes.setUserId(userId);
+        userCommentLikes.setCommentId(commentId);
+
+        userCommentLikesMapper.insert(userCommentLikes);
 
         // todo:发送消息给消息队列实时计算搜索词热度
 
@@ -171,7 +199,7 @@ public class ReplyCommentsServiceImpl extends ServiceImpl<ReplyCommentsMapper, R
      * @description 取消二级评论的点赞
      **/
     @Override
-    public void decreaseCommentLikes(Long commentId) {
+    public void decreaseCommentLikes(Long userId, Long commentId) {
         // 1: 校验参数
         ReplyComments comments = this.baseMapper.selectById(commentId);
         if (comments == null) {
@@ -181,6 +209,15 @@ public class ReplyCommentsServiceImpl extends ServiceImpl<ReplyCommentsMapper, R
         // 2: 修改数据库
         comments.setLikes(comments.getLikes() - 1);
         this.baseMapper.updateById(comments);
+
+        // 3: 删除点赞记录
+        UserCommentLikes userCommentLikes = new UserCommentLikes();
+        userCommentLikes.setUserId(userId);
+        userCommentLikes.setCommentId(commentId);
+
+        userCommentLikesMapper.delete(new LambdaQueryWrapper<UserCommentLikes>()
+                .eq(UserCommentLikes::getUserId, userId)
+                .eq(UserCommentLikes::getCommentId, commentId));
 
         // todo:发送消息给消息队列实时计算搜索词热度
     }
@@ -266,14 +303,19 @@ public class ReplyCommentsServiceImpl extends ServiceImpl<ReplyCommentsMapper, R
         // 获取数据
         SocialDataDto socialDataDto = new SocialDataDto();
         LambdaQueryWrapper<ReplyComments> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(ReplyComments::getReplyCommentId, id);
+        queryWrapper.eq(ReplyComments::getReplyUserId, id);
         List<ReplyComments> commentsList = this.baseMapper.selectList(queryWrapper);
 
         // 获取评论数量
         int commentsNum = commentsList.size();
+        // 获取点赞数量
+        LambdaQueryWrapper<ReplyComments> queryWrapper2 = new LambdaQueryWrapper<>();
+        queryWrapper2.eq(ReplyComments::getUserId, id);
+        List<ReplyComments> commentsList2 = this.baseMapper.selectList(queryWrapper2);
+
         int likesNum = 0;
         // 获取点赞数量
-        for (ReplyComments comments : commentsList) {
+        for (ReplyComments comments : commentsList2) {
             likesNum += comments.getLikes();
         }
 

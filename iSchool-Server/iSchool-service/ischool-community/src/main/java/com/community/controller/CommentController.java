@@ -52,26 +52,28 @@ public class CommentController {
     }
 
     /**
-     * @description 给一级评论点赞
      * @param commentId
      * @return com.ischool.model.BaseResponse<java.lang.Object>
+     * @description 给一级评论点赞
      **/
     @PutMapping("like/{commentId}")
-    public BaseResponse<Object> addCommentLikes(@PathVariable Long commentId) {
-        log.info("用户点赞，点赞评论id为{}", commentId);
-        commentsService.addCommentLikes(commentId);
+    public BaseResponse<Object> addCommentLikes(@PathVariable Long commentId,
+                                                @RequestHeader("id") Long userId) {
+        log.info("用户{}点赞，点赞评论id为{}", userId, commentId);
+        commentsService.addCommentLikes(userId, commentId);
         return Result.success();
     }
 
     /**
-     * @description 取消一级评论点赞
      * @param commentId
      * @return com.ischool.model.BaseResponse<java.lang.Object>
+     * @description 取消一级评论点赞
      **/
     @DeleteMapping("like/{commentId}")
-    public BaseResponse<Object> decreaseCommentLikes(@PathVariable Long commentId) {
-        log.info("用户点赞，点赞评论id为{}", commentId);
-        commentsService.decreaseCommentLikes(commentId);
+    public BaseResponse<Object> decreaseCommentLikes(@PathVariable Long commentId,
+                                                     @RequestHeader("id") Long userId) {
+        log.info("用户{}取消点赞，取消点赞评论id为{}", userId,commentId);
+        commentsService.decreaseCommentLikes(userId,commentId);
         return Result.success();
     }
 }

@@ -4,6 +4,7 @@ import com.community.model.dto.AddCommentObjRequest;
 import com.community.model.dto.CommentObjSearchParam;
 import com.community.model.dto.ScoreRequest;
 import com.community.model.entity.CommentObj;
+import com.community.model.vo.CommentObjVO;
 import com.community.service.CommentObjService;
 
 import com.ischool.model.BaseResponse;
@@ -46,19 +47,20 @@ public class CommentObjController {
      * @description 搜索点评对象
      **/
     @GetMapping("/search")
-    public BaseResponse<List<CommentObj>> searchCommentObj(@RequestParam("keyword") String keyword, @RequestParam("type")
-    String type) {
-        log.info("查询点评对象，查询参数为{}:{}", keyword, type);
+    public BaseResponse<List<CommentObjVO>> searchCommentObj(@RequestParam("keyword") String keyword
+            , @RequestParam("type") String type
+            , @RequestHeader("id") Long userId) {
+        log.info("用户{}查询点评对象，查询参数为{}:{}", userId, keyword, type);
         // todo：添加点赞量最高的评论
-        List<CommentObj> commentObjs = commentObjService.search(keyword, type);
-        return Result.success(commentObjs);
+        List<CommentObjVO> commentObjVOS = commentObjService.search(keyword, type, userId);
+        return Result.success(commentObjVOS);
     }
 
     // 删改暂时不实现
 
     @PutMapping("score")
     public BaseResponse<Object> score(@RequestBody ScoreRequest scoreRequest,
-                                      @RequestHeader Long id) {
+                                      @RequestHeader("id") Long id) {
         log.info("用户{}评分，评分参数为{}", id, scoreRequest);
         commentObjService.score(scoreRequest, id);
         return Result.success();

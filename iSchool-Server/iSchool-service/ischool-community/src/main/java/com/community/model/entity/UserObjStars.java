@@ -1,4 +1,4 @@
-package generator.domain;
+package com.community.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -33,7 +33,7 @@ public class UserObjStars implements Serializable {
     /**
      * 评分的分数
      */
-    private Double scoreCount;
+    private Double score;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

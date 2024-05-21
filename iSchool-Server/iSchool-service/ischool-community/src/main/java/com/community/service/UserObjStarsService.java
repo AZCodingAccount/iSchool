@@ -1,7 +1,8 @@
-package generator.service;
+package com.community.service;
 
-import generator.domain.UserObjStars;
+
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.community.model.entity.UserObjStars;
 
 /**
 * @author Albert han

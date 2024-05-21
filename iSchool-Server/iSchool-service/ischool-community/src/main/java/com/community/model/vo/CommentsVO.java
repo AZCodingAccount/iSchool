@@ -41,6 +41,12 @@ public class CommentsVO implements Serializable {
      */
     private Integer likes;
 
+
+    /**
+     * 当前用户是否点赞
+     */
+    private Boolean liked;
+
     /**
      * 用户头像
      */

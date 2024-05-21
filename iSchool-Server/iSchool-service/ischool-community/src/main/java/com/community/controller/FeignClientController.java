@@ -68,7 +68,7 @@ public class FeignClientController {
 
         resultData.setTotalLikes(socialData1.getTotalLikes() + socialData2.getTotalLikes());
 
-        resultData.setTotalComments(socialData1.getTotalComments() + socialData2.getTotalComments());
+        resultData.setTotalComments(socialData2.getTotalComments());
         return resultData;
     }
 }

@@ -1,9 +1,10 @@
-package generator.service.impl;
+package com.community.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import generator.domain.UserObjStars;
-import generator.service.UserObjStarsService;
-import generator.mapper.UserObjStarsMapper;
+
+import com.community.mapper.UserObjStarsMapper;
+import com.community.model.entity.UserObjStars;
+import com.community.service.UserObjStarsService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service;
 */
 @Service
 public class UserObjStarsServiceImpl extends ServiceImpl<UserObjStarsMapper, UserObjStars>
-    implements UserObjStarsService{
+    implements UserObjStarsService {
 
 }
 

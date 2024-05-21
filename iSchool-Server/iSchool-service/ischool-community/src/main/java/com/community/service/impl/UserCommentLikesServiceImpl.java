@@ -1,9 +1,10 @@
-package generator.service.impl;
+package com.community.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import generator.domain.UserCommentLikes;
-import generator.service.UserCommentLikesService;
-import generator.mapper.UserCommentLikesMapper;
+
+import com.community.mapper.UserCommentLikesMapper;
+import com.community.model.entity.UserCommentLikes;
+import com.community.service.UserCommentLikesService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service;
 */
 @Service
 public class UserCommentLikesServiceImpl extends ServiceImpl<UserCommentLikesMapper, UserCommentLikes>
-    implements UserCommentLikesService{
+    implements UserCommentLikesService {
 
 }
 

@@ -1,4 +1,4 @@
-package generator.domain;
+package com.community.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;

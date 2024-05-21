@@ -1,23 +1,21 @@
-package com.community.model.entity;
+package com.community.model.vo;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
-import java.time.LocalDateTime;
 import lombok.Data;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
 /**
- * 
  * @TableName obj
  */
-@TableName(value ="obj")
 @Data
-public class CommentObj implements Serializable {
+public class CommentObjVO implements Serializable {
     /**
-     * 
+     *
      */
-    @TableId
     private Long id;
 
     /**
@@ -40,7 +38,12 @@ public class CommentObj implements Serializable {
     private Double score;
 
     /**
-     * 
+     * 用户评分，未评分为0
+     */
+    private Double userScore;
+
+    /**
+     *
      */
     private Integer count;
 
