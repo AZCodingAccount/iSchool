@@ -65,11 +65,50 @@ const onRegister = async () => {
     await register(registerForm.value)
     ElMessage.success('注册成功')
     isLogin.value = true
+    registerForm.value.username = ''
+    registerForm.value.password = ''
+    registerForm.value.surePassword = ''
+    loginForm.value.username = ''
+    loginForm.value.password = ''
+    rememberMe.value = false
+    loginUsername_inputRef.value.focus()
 }
 
 // 忘记密码
 const onForgetPassword = () => {
     console.log('onForgetPassword')
+}
+
+const loginUsername_inputRef = ref(null) // 登录用户名输入框的绑定变量
+const loginPassword_inputRef = ref(null) // 登录密码输入框的绑定变量
+const registerUsername_inputRef = ref(null) // 注册用户名输入框的绑定变量
+const registerPassword_inputRef = ref(null) // 注册密码输入框的绑定变量
+const registerSurePassword_inputRef = ref(null) // 注册确定密码输入框的绑定变量
+const keyOnLoginUsername = (res) => { // 登录用户名输入框键盘事件触发函数
+    if (res.key === 'Enter' || res.key === 'ArrowDown')
+        loginPassword_inputRef.value.focus()
+}
+const keyOnLoginPassword = (res) => { // 登录密码输入框键盘事件触发函数
+    if (res.key === 'Enter')
+        onLogin()
+    else if (res.key === 'ArrowUp')
+        loginUsername_inputRef.value.focus()
+}
+const keyOnRegisterUsername = (res) => { // 注册用户名输入框键盘事件触发函数
+    if (res.key === 'Enter' || res.key === 'ArrowDown')
+        registerPassword_inputRef.value.focus()
+}
+const keyOnRegisterPassword = (res) => { // 注册密码输入框键盘事件触发函数
+    if (res.key === 'Enter' || res.key === 'ArrowDown')
+        registerSurePassword_inputRef.value.focus()
+    else if (res.key === 'ArrowUp')
+        registerUsername_inputRef.value.focus()
+}
+const keyOnRegisterSurePassword = (res) => { // 注册确定密码输入框键盘事件触发函数
+    if (res.key === 'Enter')
+        onRegister()
+    else if (res.key === 'ArrowUp')
+        registerPassword_inputRef.value.focus()
 }
 
 </script>
@@ -89,7 +128,8 @@ const onForgetPassword = () => {
                         <el-icon :size="30" style="margin-right: 20px;">
                             <User />
                         </el-icon>
-                        <el-input v-model="loginForm.username" placeholder="请输入用户名" />
+                        <el-input ref="loginUsername_inputRef" v-model="loginForm.username" placeholder="请输入用户名"
+                            @keyup="keyOnLoginUsername" />
                     </div>
                 </el-form-item>
 
@@ -97,14 +137,14 @@ const onForgetPassword = () => {
                     <div style="display: flex; width: 100%;">
                         <el-icon :size="30" style="margin-right: 20px;">
                             <Unlock />
-                        </el-icon><el-input v-model="loginForm.password" type="password" placeholder="请输入密码"
-                            :show-password="true" />
+                        </el-icon><el-input ref="loginPassword_inputRef" v-model="loginForm.password" type="password"
+                            placeholder="请输入密码" :show-password="true" @keyup="keyOnLoginPassword" />
                     </div>
                 </el-form-item>
                 <div>
                     <el-switch size="large" style="margin-left: 130px;" v-model="rememberMe" inline-prompt
                         active-text="记住我" inactive-text="记住我" />
-                    <el-link style="float: right;" @click="onForgetPassword">忘记密码</el-link>
+                    <el-link disabled style="float: right;" @click="onForgetPassword">忘记密码</el-link>
                 </div>
 
                 <div style="display: flex;">
@@ -126,7 +166,8 @@ const onForgetPassword = () => {
                         <el-icon :size="30" style="margin-right: 20px;">
                             <User />
                         </el-icon>
-                        <el-input v-model="registerForm.username" placeholder="请输入用户名" />
+                        <el-input ref="registerUsername_inputRef" v-model="registerForm.username" placeholder="请输入用户名"
+                            @keyup="keyOnRegisterUsername" />
                     </div>
                 </el-form-item>
 
@@ -134,8 +175,9 @@ const onForgetPassword = () => {
                     <div style="display: flex; width: 100%;">
                         <el-icon :size="30" style="margin-right: 20px;">
                             <Unlock />
-                        </el-icon><el-input v-model="registerForm.password" type="password" placeholder="请输入密码"
-                            :show-password="true" />
+                        </el-icon>
+                        <el-input ref="registerPassword_inputRef" v-model="registerForm.password" type="password"
+                            placeholder="请输入密码" :show-password="true" @keyup="keyOnRegisterPassword" />
                     </div>
                 </el-form-item>
 
@@ -143,15 +185,17 @@ const onForgetPassword = () => {
                     <div style="display: flex; width: 100%;">
                         <el-icon :size="30" style="margin-right: 20px;">
                             <Unlock />
-                        </el-icon><el-input v-model="registerForm.surePassword" type="password" placeholder="请再次输入密码"
-                            :show-password="true" />
+                        </el-icon>
+                        <el-input ref="registerSurePassword_inputRef" v-model="registerForm.surePassword"
+                            type="password" placeholder="请再次输入密码" :show-password="true"
+                            @keyup="keyOnRegisterSurePassword" />
                     </div>
                 </el-form-item>
 
                 <div>
-                    <el-switch size="large" style="margin-left: 130px;" v-model="rememberMe" inline-prompt
-                        active-text="记住我" inactive-text="记住我" />
-                    <el-link style="float: right;" @click="onForgetPassword">忘记密码</el-link>
+                    <!-- <el-switch size="large" style="margin-left: 130px;" v-model="rememberMe" inline-prompt
+                        active-text="记住我" inactive-text="记住我" /> -->
+                    <!-- <el-link disabled style="float: right;" @click="onForgetPassword">忘记密码</el-link> -->
                 </div>
 
                 <div style="display: flex;">

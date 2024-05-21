@@ -3,11 +3,11 @@ import { useUserInfoerStore } from '@/stores/userInfoer'
 import { ref, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 
-import { myMessage1 } from '@/assets/testData.json' // 测试数据引用
+// import { myMessage1 } from '@/assets/testData.json' // 测试数据引用
 // import { sleep } from '@/utils/time'
 import { deleteUser_1, getMessageList, readMessage, updateUserInfo_1, upload } from '@/api/user'
 import router from '@/router'
-import { sleep } from '@/utils/time'
+// import { sleep } from '@/utils/time'
 
 const userInfoerStore = useUserInfoerStore()
 const formInfo = ref({}) // 个人信息的表单信息
@@ -16,8 +16,11 @@ const isModifying = ref(false) // 是否正在修改
 
 const onEdit = () => { // 点击编辑
     // console.log('on edit')
-    for (let key in userInfoerStore.userInfo)
-        formInfo.value[key] = userInfoerStore.userInfo[key]
+    for (let key in userInfoerStore.userInfo) {
+        if (key != 'password') {
+            formInfo.value[key] = userInfoerStore.userInfo[key]
+        }
+    }
     isModifying.value = true
 }
 
@@ -33,6 +36,7 @@ const onModify = async () => { // 确认修改
     //     }
     // }
     // 发送修改请求
+    // delete formInfo.value.password // 删除密码字段
     await updateUserInfo_1(formInfo.value)
     userInfoerStore.updateUserInfo(formInfo.value)
     isModifying.value = false
@@ -60,10 +64,10 @@ const onExit = () => { // 确认退出
 const showingLogoutDialog = ref(false) // 是否展示注销对话框
 const onLogout = async () => { // 确认注销
     await deleteUser_1()
-    ElMessage.error('账号注销成功')
     userInfoerStore.cleanUserInfo()
     showingLogoutDialog.value = false
     router.push('/login')
+    ElMessage.error('账号注销成功')
 }
 
 const myMessage = ref([]) // 我的信息
@@ -71,11 +75,12 @@ const isLoading_myMessage = ref(false) // 是否在加载我的信息
 const initMyMessage = async () => { // 初始化我的信息
     isLoading_myMessage.value = true
     try {
-        // var res = await getMessageList()
-        await sleep(1000)
-        var res = { data: myMessage1 }
+        var res = await getMessageList()
+        // await sleep(1000) // test
+        // var res = { data: myMessage1 }
     } catch { isLoading_myMessage.value = false; return; }
     myMessage.value = res.data
+    // console.log('myMessage', myMessage.value)
     isLoading_myMessage.value = false
 }
 onMounted(() => {
@@ -83,7 +88,7 @@ onMounted(() => {
 })
 
 const onSelectMessage = async (messageObj) => { // 选择了某个信息
-    // await readMessage({ messageId: messageObj.id }) // 标为已读
+    await readMessage({ messageId: messageObj.id }) // 标为已读
     myMessage.value = myMessage.value.filter((item) => { return item.id != messageObj.id })
     // router.push('/main/comment?objId=' + messageObj.objId)
 }
@@ -125,7 +130,7 @@ const onSelectMessage = async (messageObj) => { // 选择了某个信息
                         <el-upload :show-file-list="false" :before-upload="onAvatar" list-type="picture"
                             accept="image/*">
                             <div class="avatar">
-                                <img style="height: 100%;" :src="userInfoerStore.userInfo.userAvatar" alt="头像">
+                                <img style="height: 100%;" :src="userInfoerStore.userInfo.userAvatar">
                             </div>
                         </el-upload>
                     </el-tooltip>
@@ -213,7 +218,7 @@ const onSelectMessage = async (messageObj) => { // 选择了某个信息
                                             </div>
                                             <div style="color: gray; margin-left: 20px;">回复了我的评论</div>
                                             <div style="flex-grow: 1;"></div>
-                                            <el-tag size="large">{{ item.objId }}</el-tag>
+                                            <el-tag size="large">{{ item.objName }}</el-tag>
                                         </div>
                                     </template>
                                     <el-text line-clamp="2" style="width: 100%; font-size: 20px;">{{
