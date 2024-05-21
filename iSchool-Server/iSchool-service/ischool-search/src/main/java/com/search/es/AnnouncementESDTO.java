@@ -31,6 +31,7 @@ public class AnnouncementESDTO {
 
     private String title;
 
+    private String pureText;
     private String content;
 
     @Field(index = true, store = true, type = FieldType.Date, format = {}, pattern = DATE_PATTERN)

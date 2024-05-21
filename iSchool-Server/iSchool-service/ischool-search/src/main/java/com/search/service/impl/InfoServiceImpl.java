@@ -121,7 +121,7 @@ public class InfoServiceImpl extends ServiceImpl<InfoMapper, Info>
             boolQueryBuilder.must(new Query.Builder()
                     .bool(b -> b
                             .should(new Query.Builder().match(m -> m.field("title").boost(3F).query(request.getKeyword())).build())
-                            .should(new Query.Builder().match(m -> m.field("content").query(request.getKeyword())).build())
+                            .should(new Query.Builder().match(m -> m.field("pureText").query(request.getKeyword())).build())
                     ).build());
         }
 
@@ -155,7 +155,7 @@ public class InfoServiceImpl extends ServiceImpl<InfoMapper, Info>
                 .preTags("<span style=\"color: red; font-weight: bold;\">")
                 .postTags("</span>")
                 .fields("title", new HighlightField.Builder().build())
-                .fields("content", new HighlightField.Builder().build());
+                .fields("pureText", new HighlightField.Builder().build());
 
         // 4：执行查询
         try {
@@ -185,8 +185,8 @@ public class InfoServiceImpl extends ServiceImpl<InfoMapper, Info>
                                 if (hit.highlight().containsKey("title")) {
                                     vo.setTitle(String.join("", hit.highlight().get("title")));
                                 }
-                                if (hit.highlight().containsKey("content")) {
-                                    vo.setContent(String.join("", hit.highlight().get("content")));
+                                if (hit.highlight().containsKey("pureText")) {
+                                    vo.setContent(String.join("", hit.highlight().get("pureText")));
                                 }
                             }
                         }
