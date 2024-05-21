@@ -1,6 +1,7 @@
 package com.common.dto;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
  * @description: 信息传输Dto
  **/
 @Data
+@NoArgsConstructor
 public class MessageDto {
 
     private Long id;
@@ -24,6 +26,11 @@ public class MessageDto {
      * 当前评论用户昵称
      */
     private String userNickname;
+
+    /**
+     * 当前评论用户昵称
+     */
+    private String objName;
     /**
      * 当前评论对象id
      */

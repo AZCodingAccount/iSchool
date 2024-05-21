@@ -26,7 +26,7 @@ Vue框架+Ant Design组件库
 
 中间件：RabbitMQ消息队列、OpenFeign远程调用、分布式任务调度框架 xxl-job
 
-生成式AI接口，SpringAI框架调用openai
+生成式AI接口，SpringAI框架调用OpenAI接口
 
 爬虫技术
 

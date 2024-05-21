@@ -94,8 +94,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (roleEnum != null) {
             role = roleEnum.getText();
         }
+        String school = user.getSchool();
 
         claims.put("userRole", role); // 标识用户或管理员
+        claims.put("school", school);
         return JwtUtil.createJWT(
                 jwtProperties.getSecretKey(),
                 jwtProperties.getTtl(),
@@ -187,9 +189,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setUsername(oldUser.getUsername());
 
         // 3: 加密
-        String encryptPassword = DigestUtils.md5DigestAsHex((SALT + password).getBytes());
-        user.setPassword(encryptPassword);
-
+        if (StringUtils.isNotBlank(password)) {
+            String encryptPassword = DigestUtils.md5DigestAsHex((SALT + password).getBytes());
+            user.setPassword(encryptPassword);
+        }
 
         // 3: 更新用户信息
         updateById(user);
@@ -241,6 +244,30 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public Boolean checkId(Long id) {
         User user = this.baseMapper.selectById(id);
         return user != null;
+    }
+
+    /**
+     * @param id
+     * @return com.common.dto.UserDto
+     * @description 获取用户信息
+     **/
+    @Override
+    public UserDto getUser(Long id) {
+        // 1：校验参数
+        if (id <= 0) {
+            return null;
+        }
+
+        User oldUser = getById(id);
+        if (oldUser == null) {
+            return null;
+        }
+
+
+        // 5：拼装数据
+        UserDto userDto = new UserDto();
+        BeanUtils.copyProperties(oldUser, userDto);
+        return userDto;
     }
 }
 

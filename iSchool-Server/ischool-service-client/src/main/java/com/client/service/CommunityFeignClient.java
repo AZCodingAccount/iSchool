@@ -2,6 +2,7 @@ package com.client.service;
 
 import com.common.dto.MessageDto;
 import com.common.dto.SocialDataDto;
+import com.ischool.config.FeignClientConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;

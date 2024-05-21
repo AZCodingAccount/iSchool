@@ -1,30 +1,46 @@
 package com.ischool.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import org.springframework.boot.jackson.JsonComponent;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
-/**
- * Spring MVC Json 配置
- *
-@author 张晗
- */
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 @JsonComponent
 public class JsonConfig {
 
-    /**
-     * 添加 Long 转 json 精度丢失的配置
-     */
-    @Bean
-    public ObjectMapper jacksonObjectMapper(Jackson2ObjectMapperBuilder builder) {
-        ObjectMapper objectMapper = builder.createXmlMapper(false).build();
-        SimpleModule module = new SimpleModule();
-        module.addSerializer(Long.class, ToStringSerializer.instance);
-        module.addSerializer(Long.TYPE, ToStringSerializer.instance);
-        objectMapper.registerModule(module);
-        return objectMapper;
+    private static final String DATE_FORMAT = "yyyy-MM-dd";
+    private static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
+    @Bean(name = "webObjectMapper")
+    @Primary
+    public ObjectMapper objectMapper(Jackson2ObjectMapperBuilder builder) {
+        JavaTimeModule javaTimeModule = new JavaTimeModule();
+        javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern(DATE_FORMAT)));
+        javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)));
+        javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern(DATE_FORMAT)));
+        javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)));
+
+        SimpleModule longToStringModule = new SimpleModule();
+        longToStringModule.addSerializer(Long.class, ToStringSerializer.instance);
+        longToStringModule.addSerializer(Long.TYPE, ToStringSerializer.instance);
+
+        return builder
+                .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS) // Disable timestamps in JSON
+                .modulesToInstall(javaTimeModule, longToStringModule)
+                .build();
     }
 }
