@@ -4,7 +4,8 @@ import com.ischool.model.PageResult;
 import com.search.es.AnnouncementESDTO;
 import com.search.model.dto.SearchAnnouncementRequest;
 import com.search.model.entity.Info;
-import com.search.model.vo.SearchAnnouncementVO;
+import com.search.model.vo.AnnouncementVO;
+import com.search.model.vo.searchAnnouncementVO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public interface InfoService extends IService<Info> {
      * @return com.ischool.model.PageResult<com.search.model.vo.SearchAnnouncementVO>
      * @description MySQL分页查询
      **/
-    PageResult<SearchAnnouncementVO> search(SearchAnnouncementRequest searchAnnouncementRequest, String school);
+    PageResult<searchAnnouncementVO> search(SearchAnnouncementRequest searchAnnouncementRequest, String school);
 
     /**
      * @param searchAnnouncementRequest
@@ -30,7 +31,7 @@ public interface InfoService extends IService<Info> {
      * @return com.ischool.model.PageResult<com.search.model.vo.SearchAnnouncementVO>
      * @description 使用es查询
      **/
-    PageResult<SearchAnnouncementVO> searchFromES(SearchAnnouncementRequest searchAnnouncementRequest, String school);
+    PageResult<searchAnnouncementVO> searchFromES(SearchAnnouncementRequest searchAnnouncementRequest, String school);
 
     /**
      * @param school
@@ -52,5 +53,5 @@ public interface InfoService extends IService<Info> {
      * @return com.search.model.vo.SearchAnnouncementVO
      * @description 从es中根据id查询
      **/
-    SearchAnnouncementVO searchByIdFromES(Long id);
+    AnnouncementVO searchByIdFromES(Long id);
 }

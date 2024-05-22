@@ -3,8 +3,8 @@ import { addComment, addCommentLikes_1, addCommentObj, addComment_1, decreaseCom
 import { ElMessage } from 'element-plus'
 import { ref, computed, onMounted } from 'vue'
 
-import { commentObj, comment1, comment2 } from '@/assets/testData.json' // 测试数据引用
-import { sleep } from '@/utils/time'
+// import { commentObj, comment1, comment2 } from '@/assets/testData.json' // 测试数据引用
+// import { sleep } from '@/utils/time'
 import router from '@/router'
 
 const commentObjData = ref([]) // 点评对象数据
@@ -23,9 +23,9 @@ const onSearch = async () => { // 搜索
     selectedCommentObj.value = { id: -1 }
     isLoading.value = true
     try {
-        // var res = await searchCommentObj(keyword.value, type.value)
-        await sleep(1000) // test
-        var res = { data: commentObj }
+        var res = await searchCommentObj(keyword.value, type.value)
+        // await sleep(1000) // test
+        // var res = { data: commentObj }
     }
     catch { // 请求错误时关闭加载画面
         isLoading.value = false
@@ -93,9 +93,9 @@ const onSelectCommentObj = async (commentObj) => { // 选择点评对象
     input1Ref.value.focus()
     toStatus(2)
     try {
-        // var res = await getCommentsList_1(selectedCommentObj.value.id)
-        await sleep(1000) // test
-        var res = { data: comment1 }
+        var res = await getCommentsList_1(selectedCommentObj.value.id)
+        // await sleep(1000) // test
+        // var res = { data: comment1 }
     }
     catch { isLoading_comment1.value = false; return; }
     commentData1.value = res.data
@@ -119,27 +119,27 @@ const likeImgUrl = (isLike) => { // 点赞的图标
 }
 const onLikeComment1 = async (commentObj) => { // 给一级评论点赞
     if (commentObj.liked) { // 取消点赞
-        // await decreaseCommentLikes_1(commentObj.id)
-        await sleep(1000) // test
+        await decreaseCommentLikes_1(commentObj.id)
+        // await sleep(1000) // test
         commentObj.liked = false
         commentObj.likes -= 1
         return
     }
-    // await addCommentLikes_1(commentObj.id)
-    await sleep(1000) // test
+    await addCommentLikes_1(commentObj.id)
+    // await sleep(1000) // test
     commentObj.liked = true
     commentObj.likes += 1
 }
 const onLikeComment2 = async (commentObj) => {
     if (commentObj.liked) { // 取消点赞
-        // await decreaseCommentLikes(commentObj.id)
-        await sleep(1000) // test
+        await decreaseCommentLikes(commentObj.id)
+        // await sleep(1000) // test
         commentObj.liked = false
         commentObj.likes -= 1
         return
     }
-    // await addCommentLikes_1(commentObj.id)
-    await sleep(1000) // test
+    await addCommentLikes_1(commentObj.id)
+    // await sleep(1000) // test
     commentObj.liked = true
     commentObj.likes += 1
 }
@@ -152,13 +152,16 @@ const commentData2 = ref([]) // 所有二级评论数据
 const onSelectComment = async (commentObj, commentLevel) => { // 选择或取消选择评论
     if (selectedComment.value.id == commentObj.id) { // 取消对评论的选择
         selectedComment.value = { id: -1 }
-        if (commentLevel == 1) {
+        if (commentLevel == 1) { // 若取消选择的是一级评论
             selectedComment1.value = { id: -1 }
             toStatus(2)
         }
         commentSendTo.value = 0
         return
     }
+    // if (commentLevel == 2 && commentObj.userId == '0'){ // 不能回复已注销用户的评论
+
+    // }
     selectedComment.value = commentObj
     commentSendTo.value = commentLevel
     input1Ref.value.focus()
@@ -168,12 +171,13 @@ const onSelectComment = async (commentObj, commentLevel) => { // 选择或取消
         // 刷新二级评论数据
         isLoading_comment2.value = true
         try {
-            // var res = await getCommentsList(commentObj.id)
-            await sleep(1000) // test
-            var res = { data: comment2 }
+            var res = await getCommentsList(commentObj.id)
+            // await sleep(1000) // test
+            // var res = { data: comment2 }
         }
         catch { isLoading_comment2.value = false; return; }
         commentData2.value = res.data
+        // console.log('commentData2', commentData2.value)
         isLoading_comment2.value = false
         comment2ScrollbarRef.value.setScrollTop(0)
     }
@@ -193,9 +197,9 @@ const onSendComment = async () => { // 一级评论输入框发送信息
         // 刷新一级评论信息
         isLoading_comment1.value = true
         try {
-            // var res = await getCommentsList_1(selectedCommentObj.value.id)
-            await sleep(1000) // test
-            var res1 = { data: comment1 }
+            var res1 = await getCommentsList_1(selectedCommentObj.value.id)
+            // await sleep(1000) // test
+            // var res1 = { data: comment1 }
         }
         catch { isLoading_comment1.value = false; return; }
         commentData1.value = res1.data
@@ -203,8 +207,11 @@ const onSendComment = async () => { // 一级评论输入框发送信息
         // comment1ScrollbarRef.value.setScrollTop(0)
         selectedCommentObj.value.commentCount += 1
     } else { // 回复某一级或二级评论
+        // console.log('selectedComment', selectedComment.value)
         await addComment({
+            objId: selectedCommentObj.value.id,
             commentId: selectedComment.value.id,
+            parentCommentId: selectedComment1.value.id,
             replyContent: messageComment.value,
             replyUserId: selectedComment.value.userId
         })
@@ -212,9 +219,9 @@ const onSendComment = async () => { // 一级评论输入框发送信息
         // 刷新二级评论数据
         isLoading_comment2.value = true
         try {
-            // var res = await getCommentsList(commentObj.id)
-            await sleep(1000) // test
-            var res2 = { data: comment2 }
+            var res2 = await getCommentsList(selectedComment1.value.id)
+            // await sleep(1000) // test
+            // var res2 = { data: comment2 }
         }
         catch { isLoading_comment2.value = false; return; }
         commentData2.value = res2.data

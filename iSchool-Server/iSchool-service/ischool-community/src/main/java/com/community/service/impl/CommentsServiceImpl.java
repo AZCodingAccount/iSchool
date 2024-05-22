@@ -8,10 +8,12 @@ import com.common.dto.UserDto;
 import com.community.mapper.CommentObjMapper;
 import com.community.mapper.CommentsMapper;
 import com.community.mapper.ReplyCommentsMapper;
+import com.community.mapper.UserCommentLikesMapper;
 import com.community.model.dto.AddCommentRequest;
 import com.community.model.entity.CommentObj;
 import com.community.model.entity.Comments;
 import com.community.model.entity.ReplyComments;
+import com.community.model.entity.UserCommentLikes;
 import com.community.model.vo.CommentsVO;
 import com.community.service.CommentsService;
 import com.ischool.exception.BusinessException;
@@ -21,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +44,9 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments>
 
     @Autowired
     ReplyCommentsMapper replyCommentsMapper;
+
+    @Autowired
+    UserCommentLikesMapper userCommentLikesMapper;
 
     /**
      * @param addCommentRequest
@@ -99,23 +105,37 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments>
             Long userId = comment.getUserId();
             BaseResponse<UserDto> res = userFeignClient.getLoginUser(userId);
             UserDto loginUser = res.getData();
-            String userAvatar ="";
+            String userAvatar = "";
             String nickname = "";
             if (loginUser != null) {
-                 userAvatar = loginUser.getUserAvatar();
-                 nickname = loginUser.getNickname();
+                userAvatar = loginUser.getUserAvatar();
+                nickname = loginUser.getNickname();
             } else {
-                 userAvatar = "";
-                 nickname = "用户已注销";
+                userAvatar = "";
+                nickname = "用户已注销";
+                commentsVO.setUserId(0L);   // 用户id置为0
             }
             commentsVO.setUserAvatar(userAvatar);
             commentsVO.setUsername(nickname);
+
             // 2: 填充对应的回复评论数
             Long count = replyCommentsMapper.selectCount(new LambdaQueryWrapper<ReplyComments>()
                     .eq(ReplyComments::getReplyCommentId, comment.getId()));
 
             commentsVO.setReplyCount(count);
-            // 3:加入列表
+
+            // 3: 加入用户是否点赞
+            Long commentId = comment.getId();
+            UserCommentLikes userCommentLikes = userCommentLikesMapper.selectOne(new LambdaQueryWrapper<UserCommentLikes>()
+                    .eq(UserCommentLikes::getUserId, userId)
+                    .eq(UserCommentLikes::getCommentId, commentId));
+            Boolean liked = Boolean.FALSE;
+            if (userCommentLikes != null) {
+                liked = Boolean.TRUE;
+            }
+            commentsVO.setLiked(liked);
+
+            // 4:加入列表
             commentsVOList.add(commentsVO);
         }
         return commentsVOList;
@@ -127,17 +147,24 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments>
      * @description 给一级评论点赞
      **/
     @Override
-    public void addCommentLikes(Long commentId) {
+    @Transactional(rollbackFor = Exception.class)
+    public void addCommentLikes(Long userId, Long commentId) {
         // 1: 校验参数
         Comments comments = this.baseMapper.selectById(commentId);
         if (comments == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "点赞评论不存在");
         }
 
-        // 2: 修改数据库
+        // 2: 修改点赞数
         comments.setLikes(comments.getLikes() + 1);
         this.baseMapper.updateById(comments);
 
+        // 3: 添加点赞记录
+        UserCommentLikes userCommentLikes = new UserCommentLikes();
+        userCommentLikes.setUserId(userId);
+        userCommentLikes.setCommentId(commentId);
+
+        userCommentLikesMapper.insert(userCommentLikes);
 
         // todo:发送消息给消息队列实时计算搜索词热度
 
@@ -149,7 +176,7 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments>
      * @description 取消一级评论点赞
      **/
     @Override
-    public void decreaseCommentLikes(Long commentId) {
+    public void decreaseCommentLikes(Long userId, Long commentId) {
         // 1: 校验参数
         Comments comments = this.baseMapper.selectById(commentId);
         if (comments == null) {
@@ -159,6 +186,15 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments>
         // 2: 修改数据库
         comments.setLikes(comments.getLikes() - 1);
         this.baseMapper.updateById(comments);
+
+        // 3: 删除点赞记录
+        UserCommentLikes userCommentLikes = new UserCommentLikes();
+        userCommentLikes.setUserId(userId);
+        userCommentLikes.setCommentId(commentId);
+
+        userCommentLikesMapper.delete(new LambdaQueryWrapper<UserCommentLikes>()
+                .eq(UserCommentLikes::getUserId, userId)
+                .eq(UserCommentLikes::getCommentId, commentId));
 
     }
 
@@ -183,14 +219,12 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments>
         List<Comments> commentsList = this.baseMapper.selectList(queryWrapper);
 
         // 获取评论数量
-        int commentsNum = commentsList.size();
         int likesNum = 0;
         // 获取点赞数量
         for (Comments comments : commentsList) {
             likesNum += comments.getLikes();
         }
 
-        socialDataDto.setTotalComments(commentsNum);
         socialDataDto.setTotalLikes(likesNum);
 
         return socialDataDto;

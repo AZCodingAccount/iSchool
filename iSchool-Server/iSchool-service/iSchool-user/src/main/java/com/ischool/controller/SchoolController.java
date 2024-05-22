@@ -6,6 +6,8 @@ import com.ischool.model.Result;
 import com.ischool.model.entity.School;
 import com.common.vo.SchoolVO;
 import com.ischool.service.SchoolService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +26,13 @@ import java.util.List;
 @RestController
 @RequestMapping
 @Slf4j
+@Tag(name = "学校管理")
 public class SchoolController {
     @Autowired
     SchoolService schoolService;
 
     @GetMapping("/schools")
+    @Operation(summary = "获取学校列表", description = "获取系统所有支持列表，供个人中心下拉框使用")
     public BaseResponse<List<SchoolVO>> getSchoolList() {
         log.info("获取学校列表");
         // 获取学校列表就直接在controller里面写了，后面直接改库

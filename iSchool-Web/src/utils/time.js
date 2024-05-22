@@ -6,9 +6,16 @@
 // }
 
 
-function sleep(time) {
+const sleep = (time) => {
     // a()
     return new Promise((resolve) => setTimeout(resolve, time))
 }
 
-export { sleep }
+const timeFormat = (time) => {
+    return time.split('T')[0]
+}
+
+export {
+    sleep,
+    timeFormat
+}

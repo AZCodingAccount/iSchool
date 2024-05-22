@@ -59,6 +59,7 @@ export const getMessageList = () => { // 获取信息
     //             "userId": 0,
     //             "userNickname": "",
     //             "objId": 0,
+    //             "objName": '',
     //             "replyUserId": 0,
     //             "replyCommentId": 0,
     //             "content": "",
@@ -74,7 +75,7 @@ export const readMessage = (data) => { // 已读信息
     // {
     //     "messageId": 0
     // }
-    return request.put('/user/read/messages', data)
+    return request.put('/user/read/messages?messageId=' + data.messageId)
 }
 
 export const register = (data) => { // 注册
@@ -88,7 +89,7 @@ export const register = (data) => { // 注册
 export const upload = (file) => { // 上传头像
     return request.post('/user/upload', file)
     // {
-    //     "data": "" // token
+    //     "data": "" // avatar url
     // }
 }
 
