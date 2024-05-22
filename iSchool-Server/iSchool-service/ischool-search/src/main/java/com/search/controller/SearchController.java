@@ -70,6 +70,7 @@ public class SearchController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "搜索单一公告")
     public BaseResponse<AnnouncementVO> searchAnnoById(@PathVariable("id") Long id) {
         log.info("搜索id为{}的公告", id);
         String key = RedisKeyConstant.USER_SEARCH_BY_ID + id;
