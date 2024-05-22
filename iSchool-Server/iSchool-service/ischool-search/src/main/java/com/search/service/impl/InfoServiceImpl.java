@@ -1,7 +1,6 @@
 package com.search.service.impl;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
-import co.elastic.clients.elasticsearch._types.ErrorResponse;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch.core.SearchRequest;
@@ -10,8 +9,6 @@ import co.elastic.clients.elasticsearch.core.search.Highlight;
 import co.elastic.clients.elasticsearch.core.search.HighlightField;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import co.elastic.clients.json.JsonData;
-import co.elastic.clients.transport.Endpoint;
-import co.elastic.clients.transport.endpoints.SimpleEndpoint;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -22,14 +19,14 @@ import com.search.es.AnnouncementESDTO;
 import com.search.mapper.InfoMapper;
 import com.search.model.dto.SearchAnnouncementRequest;
 import com.search.model.entity.Info;
-import com.search.model.vo.SearchAnnouncementVO;
+import com.search.model.vo.AnnouncementVO;
+import com.search.model.vo.searchAnnouncementVO;
 import com.search.service.InfoService;
 import org.apache.commons.lang3.StringUtils;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -57,7 +54,7 @@ public class InfoServiceImpl extends ServiceImpl<InfoMapper, Info>
      * @description MySQL普通查询
      **/
     @Override
-    public PageResult<SearchAnnouncementVO> search(SearchAnnouncementRequest searchAnnouncementRequest, String school) {
+    public PageResult<searchAnnouncementVO> search(SearchAnnouncementRequest searchAnnouncementRequest, String school) {
         String keyword = searchAnnouncementRequest.getKeyword();
         Integer pageNum = searchAnnouncementRequest.getPageNum();
         Integer pageSize = searchAnnouncementRequest.getPageSize();
@@ -99,16 +96,16 @@ public class InfoServiceImpl extends ServiceImpl<InfoMapper, Info>
         long size = page.getSize();
         List<Info> records = page.getRecords();
         // 3.1：转换数据并根据发布时间降序
-        List<SearchAnnouncementVO> searchAnnouncementVOList = records.stream().map(item -> {
-            SearchAnnouncementVO searchAnnouncementVO = new SearchAnnouncementVO();
+        List<searchAnnouncementVO> searchAnnouncementVOList = records.stream().map(item -> {
+            searchAnnouncementVO searchAnnouncementVO = new searchAnnouncementVO();
             BeanUtils.copyProperties(item, searchAnnouncementVO);
             return searchAnnouncementVO;
-        }).sorted(Comparator.comparing(SearchAnnouncementVO::getPubTime)).collect(Collectors.toList());
+        }).sorted(Comparator.comparing(searchAnnouncementVO::getPubTime)).collect(Collectors.toList());
         return new PageResult<>(searchAnnouncementVOList, total, current, size);
     }
 
 
-    public PageResult<SearchAnnouncementVO> searchFromES(SearchAnnouncementRequest request, String school) {
+    public PageResult<searchAnnouncementVO> searchFromES(SearchAnnouncementRequest request, String school) {
         // 1：校验参数
         if (request.getPageNum() <= 0 || request.getPageSize() <= 0 || request.getPageSize() >= 100) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "分页参数不合法");
@@ -174,9 +171,9 @@ public class InfoServiceImpl extends ServiceImpl<InfoMapper, Info>
             if (searchResponse.hits().total() != null) {
                 total = searchResponse.hits().total().value();
             }
-            List<SearchAnnouncementVO> searchAnnouncementVOList = searchResponse.hits().hits().stream()
+            List<searchAnnouncementVO> searchAnnouncementVOList = searchResponse.hits().hits().stream()
                     .map(hit -> {
-                        SearchAnnouncementVO vo = new SearchAnnouncementVO();
+                        searchAnnouncementVO vo = new searchAnnouncementVO();
                         AnnouncementESDTO announcement = hit.source();
                         if (announcement != null) {
                             BeanUtils.copyProperties(announcement, vo);
@@ -246,7 +243,7 @@ public class InfoServiceImpl extends ServiceImpl<InfoMapper, Info>
     }
 
     @Override
-    public SearchAnnouncementVO searchByIdFromES(Long id) {
+    public AnnouncementVO searchByIdFromES(Long id) {
         // 1：校验参数
         if (id == null || id <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "ID参数不合法");
@@ -271,7 +268,7 @@ public class InfoServiceImpl extends ServiceImpl<InfoMapper, Info>
             // 4：处理查询结果
             if (!searchResponse.hits().hits().isEmpty()) {
                 Hit<AnnouncementESDTO> hit = searchResponse.hits().hits().get(0);
-                SearchAnnouncementVO vo = new SearchAnnouncementVO();
+                AnnouncementVO vo = new AnnouncementVO();
                 AnnouncementESDTO announcement = hit.source();
                 if (announcement != null) {
                     BeanUtils.copyProperties(announcement, vo);

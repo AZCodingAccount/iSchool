@@ -16,6 +16,9 @@ import com.ischool.model.entity.User;
 import com.ischool.model.enums.UserRoleEnum;
 import com.ischool.service.UserService;
 import com.ischool.utils.AliOssUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +39,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping
 @Slf4j
+@Tag(name = "用户管理", description = "个人中心相关操作")
 public class UserController {
 
     @Autowired
@@ -53,6 +57,7 @@ public class UserController {
      * @description 用户登录
      **/
     @PostMapping("/login")
+    @Operation(summary = "用户登录")
     public BaseResponse<String> login(@RequestBody LoginDto loginDto) {
         log.info("用户登录，当前登录请求信息为{}", loginDto);
         // 查找登录用户信息
@@ -67,7 +72,8 @@ public class UserController {
      * @description 获取用户登录信息
      **/
     @GetMapping
-    public BaseResponse<UserDto> getLoginUser(@RequestHeader("id") Long id) {
+    @Operation(summary = "获取用户登录信息", description = "常常用于第一次登陆成功或路由守卫检查用户登录态")
+    public BaseResponse<UserDto> getLoginUser(@Parameter(hidden = true) @RequestHeader("id") Long id) {
         log.info("获取id为{}的用户登录信息", id);
         UserDto userDto = userService.getLoginUser(id);
         return Result.success(userDto);
@@ -80,6 +86,7 @@ public class UserController {
      * @description 用户注册
      **/
     @PostMapping("/register")
+    @Operation(summary = "用户注册")
     public BaseResponse<Object> register(@RequestBody LoginDto loginDto) {
         log.info("用户注册，注册信息为：{}", loginDto);
         userService.register(loginDto);
@@ -92,9 +99,10 @@ public class UserController {
      * @description 修改用户信息
      **/
     @PutMapping
+    @Operation(summary = "修改用户信息")
     public BaseResponse<Object> updateUserInfo(@RequestBody UpdateUserDto updateUserDto,
-                                               @RequestHeader("id") Long id,
-                                               @RequestHeader("role") String role, HttpServletRequest request) {
+                                               @Parameter(hidden = true) @RequestHeader("id") Long id,
+                                               @Parameter(hidden = true) @RequestHeader("role") String role, HttpServletRequest request) {
         log.info("用户{}，角色为{}，修改信息，要修改的信息为：{}", id, role, updateUserDto);
         userService.updateUserInfo(updateUserDto, id, role);
         return Result.success();
@@ -107,8 +115,9 @@ public class UserController {
      * @description 普通用户注销
      **/
     @DeleteMapping
-    public BaseResponse<Object> deleteUser(@RequestHeader("id") Long id,
-                                           @RequestHeader("role") String role) {
+    @Operation(summary = "用户注销")
+    public BaseResponse<Object> deleteUser(@Parameter(hidden = true) @RequestHeader("id") Long id,
+                                           @Parameter(hidden = true) @RequestHeader("role") String role) {
         log.info("用户{}，角色为{}，删除用户", id, role);
 
         if (!role.equals(UserRoleEnum.USER.getText())) {
@@ -130,7 +139,10 @@ public class UserController {
      * @description 文件上传
      **/
     @PostMapping("/upload")
-    public BaseResponse<String> upload(MultipartFile file, @RequestHeader("id") Long id, @RequestHeader("role") String role) {
+    @Operation(summary = "文件上传")
+    public BaseResponse<String> upload(@Parameter(description = "文件对象") MultipartFile file,
+                                       @Parameter(hidden = true) @RequestHeader("id") Long id,
+                                       @Parameter(hidden = true) @RequestHeader("role") String role) {
         log.info("文件上传，{}", file);
         try {
             String originalFilename = file.getOriginalFilename();
@@ -158,6 +170,7 @@ public class UserController {
      * @description 检查用户id是否合法
      **/
     @GetMapping("/id")
+    @Operation(summary = "检查用户id是否合法", description = "供后端系统远程调用，前端不需关注")
     public Boolean checkId(@RequestParam("id") Long id) {
         log.info("检查id{}是否合法，远程调用", id);
         return userService.checkId(id);
@@ -170,6 +183,7 @@ public class UserController {
      * @description 获取用户信息——》远程调用
      **/
     @GetMapping("/rpc")
+    @Operation(summary = "获取用户信息", description = "供后端系统远程调用，前端不需关注")
     public BaseResponse<UserDto> getUser(@RequestHeader("id") Long id) {
         log.info("获取id为{}的用户登录信息，远程调用", id);
         UserDto userDto = userService.getUser(id);
@@ -183,7 +197,8 @@ public class UserController {
      * @description 获取所有未读的信息
      **/
     @GetMapping("/messages")
-    public BaseResponse<List<MessageDto>> getMessageList(@RequestHeader("id") Long id) {
+    @Operation(summary = "获取用户所有未读信息")
+    public BaseResponse<List<MessageDto>> getMessageList(@Parameter(hidden = true) @RequestHeader("id") Long id) {
         log.info("获取用户{}所有未读信息", id);
         if (!checkId(id)) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "用户不存在");
@@ -198,8 +213,9 @@ public class UserController {
      * @description 当前消息已读
      **/
     @PutMapping("/read/messages")
-    public BaseResponse<Object> readMessage(@RequestParam("messageId") Long messageId,
-                                            @RequestHeader("id") Long id) {
+    @Operation(summary = "将消息标记为已读", description = "点击去查看以后发送的请求")
+    public BaseResponse<Object> readMessage(@Parameter(description = "要标记的消息id", example = "1789548655582642177") @RequestParam("messageId") Long messageId,
+                                            @Parameter(hidden = true) @RequestHeader("id") Long id) {
         log.info("用户{}将消息{}标记为已读", id, messageId);
         Boolean b = communityFeignClient.readMessage(id, messageId);
         if (!b) {
