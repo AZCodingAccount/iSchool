@@ -4,7 +4,7 @@
 **简介**:OpenAPI definition
 
 
-**HOST**:http://192.168.148.191:8902/api/v1/user
+**HOST**:http://192.168.41.191:8902/api/v1/user
 
 
 **联系人**:
@@ -65,16 +65,25 @@
 | 参数名称 | 参数说明 | 类型 | schema |
 | -------- | -------- | ----- |----- | 
 |code|响应码，成功为0其他（4xxxx客户端错误，5xxxx服务端错误）|integer(int32)|integer(int32)|
-|data|响应数据|array|array|
+|data|响应数据|array|SchoolVO|
+|&emsp;&emsp;id|学校id|integer(int64)||
+|&emsp;&emsp;schoolName|学校名称|string||
+|&emsp;&emsp;schoolAbbr|学校缩写|string||
 |msg|响应消息，成功为success，错误返回失败信息|string||
 
 
 **响应示例**:
 ```javascript
 {
-	"code": 50010,
-	"data": null,
-	"msg": "接口调用失败"
+	"code": 0,
+	"data": [
+		{
+			"id": 1789548655582642177,
+			"schoolName": "哈尔滨理工大学",
+			"schoolAbbr": "HRBUST"
+		}
+	],
+	"msg": "success"
 }
 ```
 
@@ -140,7 +149,7 @@
 **响应示例**:
 ```javascript
 {
-	"code": 50010,
+	"code": 0,
 	"data": {
 		"userId": 1789548655582642177,
 		"username": "nick123",
@@ -155,7 +164,7 @@
 		"totalComments": 200,
 		"unReadCommentsCount": 10
 	},
-	"msg": "接口调用失败"
+	"msg": "success"
 }
 ```
 
@@ -230,9 +239,9 @@
 **响应示例**:
 ```javascript
 {
-	"code": 50010,
-	"data": null,
-	"msg": "接口调用失败"
+	"code": 0,
+	"data": {},
+	"msg": "success"
 }
 ```
 
@@ -282,9 +291,9 @@
 **响应示例**:
 ```javascript
 {
-	"code": 50010,
-	"data": null,
-	"msg": "接口调用失败"
+	"code": 0,
+	"data": {},
+	"msg": "success"
 }
 ```
 
@@ -396,9 +405,9 @@
 **响应示例**:
 ```javascript
 {
-	"code": 50010,
-	"data": "null",
-	"msg": "接口调用失败"
+	"code": 0,
+	"data": "",
+	"msg": "success"
 }
 ```
 
@@ -441,16 +450,39 @@
 | 参数名称 | 参数说明 | 类型 | schema |
 | -------- | -------- | ----- |----- | 
 |code|响应码，成功为0其他（4xxxx客户端错误，5xxxx服务端错误）|integer(int32)|integer(int32)|
-|data|响应数据|array|array|
+|data|响应数据|array|MessageDto|
+|&emsp;&emsp;id|消息id|integer(int64)||
+|&emsp;&emsp;userId|当前评论用户id（回复你的评论）|integer(int64)||
+|&emsp;&emsp;userNickname|回复评论的用户昵称|string||
+|&emsp;&emsp;objName|当前评论所属点评对象|string||
+|&emsp;&emsp;objId|当前评论所属点评对象id|integer(int64)||
+|&emsp;&emsp;replyUserId|被回复的用户id|integer(int64)||
+|&emsp;&emsp;replyCommentId|被回复的评论id|integer(int64)||
+|&emsp;&emsp;content|回复的评论内容|string||
+|&emsp;&emsp;likes|评论所获点赞数|integer(int32)||
+|&emsp;&emsp;pubTime|评论发布时间|string(date-time)||
 |msg|响应消息，成功为success，错误返回失败信息|string||
 
 
 **响应示例**:
 ```javascript
 {
-	"code": 50010,
-	"data": null,
-	"msg": "接口调用失败"
+	"code": 0,
+	"data": [
+		{
+			"id": 1789548655582642177,
+			"userId": 1789548655582642177,
+			"userNickname": "张三",
+			"objName": "服务端架构设计",
+			"objId": 1789548655582642177,
+			"replyUserId": 1789548655582642177,
+			"replyCommentId": 1789548655582642177,
+			"content": "你说的对，但是......",
+			"likes": 100,
+			"pubTime": ""
+		}
+	],
+	"msg": "success"
 }
 ```
 
@@ -503,9 +535,9 @@
 **响应示例**:
 ```javascript
 {
-	"code": 50010,
-	"data": null,
-	"msg": "接口调用失败"
+	"code": 0,
+	"data": {},
+	"msg": "success"
 }
 ```
 
@@ -570,9 +602,9 @@
 **响应示例**:
 ```javascript
 {
-	"code": 50010,
-	"data": null,
-	"msg": "接口调用失败"
+	"code": 0,
+	"data": {},
+	"msg": "success"
 }
 ```
 
@@ -637,7 +669,7 @@
 **响应示例**:
 ```javascript
 {
-	"code": 50010,
+	"code": 0,
 	"data": {
 		"userId": 1789548655582642177,
 		"username": "nick123",
@@ -652,7 +684,7 @@
 		"totalComments": 200,
 		"unReadCommentsCount": 10
 	},
-	"msg": "接口调用失败"
+	"msg": "success"
 }
 ```
 
@@ -704,8 +736,8 @@
 **响应示例**:
 ```javascript
 {
-	"code": 50010,
-	"data": "null",
-	"msg": "接口调用失败"
+	"code": 0,
+	"data": "",
+	"msg": "success"
 }
 ```
