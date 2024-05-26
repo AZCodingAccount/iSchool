@@ -8,7 +8,7 @@ let baseURL = ''
 // 根据不同环境配置不同的url
 if (import.meta.env.MODE === 'development') {
   // baseURL = 'http://localhost:8901'
-  baseURL = 'http://192.168.24.191:8901'
+  baseURL = 'http://192.168.41.191:8901'
 } else {
   baseURL = 'http://localhost:8901'
 }

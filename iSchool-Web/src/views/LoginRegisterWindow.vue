@@ -9,6 +9,8 @@ const isLogin = ref(true) // true登录，false注册
 const rememberMe = ref(false) // 记住我
 const titleRef = ref(null) // 标题绑定变量
 const boxRef = ref(null) // 盒子绑定变量
+const isLoading_login = ref(false) // 登录是否正在加载
+const isLoading_register = ref(false) // 注册是否正在加载
 
 const loginForm = ref({ // 登录表单
     username: '',
@@ -30,14 +32,19 @@ const onLogin = async () => {
         })
         return
     }
-    let res = await login(loginForm.value)
-    userInfoerStore.updateUserInfo({
-        token: res.data,
-        rememberMe: rememberMe.value
-    })
-    res = await getLoginUser_1()
-    userInfoerStore.updateUserInfo(res.data)
-    router.push('/main')
+    isLoading_login.value = true
+    try {
+        let res = await login(loginForm.value) // 获取token
+        userInfoerStore.updateUserInfo({
+            token: res.data,
+            password: loginForm.value.password,
+            rememberMe: rememberMe.value
+        })
+        res = await getLoginUser_1() // 获取个人信息
+        userInfoerStore.updateUserInfo(res.data)
+        isLoading_login.value = false
+        router.push('/main')
+    } catch { isLoading_login.value = false }
 }
 
 const registerForm = ref({ // 注册表单
@@ -62,16 +69,20 @@ const onRegister = async () => {
         })
         return
     }
-    await register(registerForm.value)
-    ElMessage.success('注册成功')
-    isLogin.value = true
-    registerForm.value.username = ''
-    registerForm.value.password = ''
-    registerForm.value.surePassword = ''
-    loginForm.value.username = ''
-    loginForm.value.password = ''
-    rememberMe.value = false
-    loginUsername_inputRef.value.focus()
+    isLoading_register.value = true
+    try {
+        await register(registerForm.value)
+        ElMessage.success('注册成功')
+        isLogin.value = true
+        registerForm.value.username = ''
+        registerForm.value.password = ''
+        registerForm.value.surePassword = ''
+        loginForm.value.username = ''
+        loginForm.value.password = ''
+        rememberMe.value = false
+        loginUsername_inputRef.value.focus()
+        isLoading_register.value = false
+    } catch { isLoading_register.value = false }
 }
 
 // 忘记密码
@@ -149,8 +160,8 @@ const keyOnRegisterSurePassword = (res) => { // 注册确定密码输入框键�
 
                 <div style="display: flex;">
                     <div style="flex-grow: 1;"></div>
-                    <el-button type="primary" style="width: 180px; height: 45px; font-size: 20px"
-                        @click="onLogin">登录</el-button>
+                    <el-button type="primary" style="width: 180px; height: 45px; font-size: 20px" @click="onLogin"
+                        :loading="isLoading_login">登录</el-button>
                     <div style="flex-grow: 0.45;"></div>
                     <el-link style="float: right; color: #409eff;" :underline="false"
                         @click="isLogin = false">没有账号？去注册</el-link>
@@ -200,8 +211,8 @@ const keyOnRegisterSurePassword = (res) => { // 注册确定密码输入框键�
 
                 <div style="display: flex;">
                     <div style="flex-grow: 1;"></div>
-                    <el-button type="primary" style="width: 180px; height: 45px; font-size: 20px"
-                        @click="onRegister">注册</el-button>
+                    <el-button type="primary" style="width: 180px; height: 45px; font-size: 20px" @click="onRegister"
+                        :loading="isLoading_register">注册</el-button>
                     <div style="flex-grow: 0.8;"></div>
                     <el-link style="float: right; color: #409eff;" :underline="false"
                         @click="isLogin = true">去登录</el-link>
