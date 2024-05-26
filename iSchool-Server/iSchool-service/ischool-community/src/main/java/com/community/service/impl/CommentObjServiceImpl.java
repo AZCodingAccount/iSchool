@@ -9,6 +9,8 @@ import com.community.model.constants.CommentObjTypeConstants;
 import com.community.model.dto.AddCommentObjRequest;
 import com.community.model.dto.ScoreRequest;
 import com.community.model.entity.CommentObj;
+import com.community.model.entity.UserObjStars;
+import com.community.model.vo.CommentObjVO;
 import com.community.service.CommentObjService;
 import com.ischool.exception.BusinessException;
 import com.ischool.model.ErrorCode;
@@ -16,7 +18,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,6 +34,9 @@ public class CommentObjServiceImpl extends ServiceImpl<CommentObjMapper, Comment
 
     @Autowired
     UserFeignClient userFeignClient;
+
+    @Autowired
+    UserObjStarsServiceImpl userObjStarsService;
 
     /**
      * @param addCommentObjRequest
@@ -65,9 +72,9 @@ public class CommentObjServiceImpl extends ServiceImpl<CommentObjMapper, Comment
      * @description 搜索点评对象
      **/
     @Override
-    public List<CommentObj> search(String keyword, String type) {
+    public List<CommentObjVO> search(String keyword, String type, Long userId) {
         // 1：校验参数
-        if (StringUtils.isNotBlank(type)&&!CommentObjTypeConstants.isLegal(type)) {
+        if (StringUtils.isNotBlank(type) && !CommentObjTypeConstants.isLegal(type)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
 
@@ -80,7 +87,25 @@ public class CommentObjServiceImpl extends ServiceImpl<CommentObjMapper, Comment
         if (commentObjs == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
         }
-        return commentObjs;
+
+        // 3: 填充当前用户对点评对象的评分
+        List<CommentObjVO> commentObjVOList = new ArrayList<>();
+        for (CommentObj commentObj : commentObjs) {
+            CommentObjVO commentObjVO = new CommentObjVO();
+            BeanUtils.copyProperties(commentObj, commentObjVO);
+            Long objId = commentObj.getId();
+            // 获取点评对象的评分
+            UserObjStars userObjStars = userObjStarsService.getBaseMapper().selectOne(new LambdaQueryWrapper<UserObjStars>()
+                    .eq(UserObjStars::getUserId, userId)
+                    .eq(UserObjStars::getObjId, objId));
+            Double score = 0d;
+            if (userObjStars != null) {
+                score = userObjStars.getScore();
+            }
+            commentObjVO.setUserScore(score);
+            commentObjVOList.add(commentObjVO);
+        }
+        return commentObjVOList;
     }
 
     /**
@@ -90,6 +115,7 @@ public class CommentObjServiceImpl extends ServiceImpl<CommentObjMapper, Comment
      * @description 点评对象评分
      **/
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void score(ScoreRequest scoreRequest, Long id) {
         // 1：参数校验
         Long commentObjId = scoreRequest.getCommentObjId();
@@ -116,6 +142,14 @@ public class CommentObjServiceImpl extends ServiceImpl<CommentObjMapper, Comment
         commentObj.setCount(scoreCount + 1);
         commentObj.setScore(newScore);
         this.baseMapper.updateById(commentObj);
+
+        // 3: 插入更新记录表数据
+        UserObjStars userObjStars = new UserObjStars();
+        userObjStars.setUserId(id);
+        userObjStars.setObjId(commentObjId);
+        userObjStars.setScore(score);
+
+        userObjStarsService.getBaseMapper().insert(userObjStars);
     }
 }
 

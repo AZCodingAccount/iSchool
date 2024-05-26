@@ -1,44 +1,39 @@
-package com.ischool.model.entity;
+package com.community.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-
 import java.io.Serializable;
-import java.time.LocalDateTime;
-
 import lombok.Data;
 
 /**
- * 支持的学校表
- *
- * @TableName school
+ * 
+ * @TableName user_obj_stars
  */
-@TableName(value = "school")
+@TableName(value ="user_obj_stars")
 @Data
-public class School implements Serializable {
+public class UserObjStars implements Serializable {
     /**
-     * 学校id
+     * 记录id
      */
     @TableId
     private Long id;
 
     /**
-     * 学校名称
+     * 评分的用户id
      */
-    private String schoolName;
-
-
-    /**
-     * 学校名称缩写
-     */
-    private String schoolAbbr;
+    private Long userId;
 
     /**
-     * 学校接入系统创建时间
+     * 评分的对象id(一级二级)
      */
-    private LocalDateTime createTime;
+    private Long objId;
+
+    /**
+     * 评分的分数
+     */
+    private Double score;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

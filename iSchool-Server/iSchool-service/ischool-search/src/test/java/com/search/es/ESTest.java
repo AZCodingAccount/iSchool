@@ -37,7 +37,7 @@ public class ESTest {
         announcementESDTO.setId(1L);
         announcementESDTO.setTitle("保研政策");
         announcementESDTO.setContent("保研政策大改");
-        announcementESDTO.setPubTime(LocalDateTime.now());
+        // announcementESDTO.setPubTime(LocalDateTime.now());
         announcementESDTO.setUrl("http://jwzx.hrbust.edu.cn/homepage/infoSingleArticle.do?articleId=4720&columnId=354");
         announcementESDTO.setCreateTime(LocalDateTime.now());
         announcementESDTO.setArticleId(1L);
