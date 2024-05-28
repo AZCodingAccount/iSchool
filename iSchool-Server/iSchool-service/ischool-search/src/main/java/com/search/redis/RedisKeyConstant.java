@@ -23,7 +23,7 @@ public class RedisKeyConstant {
 
     /*
      * 用户查询缓存
-     * 格式：search:user:20:蓝桥杯（20是页数，蓝桥杯是keyword）
+     * 格式：search:user:20:2023-11-20:2024-10-10:蓝桥杯（20是页数，蓝桥杯是keyword）
      */
     public static final String USER_SEARCH_LIST = "search:user:";
 

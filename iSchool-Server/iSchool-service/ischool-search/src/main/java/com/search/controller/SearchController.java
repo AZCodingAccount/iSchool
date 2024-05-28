@@ -16,6 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 /**
  * @program: iSchool-Server
  * @author: AlbertZhang
@@ -36,6 +39,34 @@ public class SearchController {
     private RedisTemplate<String, Object> redisTemplate;
 
     /**
+     * @param pageSize
+     * @param startDate
+     * @param endDate
+     * @param keyword
+     * @return java.lang.String
+     * @description 生成搜索时候的redis key
+     **/
+    public static String generateSearchKey(int pageSize, LocalDate startDate, LocalDate endDate, String keyword) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        String startDateStr = (startDate != null) ? startDate.format(formatter) : "null";
+        String endDateStr = (endDate != null) ? endDate.format(formatter) : "null";
+        String keywordStr = (keyword != null && !keyword.isEmpty()) ? keyword : "null";
+
+        StringBuilder keyBuilder = new StringBuilder();
+        keyBuilder.append(RedisKeyConstant.USER_SEARCH_LIST)
+                .append(pageSize)
+                .append(":")
+                .append(startDateStr)
+                .append(":")
+                .append(endDateStr)
+                .append(":")
+                .append(keywordStr);
+
+        return keyBuilder.toString();
+    }
+
+    /**
      * @param searchAnnouncementRequest
      * @param school
      * @return com.ischool.model.BaseResponse<com.ischool.model.PageResult < com.search.model.vo.SearchAnnouncementVO>>
@@ -48,9 +79,11 @@ public class SearchController {
         log.info("用户搜索，搜索信息为：{}", searchAnnouncementRequest);
         Integer pageNum = searchAnnouncementRequest.getPageNum();
         Integer pageSize = searchAnnouncementRequest.getPageSize();
-        String keyword = searchAnnouncementRequest.getKeyword();
+        String keyword = searchAnnouncementRequest.getKeyword();;
+        LocalDate startDate = searchAnnouncementRequest.getStartDate();
+        LocalDate endDate = searchAnnouncementRequest.getEndDate();
         // 首先看是否命中缓存
-        String key = RedisKeyConstant.USER_SEARCH_LIST + pageSize + ":" + keyword;
+        String key = generateSearchKey(pageSize, startDate, endDate, keyword);
         Object object = redisTemplate.opsForValue().get(key);
         if (pageNum == 1 && object != null) {
             // 直接返回

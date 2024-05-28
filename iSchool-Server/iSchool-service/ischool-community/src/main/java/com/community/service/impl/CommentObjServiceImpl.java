@@ -5,10 +5,13 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.client.service.UserFeignClient;
 import com.community.mapper.CommentObjMapper;
+import com.community.mapper.ReplyCommentsMapper;
 import com.community.model.constants.CommentObjTypeConstants;
 import com.community.model.dto.AddCommentObjRequest;
 import com.community.model.dto.ScoreRequest;
 import com.community.model.entity.CommentObj;
+import com.community.model.entity.Comments;
+import com.community.model.entity.ReplyComments;
 import com.community.model.entity.UserObjStars;
 import com.community.model.vo.CommentObjVO;
 import com.community.service.CommentObjService;
@@ -37,6 +40,13 @@ public class CommentObjServiceImpl extends ServiceImpl<CommentObjMapper, Comment
 
     @Autowired
     UserObjStarsServiceImpl userObjStarsService;
+
+    @Autowired
+    CommentsServiceImpl commentsService;
+
+    @Autowired
+    ReplyCommentsMapper replyCommentsMapper;
+
 
     /**
      * @param addCommentObjRequest
@@ -103,6 +113,12 @@ public class CommentObjServiceImpl extends ServiceImpl<CommentObjMapper, Comment
                 score = userObjStars.getScore();
             }
             commentObjVO.setUserScore(score);
+            // 获取评论数
+            Long count1 = commentsService.getBaseMapper().selectCount(new LambdaQueryWrapper<Comments>()
+                    .eq(Comments::getObjId, objId));
+            Long count2 = replyCommentsMapper.selectCount(new LambdaQueryWrapper<ReplyComments>()
+                    .eq(ReplyComments::getObjId, objId));
+            commentObjVO.setCommentCount((int) (count1 + count2));
             commentObjVOList.add(commentObjVO);
         }
         return commentObjVOList;
@@ -135,15 +151,36 @@ public class CommentObjServiceImpl extends ServiceImpl<CommentObjMapper, Comment
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户id或点评对象id不存在");
         }
 
-        // 2：计算并更新点评对象评分
+        // 2:构造查询条件。
+        LambdaQueryWrapper<UserObjStars> queryWrapper = new LambdaQueryWrapper<UserObjStars>()
+                .eq(UserObjStars::getUserId, id)
+                .eq(UserObjStars::getObjId, commentObjId);
+        // 获取之前的评分
+        UserObjStars originUserObjStars = userObjStarsService.getBaseMapper().selectOne(queryWrapper);
+        Double newScore = 0d;
+
+
+        // 3：计算并更新点评对象评分
         Double score1 = commentObj.getScore();
         Integer scoreCount = commentObj.getCount();
-        Double newScore = (score1 * scoreCount + score) / (scoreCount + 1);
-        commentObj.setCount(scoreCount + 1);
+        if (originUserObjStars != null) {
+            Double originScore = originUserObjStars.getScore();
+            // 3.1: 删除插入的评分记录
+            userObjStarsService.getBaseMapper().delete(queryWrapper);
+            // 3.2: 评分数减1
+            commentObj.setCount(commentObj.getCount() - 1);
+            this.baseMapper.updateById(commentObj);
+            // 业务逻辑是这样的，再次评分需要计算之前的总评分，去掉原来的评分，加上新评分
+            newScore = (score1 * scoreCount - originScore + score) / scoreCount;
+        } else {
+            // 业务逻辑是这样的，再次评分需要计算之前的总评分，去掉原来的评分，加上新评分
+            newScore = (score1 * scoreCount + score) / (scoreCount + 1);
+        }
+        commentObj.setCount(commentObj.getCount() + 1);
         commentObj.setScore(newScore);
         this.baseMapper.updateById(commentObj);
 
-        // 3: 插入更新记录表数据
+        // 4: 插入更新记录表数据
         UserObjStars userObjStars = new UserObjStars();
         userObjStars.setUserId(id);
         userObjStars.setObjId(commentObjId);
