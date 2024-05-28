@@ -9,11 +9,14 @@ export const useUserInfoerStore = defineStore('UserInfoer', () => {
     password: '123456',
     gender: '男',
     age: 20,
+    school: '哈尔滨理工大学',
     userAvatar: '/public/img/myAvatar.jpg',
     email: '1476652531@qq.com',
     totalLikes: 0,
     totalComments: 1,
     unReadCommentsCount: 0,
+
+    // tempViewObj: {},
 
     rememberMe: true,
     token: '',
@@ -35,11 +38,12 @@ export const useUserInfoerStore = defineStore('UserInfoer', () => {
       age: -1,
       userAvatar: '',
       email: '',
+      school: '',
+      // tempViewObj: {},
       rememberMe: false,
       token: ''
     }
-    for (let key in obj)
-      userInfo.value[key] = obj[key]
+    updateUserInfo(obj)
   }
 
   return {

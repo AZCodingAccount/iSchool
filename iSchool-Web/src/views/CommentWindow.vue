@@ -6,6 +6,7 @@ import { ref, computed, onMounted } from 'vue'
 // import { commentObj, comment1, comment2 } from '@/assets/testData.json' // 测试数据引用
 // import { sleep } from '@/utils/time'
 import router from '@/router'
+import { readMessage } from '@/api/user';
 
 const commentObjData = ref([]) // 点评对象数据
 const keyword = ref('') // 搜索内容
@@ -32,24 +33,23 @@ const onSearch = async () => { // 搜索
         return
     }
     commentObjData.value = res.data
+    for (let ind in commentObjData.value)
+        commentObjData.value[ind].userScore = commentObjData.value[ind].userScore / 2
     isLoading.value = false
     resultScrollbarRef.value.setScrollTop(0)
 }
 onMounted(() => {
-    onSearch().then(() => { // 最开始展示全部的搜索结果
-        // console.log('router', router.currentRoute.value.query)
+    onSearch().then(async () => { // 最开始展示全部的搜索结果
         if (router.currentRoute.value.query.objId != undefined) {
             let objId = router.currentRoute.value.query.objId
-            // console.log('objId', objId)
-            // console.log('commentObjData', commentObjData.value)
             let lit_commentObj = commentObjData.value.filter((item) => { return item.id == objId })
-            // console.log('lit_commentObj', lit_commentObj)
             if (lit_commentObj.length !== 1) {
                 ElMessage.error('点评对象定位失败')
                 return
             }
             onSelectCommentObj(lit_commentObj[0])
             resultScrollbarRef.value.setScrollTop(commentObjData.value.indexOf(lit_commentObj[0]) * 175)
+            await readMessage({ messageId: objId }) // 标为已读
         }
     })
 })
@@ -76,20 +76,15 @@ const onAddCommentObj = async () => { // 添加点评对象
 const commentObj_like = async (commentObj) => { // 给点评对象点赞
     await score({
         commentObjId: commentObj.id,
-        score: commentObj.stared
+        score: commentObj.userScore * 2
     })
 }
 
 const selectedCommentObj = ref({ id: -1 }) // 当前选择的点评对象
 const isLoading_comment1 = ref(false) // 是否在加载一级评论数据
 const onSelectCommentObj = async (commentObj) => { // 选择点评对象
-    // if (selectedCommentObj.value.id == commentObj.id) {
-    //     selectedCommentObj.value = { id: -1 }
-    //     return
-    // }
     selectedCommentObj.value = commentObj
     isLoading_comment1.value = true
-    // resultScrollbarRef.value.setScrollTop(commentObjData.value.indexOf(commentObj) * 175)
     input1Ref.value.focus()
     toStatus(2)
     try {
@@ -115,22 +110,22 @@ const inputPlaceholder = computed(() => { // 一级评论输入框悬浮文字
 })
 const likeImgUrl = (isLike) => { // 点赞的图标
     if (isLike) return '/public/img/like_active.png'
-    return '/public/img/like.png'
+    else return '/public/img/like.png'
 }
 const onLikeComment1 = async (commentObj) => { // 给一级评论点赞
     if (commentObj.liked) { // 取消点赞
         await decreaseCommentLikes_1(commentObj.id)
         // await sleep(1000) // test
         commentObj.liked = false
-        commentObj.likes -= 1
+        commentObj.likes--
         return
     }
     await addCommentLikes_1(commentObj.id)
     // await sleep(1000) // test
     commentObj.liked = true
-    commentObj.likes += 1
+    commentObj.likes++
 }
-const onLikeComment2 = async (commentObj) => {
+const onLikeComment2 = async (commentObj) => { // 给二级评论点赞
     if (commentObj.liked) { // 取消点赞
         await decreaseCommentLikes(commentObj.id)
         // await sleep(1000) // test
@@ -149,6 +144,7 @@ const comment1ScrollbarRef = ref(null) // 一级评论滚动窗口绑定变量
 const comment2ScrollbarRef = ref(null) // 一级评论滚动窗口绑定变量
 const isLoading_comment2 = ref(false) // 是否在加载二级评论数据
 const commentData2 = ref([]) // 所有二级评论数据
+const InputDisabled = ref(false) // 是否禁用输入框
 const onSelectComment = async (commentObj, commentLevel) => { // 选择或取消选择评论
     if (selectedComment.value.id == commentObj.id) { // 取消对评论的选择
         selectedComment.value = { id: -1 }
@@ -157,29 +153,27 @@ const onSelectComment = async (commentObj, commentLevel) => { // 选择或取消
             toStatus(2)
         }
         commentSendTo.value = 0
-        return
-    }
-    // if (commentLevel == 2 && commentObj.userId == '0'){ // 不能回复已注销用户的评论
-
-    // }
-    selectedComment.value = commentObj
-    commentSendTo.value = commentLevel
-    input1Ref.value.focus()
-    toStatus(3)
-    if (commentLevel == 1) { // 选的是一级评论
-        selectedComment1.value = commentObj
-        // 刷新二级评论数据
-        isLoading_comment2.value = true
-        try {
-            var res = await getCommentsList(commentObj.id)
-            // await sleep(1000) // test
-            // var res = { data: comment2 }
+    } else {
+        selectedComment.value = commentObj
+        commentSendTo.value = commentLevel
+        input1Ref.value.focus()
+        toStatus(3)
+        // 若发出当前评论的用户已注销，则禁用输入框
+        InputDisabled.value = (commentSendTo.value !== 0 && selectedComment.value.userId === '0')
+        if (commentLevel == 1) { // 选的是一级评论
+            selectedComment1.value = commentObj
+            // 刷新二级评论数据
+            isLoading_comment2.value = true
+            try {
+                var res = await getCommentsList(commentObj.id)
+                // await sleep(1000) // test
+                // var res = { data: comment2 }
+            }
+            catch { isLoading_comment2.value = false; return; }
+            commentData2.value = res.data
+            isLoading_comment2.value = false
+            comment2ScrollbarRef.value.setScrollTop(0)
         }
-        catch { isLoading_comment2.value = false; return; }
-        commentData2.value = res.data
-        // console.log('commentData2', commentData2.value)
-        isLoading_comment2.value = false
-        comment2ScrollbarRef.value.setScrollTop(0)
     }
 }
 const onSendComment = async () => { // 一级评论输入框发送信息
@@ -207,7 +201,6 @@ const onSendComment = async () => { // 一级评论输入框发送信息
         // comment1ScrollbarRef.value.setScrollTop(0)
         selectedCommentObj.value.commentCount += 1
     } else { // 回复某一级或二级评论
-        // console.log('selectedComment', selectedComment.value)
         await addComment({
             objId: selectedCommentObj.value.id,
             commentId: selectedComment.value.id,
@@ -323,20 +316,22 @@ const toStatus = (status) => {
                             </template>
                             <div style="display: flex;">
                                 <div style="text-align: center;" @click="onSelectCommentObj(item)">
-                                    <div style="font-size: 25px; font-weight: 600; color: #f7ba2a">{{ item.score }} <img
-                                            style="height: 20px;" src="/public/img/star.png">
+                                    <div style="font-size: 25px; font-weight: 600; color: #f7ba2a">{{
+                                        item.score.toFixed(1)
+                                        }} <img style="height: 20px;" src="/public/img/star.png">
                                     </div>
-                                    <div style="color: gray;"><span style="font-weight: 700;">{{ item.count
-                                            }}</span>评分/<span style="font-weight: 700;">{{ item.commentCount }}</span>评论
+                                    <div style="color: gray;">
+                                        <span style="font-weight: 700;">{{ item.count }}</span>评分/
+                                        <span style="font-weight: 700;">{{ item.commentCount }}</span>评论
                                     </div>
                                 </div>
                                 <div style="flex-grow: 1;" @click="onSelectCommentObj(item)"></div>
                                 <div style="text-align: center;">
                                     <div style="color: gray;">立即评分<span
                                             style="color: #f2cb51; font-weight: 700; margin-left: 10px;">{{
-                                                item.stared != 0 ? item.stared : '' }}</span></div>
-                                    <el-rate size="large" v-model="item.stared" @change="commentObj_like(item)"
-                                        :colors="['#409eff', '#67c23a', '#FF9900']" />
+                                                item.userScore !== 0 ? item.userScore * 2 : '' }}</span></div>
+                                    <el-rate size="large" v-model="item.userScore" @change="commentObj_like(item)"
+                                        :colors="['#409eff', '#67c23a', '#FF9900']" allow-half />
                                 </div>
                             </div>
                         </el-card>
@@ -364,9 +359,8 @@ const toStatus = (status) => {
                             <div style="flex-grow: 1;"></div>
 
                             <div style="text-align: center;">
-                                <div style="font-size: 25px; font-weight: 600; color: #f7ba2a">{{
-                                    selectedCommentObj.score
-                                }}
+                                <div style="font-size: 25px; font-weight: 600; color: #f7ba2a">
+                                    {{ Number(selectedCommentObj.score).toFixed(1) }}
                                     <img style="height: 20px;" src="/public/img/star.png">
                                 </div>
                                 <div style="color: gray;"><span style="font-weight: 700;">{{
@@ -383,6 +377,8 @@ const toStatus = (status) => {
                 <div v-loading="isLoading_comment1" style="height: 365px;">
                     <el-scrollbar ref="comment1ScrollbarRef" height="100%">
                         <!-- 一级评论 -->
+                        <el-empty v-show="commentData1.length === 0" description="快发出你的第一条评论吧~"
+                            image="/public/img/noComment.png" />
                         <div :style="{ borderBottom: '1px lightgray solid', padding: '10px 2px', backgroundColor: item.id === selectedComment.id ? '#eeeeee' : '' }"
                             v-for="item in commentData1" :key="item">
                             <div @click="onSelectComment(item, 1)">
@@ -412,9 +408,9 @@ const toStatus = (status) => {
                             <div style="display: flex; font-size: 13px; padding: 0 10px;">
                                 <el-link @click="onLikeComment1(item)" :underline="false">
                                     <img style="height: 25px;" :src="likeImgUrl(item.liked)">
-                                    <span :style="{ color: item.liked ? '#f3c668' : '', marginLeft: '5px' }">{{
-                                        item.likes
-                                    }}</span>
+                                    <span :style="{ color: item.liked ? '#f3c668' : '', marginLeft: '5px' }">
+                                        {{ item.likes }}
+                                    </span>
                                 </el-link>
                             </div>
                         </div>
@@ -424,7 +420,7 @@ const toStatus = (status) => {
                 <template #footer>
                     <div style="display: flex;">
                         <el-input style="height: 50px;" ref="input1Ref" v-model="messageComment"
-                            :placeholder="inputPlaceholder" @keyup.enter="onSendComment" />
+                            :placeholder="inputPlaceholder" @keyup.enter="onSendComment" :disabled="InputDisabled" />
                         <el-button style="height: 50px; margin-left: 20px;" type="primary"
                             @click="onSendComment">发送</el-button>
                     </div>
@@ -454,7 +450,7 @@ const toStatus = (status) => {
                                 <img style="height: 40px;" :src="likeImgUrl(selectedComment1.liked)">
                                 <span :style="{ color: selectedComment1.liked ? '#f3c668' : '', marginLeft: '5px' }">{{
                                     selectedComment1.likes
-                                }}</span>
+                                    }}</span>
                             </el-link>
                         </div>
                         <el-scrollbar style="margin-top: 10px;" height="72px">
@@ -465,6 +461,8 @@ const toStatus = (status) => {
                 <div v-loading="isLoading_comment2" style="height: 393px;">
                     <el-scrollbar ref="comment2ScrollbarRef" max-height="100%">
                         <!-- 二级评论 -->
+                        <el-empty v-show="commentData2.length === 0" description="快发出你的第一条评论吧~"
+                            image="/public/img/noComment.png" />
                         <div :style="{ borderBottom: '1px lightgray solid', padding: '10px 2px', backgroundColor: item.id === selectedComment.id ? '#eeeeee' : '' }"
                             v-for="item in commentData2" :key="item">
                             <div @click="onSelectComment(item, 2)">
@@ -475,7 +473,7 @@ const toStatus = (status) => {
                                     <div style="margin-left: 10px; max-width: 84%">
                                         <div>
                                             <el-text style="font-size: 20px; font-weight: 600;" line-clamp="1">
-                                                {{ item.replyUsername }}
+                                                {{ item.username }}
                                             </el-text>
                                         </div>
                                         <div style="color: gray;">{{ item.pubTime }}</div>
@@ -484,7 +482,7 @@ const toStatus = (status) => {
                                 <div style="padding: 10px;">
                                     <el-scrollbar style="font-size: 15px;" max-height="170px">
                                         回复<span style="color: #409eff; font-size: 20px; font-weight: 700;">{{
-                                            item.username }}</span>：
+                                            item.replyUsername }}</span>：
                                         {{ item.content }}
                                     </el-scrollbar>
                                 </div>
@@ -495,7 +493,7 @@ const toStatus = (status) => {
                                     <img style="height: 25px;" :src="likeImgUrl(item.liked)">
                                     <span :style="{ color: item.liked ? '#f3c668' : '', marginLeft: '5px' }">{{
                                         item.likes
-                                    }}</span>
+                                        }}</span>
                                 </el-link>
                             </div>
                         </div>

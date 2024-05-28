@@ -34,6 +34,10 @@ const router = createRouter({
       ]
     },
     {
+      path: '/tempView',
+      component: () => import('@/views/tempView.vue')
+    },
+    {
       path: '/:pathMatch(.*)',
       component: () => import('@/views/NotFound.vue')
     }

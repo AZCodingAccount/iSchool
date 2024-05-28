@@ -1,21 +1,29 @@
 <script setup>
 import { useUserInfoerStore } from '@/stores/userInfoer'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 
-// import { myMessage1 } from '@/assets/testData.json' // 测试数据引用
+// import { myMessage1, lit_school } from '@/assets/testData.json' // 测试数据引用
 // import { sleep } from '@/utils/time'
-import { deleteUser_1, getMessageList, readMessage, updateUserInfo_1, upload } from '@/api/user'
+import { deleteUser_1, getMessageList, getSchoolList, updateUserInfo_1, upload } from '@/api/user'
 import router from '@/router'
-// import { sleep } from '@/utils/time'
 
 const userInfoerStore = useUserInfoerStore()
 const formInfo = ref({}) // 个人信息的表单信息
-
 const isModifying = ref(false) // 是否正在修改
+const allSchoolOptions = ref([]) // 所有获取到的学校选择项信息
+const selectSchoolMessage = ref('') // 学校选择框内的搜索信息
+const showingSchoolOptions = computed(() => {
+    if (selectSchoolMessage.value === '')
+        return allSchoolOptions.value
+    return allSchoolOptions.value.filter((item) => { return item.schoolName.indexOf(selectSchoolMessage.value) !== -1 })
+})
 
-const onEdit = () => { // 点击编辑
-    // console.log('on edit')
+const onEdit = async () => { // 点击编辑
+    // 请求学校下拉框信息
+    let res = await getSchoolList()
+    // let res = { data: lit_school } // test
+    allSchoolOptions.value = res.data
     for (let key in userInfoerStore.userInfo) {
         if (key != 'password') {
             formInfo.value[key] = userInfoerStore.userInfo[key]
@@ -26,19 +34,13 @@ const onEdit = () => { // 点击编辑
 
 // 修改
 const onModify = async () => { // 确认修改
-    // for (let key in formInfo.value) {
-    //     if (formInfo.value[key] == '') {
-    //         ElMessage.error({
-    //             message: '修改信息不能为空',
-    //             grouping: true
-    //         })
-    //         return
-    //     }
-    // }
-    // 发送修改请求
-    // delete formInfo.value.password // 删除密码字段
     await updateUserInfo_1(formInfo.value)
-    userInfoerStore.updateUserInfo(formInfo.value)
+    userInfoerStore.updateUserInfo(formInfo.value) // 修改更新后的信息
+    userInfoerStore.updateUserInfo({ // 将存入本地的school由值改为标签
+        school: allSchoolOptions.value.filter((item) => {
+            return item.schoolAbbr === formInfo.value.school
+        })[0].schoolName
+    })
     isModifying.value = false
     ElMessage.success('个人信息修改成功')
 }
@@ -80,22 +82,22 @@ const initMyMessage = async () => { // 初始化我的信息
         // var res = { data: myMessage1 }
     } catch { isLoading_myMessage.value = false; return; }
     myMessage.value = res.data
-    // console.log('myMessage', myMessage.value)
     isLoading_myMessage.value = false
 }
 onMounted(() => {
     initMyMessage()
 })
 
-const onSelectMessage = async (messageObj) => { // 选择了某个信息
-    await readMessage({ messageId: messageObj.id }) // 标为已读
-    myMessage.value = myMessage.value.filter((item) => { return item.id != messageObj.id })
-    // router.push('/main/comment?objId=' + messageObj.objId)
-}
+// const onSelectMessage = async (messageObj) => { // 选择了某个信息
+//     await readMessage({ messageId: messageObj.id }) // 标为已读
+//     // myMessage.value = myMessage.value.filter((item) => { return item.id != messageObj.id })
+//     router.push('/main/comment?objId=' + messageObj.objId)
+// }
 
 </script>
 
 <template>
+    <!-- 退出和注销按钮 -->
     <div style="display: inline-block; position: fixed; z-index: 1; right: 3%; bottom: 5%; line-height: 60px;">
         <div><el-button type="info" size="large" round @click="showingExitDialog = true">退出</el-button></div>
         <div><el-button type="danger" size="large" round @click="showingLogoutDialog = true">注销</el-button></div>
@@ -121,11 +123,11 @@ const onSelectMessage = async (messageObj) => { // 选择了某个信息
         </template>
     </el-dialog>
 
-
     <div style="text-align: center;">
-        <div style="display: inline-block; width: 80%; margin-top: 4%;">
+        <div style="display: inline-block; width: 1600px; margin-top: 70px;">
             <div style="display: flex;">
                 <div style="width: 30%;">
+                    <!-- 头像 -->
                     <el-tooltip content="<strong>更改头像</strong>" placement="bottom" effect="dark" raw-content>
                         <el-upload :show-file-list="false" :before-upload="onAvatar" list-type="picture"
                             accept="image/*">
@@ -172,7 +174,7 @@ const onSelectMessage = async (messageObj) => { // 选择了某个信息
                             </el-form-item>
                             <el-form-item label="昵称">
                                 <div v-show="!isModifying">{{ userInfoerStore.userInfo.nickname }}</div>
-                                <el-input v-show="isModifying" v-model="formInfo.nickname" />
+                                <el-input style="width: 180px" v-show="isModifying" v-model="formInfo.nickname" />
                             </el-form-item>
                             <el-form-item label="性别">
                                 <div v-show="!isModifying">{{ userInfoerStore.userInfo.gender }}</div>
@@ -186,9 +188,20 @@ const onSelectMessage = async (messageObj) => { // 选择了某个信息
                                 <el-input-number v-show="isModifying" v-model="formInfo.age" size="small" :min="1"
                                     :max="100" />
                             </el-form-item>
+                            <el-form-item label="学校">
+                                <div v-show="!isModifying">{{ userInfoerStore.userInfo.school }}</div>
+                                <el-select style="width: 180px" v-show="isModifying" v-model="formInfo.school"
+                                    placeholder="请选择学校">
+                                    <template #header>
+                                        <el-input v-model="selectSchoolMessage" placeholder="输入学校关键字" clearable />
+                                    </template>
+                                    <el-option v-for="item in showingSchoolOptions" :key="item" :label="item.schoolName"
+                                        :value="item.schoolAbbr" />
+                                </el-select>
+                            </el-form-item>
                             <el-form-item label="邮箱">
                                 <div v-show="!isModifying">{{ userInfoerStore.userInfo.email }}</div>
-                                <el-input v-show="isModifying" v-model="formInfo.email" />
+                                <el-input style="width: 180px" v-show="isModifying" v-model="formInfo.email" />
                             </el-form-item>
                         </el-form>
                     </el-card>
@@ -207,7 +220,7 @@ const onSelectMessage = async (messageObj) => { // 选择了某个信息
                             </div>
                         </template>
                         <div v-loading="isLoading_myMessage">
-                            <el-scrollbar height="690px">
+                            <el-scrollbar height="610px">
                                 <el-empty v-show="myMessage.length == 0" image="/public/img/empty_message.png"
                                     description="没有消息" />
                                 <el-card v-for="item in myMessage" :key="item"
@@ -227,8 +240,7 @@ const onSelectMessage = async (messageObj) => { // 选择了某个信息
                                     <div style="display: flex; margin-top: 10px;">
                                         <div style="color: gray;">{{ item.pubTime }}</div>
                                         <el-link style="color: #409eff; margin-left: 10px;"
-                                            :href="'/main/comment?objId=' + item.objId"
-                                            @click="onSelectMessage(item)">去查看</el-link>
+                                            :href="'/main/comment?objId=' + item.objId">去查看</el-link>
                                     </div>
                                 </el-card>
                             </el-scrollbar>
@@ -251,9 +263,9 @@ const onSelectMessage = async (messageObj) => { // 选择了某个信息
 .avatar {
     display: inline-block;
     border: 3px rgb(202, 202, 202) solid;
-    width: 350px;
-    height: 350px;
-    border-radius: 350px;
+    width: 224px;
+    height: 224px;
+    border-radius: 224px;
     overflow: hidden;
 }
 </style>

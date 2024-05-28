@@ -93,5 +93,14 @@ export const upload = (file) => { // 上传头像
     // }
 }
 
+export const getSchoolList = () => { // 获取学校列表
+    return request.get('/user/schools')
+    // {
+    //     "code": 50010,
+    //     "data": [],
+    //     "msg": "接口调用失败"
+    // }
+}
+
 
 
