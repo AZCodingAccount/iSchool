@@ -4,7 +4,7 @@ import { ref, nextTick, onMounted, computed } from 'vue'
 import { MdPreview } from 'md-editor-v3'
 // import { homeResultData, homeResultData_AI } from '@/assets/testData.json' // 测试数据引用
 // import { sleep } from '@/utils/time'
-import { compTime, inDateRange } from '@/utils/time'
+import { compTime } from '@/utils/time'
 import { aiSearch, aiSearchRes, chat, searchAnnouncement } from '@/api/home'
 import { useUserInfoerStore } from '@/stores/userInfoer'
 import { orderArray } from '@/utils/order'
@@ -44,27 +44,23 @@ const orderImgUrl = computed(() => { // 排序图标
         return '/public/img/timeDesc.png'
     return 'error'
 })
-const onChangeDate = () => {
-    if (startDate.value != null && endDate.value != null && compTime(startDate.value, endDate.value)) {
-        ElMessage.error('非法输入：结束日期在开始日期之前。')
-        return
-    }
-}
-const showingResultData = computed(() => { // 显示的搜索结果（排序）
+const showingResultData = computed(() => { // 显示的搜索结果（排序后的数组）
     if (orderBy.value === 0)
-        return resultData.value.items.filter((item) => { return inDateRange(item.pubTime, startDate.value, endDate.value) })
+        return resultData.value.items
     else if (orderBy.value === 1)
-        return orderArray(resultData.value.items, (item) => { return item.pubTime }, compTime, true).filter((item) => { return inDateRange(item.pubTime, startDate.value, endDate.value) })
+        return orderArray(resultData.value.items, (item) => { return item.pubTime }, compTime, true)
     else if (orderBy.value === 2)
-        return orderArray(resultData.value.items, (item) => { return item.pubTime }, compTime).filter((item) => { return inDateRange(item.pubTime, startDate.value, endDate.value) })
-    return 'error'
+        return orderArray(resultData.value.items, (item) => { return item.pubTime }, compTime)
+    ElMessage.error('error')
+    return []
 })
 const currentPage = ref(1) // 分页框显示的当前页码
 const isLoading = ref(false) // 是否在加载中
-const onChangePage = async () => { // 切换搜索页面
+const onChangePage = async () => { // 切换页面
     isLoading.value = true
     try {
-        var res = await searchAnnouncement(searchingKeyword.value, currentPage.value, numShowingDataOnOnePage, searchingStartDate.value, searchingEndDate.value)
+        var res = await searchAnnouncement(searchingKeyword.value, currentPage.value,
+            numShowingDataOnOnePage, searchingStartDate.value, searchingEndDate.value)
         // await sleep(1000) // test
         // var res = { data: homeResultData }
     }
@@ -78,10 +74,11 @@ const onChangePage = async () => { // 切换搜索页面
 }
 const onSearch = async () => { // 搜索信息
     if (searchMessage.value == '') {
-        ElMessage.error({
-            message: '搜索内容不能为空',
-            grouping: true,
-        })
+        ElMessage.error({ message: '搜索内容不能为空', grouping: true })
+        return
+    }
+    if (startDate.value != null && endDate.value != null && compTime(startDate.value, endDate.value)) {
+        ElMessage.error({ message: '结束日期不能在开始日期之前', grouping: true })
         return
     }
     if (isChatting.value)
@@ -91,7 +88,8 @@ const onSearch = async () => { // 搜索信息
     searchingEndDate.value = endDate.value
     isLoading.value = true
     try {
-        var res = await searchAnnouncement(searchMessage.value, 1, numShowingDataOnOnePage, startDate.value, endDate.value)
+        var res = await searchAnnouncement(searchMessage.value, 1,
+            numShowingDataOnOnePage, startDate.value, endDate.value)
         await aiSearch(searchMessage.value)
         // await sleep(1000) // test
         // var res = { data: homeResultData }
@@ -286,10 +284,10 @@ onMounted(() => {
             </span>
             <div style="text-align: left; margin-top: 10px;">
                 <el-date-picker v-model="startDate" type="date" placeholder="开始日期" size="large"
-                    value-format="YYYY-MM-DD" @change="onChangeDate" />
+                    value-format="YYYY-MM-DD" />
                 <span style="margin: 0 10px;">—</span>
-                <el-date-picker v-model="endDate" type="date" placeholder="结束日期" size="large" value-format="YYYY-MM-DD"
-                    @change="onChangeDate" />
+                <el-date-picker v-model="endDate" type="date" placeholder="结束日期" size="large"
+                    value-format="YYYY-MM-DD" />
                 <span style="margin-left: 50px;">
                     <el-tooltip effect="dark" :content="orderContext" placement="right">
                         <el-button @click="orderBy = (orderBy + 1) % 3" circle :disabled="searchingKeyword === ''">
@@ -303,8 +301,10 @@ onMounted(() => {
     <div v-loading="isLoading">
         <div class="searchBox">
             <!-- 搜索结果 -->
-            <el-empty style="height: 600px" v-show="resultData.counts == 0" image="/public/img/empty_search.png"
-                description="无搜索结果" />
+            <el-empty style="height: 600px" v-show="resultData.counts == 0 && searchingKeyword !== ''"
+                image="/public/img/empty_search.png" description="无搜索结果" />
+            <el-empty style="height: 600px" v-show="resultData.counts == 0 && searchingKeyword === ''"
+                image="/public/img/searchForWhat.png" description="搜点什么吧" />
             <div class="result" v-show="resultData.counts != 0">
                 <div style="width: 98%; margin-bottom: 30px; border-bottom: 1px #dcdfe6 solid;"
                     v-for="item in showingResultData" :key="item">

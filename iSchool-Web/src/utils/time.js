@@ -15,7 +15,7 @@ const timeFormat = (time) => {
     return time.split('T')[0]
 }
 
-const compTime = (a, b) => {
+const compTime = (a, b) => { // 时间a是否早于时间b
     let aLit = a.split('-')
     let bLit = b.split('-')
     if (aLit[0] !== bLit[0])
@@ -26,18 +26,15 @@ const compTime = (a, b) => {
 }
 
 const inDateRange = (now, start, end) => { // 判断是否在时间范围内
-    if (start != null && end != null && compTime(start, end))
-        return false
+    // console.log('inDate', now, start, end)
     if (start == null && end == null)
         return true
-    else if (start == null && (compTime(end, now) || end == now))
-        return true
-    else if (end == null && (compTime(now, start) || start == now))
-        return true
-    else if ((compTime(end, now) || end == now) && (compTime(now, start) || start == now))
-        return true
-    else
-        return false
+    if (start != null && end != null)
+        return (compTime(end, now) || end == now) && (compTime(now, start) || start == now)
+    if (start != null && end == null)
+        return compTime(now, start) || start == now
+    if (start == null && end != null)
+        return compTime(end, now) || end == now
 }
 
 export {

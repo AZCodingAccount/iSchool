@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * @program: iSchool-Server
- * @author: AlbertZhang
+ * @author: Ljx
  * @create: 2024-05-07 10:36
  * @description: 社区远程调用类
  **/

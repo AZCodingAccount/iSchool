@@ -35,7 +35,7 @@ import java.util.UUID;
 
 /**
  * @program: iSchool-Server
- * @author: AlbertZhang
+ * @author: Ljx
  * @create: 2024-04-20 20:10
  * @description: 用户控制器
  **/
@@ -105,7 +105,8 @@ public class UserController {
     @Operation(summary = "修改用户信息")
     public BaseResponse<Object> updateUserInfo(@RequestBody UpdateUserDto updateUserDto,
                                                @Parameter(hidden = true) @RequestHeader("id") Long id,
-                                               @Parameter(hidden = true) @RequestHeader("role") String role, HttpServletRequest request) {
+                                               @Parameter(hidden = true) @RequestHeader("role") String role,
+                                               HttpServletRequest request) {
         log.info("用户{}，角色为{}，修改信息，要修改的信息为：{}", id, role, updateUserDto);
         userService.updateUserInfo(updateUserDto, id, role);
         return Result.success();

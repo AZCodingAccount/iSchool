@@ -20,16 +20,17 @@ const showingSchoolOptions = computed(() => {
 })
 
 const onEdit = async () => { // 点击编辑
-    // 请求学校下拉框信息
-    let res = await getSchoolList()
-    // let res = { data: lit_school } // test
-    allSchoolOptions.value = res.data
     for (let key in userInfoerStore.userInfo) {
         if (key != 'password') {
             formInfo.value[key] = userInfoerStore.userInfo[key]
         }
     }
     isModifying.value = true
+
+    // 请求学校下拉框信息
+    let res = await getSchoolList()
+    // let res = { data: lit_school } // test
+    allSchoolOptions.value = res.data
 }
 
 // 修改
@@ -185,8 +186,8 @@ onMounted(() => {
                             </el-form-item>
                             <el-form-item label="年龄">
                                 <div v-show="!isModifying">{{ userInfoerStore.userInfo.age }}</div>
-                                <el-input-number v-show="isModifying" v-model="formInfo.age" size="small" :min="1"
-                                    :max="100" />
+                                <el-input-number v-show="isModifying" v-model="formInfo.age" size="small" :min="0"
+                                    :max="199" />
                             </el-form-item>
                             <el-form-item label="学校">
                                 <div v-show="!isModifying">{{ userInfoerStore.userInfo.school }}</div>
@@ -236,7 +237,7 @@ onMounted(() => {
                                     </template>
                                     <el-text line-clamp="2" style="width: 100%; font-size: 20px;">{{
                                         item.content
-                                        }}</el-text>
+                                    }}</el-text>
                                     <div style="display: flex; margin-top: 10px;">
                                         <div style="color: gray;">{{ item.pubTime }}</div>
                                         <el-link style="color: #409eff; margin-left: 10px;"

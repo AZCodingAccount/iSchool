@@ -16,7 +16,7 @@ import java.util.Date;
 
 /**
  * @program: iSchool-Server
- * @author: AlbertZhang
+ * @author: Ljx
  * @create: 2024-05-17 21:10
  * @description: 公告DTO
  **/

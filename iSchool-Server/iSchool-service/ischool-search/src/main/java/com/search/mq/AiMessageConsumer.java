@@ -22,7 +22,7 @@ import java.util.Map;
 
 /**
  * @program: iSchool-Server
- * @author: AlbertZhang
+ * @author: Ljx
  * @create: 2024-05-05 21:27
  * @description: Ai消息消费者
  **/

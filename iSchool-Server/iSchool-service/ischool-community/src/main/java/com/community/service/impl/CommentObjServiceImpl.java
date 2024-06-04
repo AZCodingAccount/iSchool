@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Albert han
+ * @author Ljx
  * @description 针对表【obj】的数据库操作Service实现
  * @createDate 2024-05-03 21:10:19
  */
@@ -54,7 +54,7 @@ public class CommentObjServiceImpl extends ServiceImpl<CommentObjMapper, Comment
      * @description 添加点评对象
      **/
     public void add(AddCommentObjRequest addCommentObjRequest) {
-        // 1：参数校验
+        // 参数校验
         String name = addCommentObjRequest.getName();
         String type = addCommentObjRequest.getType();
         if (StringUtils.isAnyBlank(name, type)) {
@@ -65,8 +65,9 @@ public class CommentObjServiceImpl extends ServiceImpl<CommentObjMapper, Comment
         }
 
         // 不能重名
-        CommentObj commentObj = this.baseMapper.selectOne(new LambdaQueryWrapper<CommentObj>()
-                .eq(CommentObj::getName, name));
+        LambdaQueryWrapper<CommentObj> lqw = new LambdaQueryWrapper<CommentObj>();
+        lqw.eq(CommentObj::getName, name);
+        CommentObj commentObj = this.baseMapper.selectOne(lqw);
         if (commentObj != null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "点评对象名称重复");
         }
@@ -83,17 +84,17 @@ public class CommentObjServiceImpl extends ServiceImpl<CommentObjMapper, Comment
      **/
     @Override
     public List<CommentObjVO> search(String keyword, String type, Long userId) {
-        // 1：校验参数
+        // 1：参数校验
         if (StringUtils.isNotBlank(type) && !CommentObjTypeConstants.isLegal(type)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
 
         // 2：查询数据
-        LambdaQueryWrapper<CommentObj> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.like(StringUtils.isNotBlank(keyword), CommentObj::getName, keyword);
-        queryWrapper.eq(StringUtils.isNotBlank(type), CommentObj::getType, type);
+        LambdaQueryWrapper<CommentObj> lqw = new LambdaQueryWrapper<>();
+        lqw.like(StringUtils.isNotBlank(keyword), CommentObj::getName, keyword);
+        lqw.eq(StringUtils.isNotBlank(type), CommentObj::getType, type);
 
-        List<CommentObj> commentObjs = this.baseMapper.selectList(queryWrapper);
+        List<CommentObj> commentObjs = this.baseMapper.selectList(lqw);
         if (commentObjs == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
         }

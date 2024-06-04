@@ -8,7 +8,7 @@ import com.ischool.service.SchoolService;
 import org.springframework.stereotype.Service;
 
 /**
-* @author Albert han
+* @author Ljx
 * @description 针对表【school(支持的学校表)】的数据库操作Service实现
 * @createDate 2024-05-19 13:41:39
 */

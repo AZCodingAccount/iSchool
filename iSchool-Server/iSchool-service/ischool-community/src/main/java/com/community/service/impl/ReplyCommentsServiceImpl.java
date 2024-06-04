@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * @author Albert han
+ * @author Ljx
  * @description 针对表【reply_comments】的数据库操作Service实现
  * @createDate 2024-05-03 22:25:06
  */
@@ -240,6 +240,7 @@ public class ReplyCommentsServiceImpl extends ServiceImpl<ReplyCommentsMapper, R
         queryWrapper.eq(ReplyComments::getReplyUserId, id)
                 .eq(ReplyComments::getReaded, 0);
         List<ReplyComments> replyComments = this.baseMapper.selectList(queryWrapper);
+
         List<MessageDto> messageDtoList = replyComments.stream().map(item -> {
             MessageDto messageDto = new MessageDto();
             BeanUtils.copyProperties(item, messageDto);

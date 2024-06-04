@@ -22,7 +22,7 @@ public class AliOssUtil {
     private String bucketName;  // 桶名称
 
     /**
-     * @author AlbertZhang
+     * @author Ljx
      * @description 上传文件对象，都是固定写法
      * @date 2023-12-25 15:46
      * @param bytes

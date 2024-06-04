@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * @author Albert han
+ * @author Ljx
  * @description 针对表【info】的数据库操作Service实现
  * @createDate 2024-05-04 21:31:19
  */

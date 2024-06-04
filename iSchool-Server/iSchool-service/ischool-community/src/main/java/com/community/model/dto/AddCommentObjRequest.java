@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 /**
  * @program: iSchool-Server
- * @author: AlbertZhang
+ * @author: Ljx
  * @create: 2024-05-03 21:30
  * @description: 添加点评对象DTO
  **/

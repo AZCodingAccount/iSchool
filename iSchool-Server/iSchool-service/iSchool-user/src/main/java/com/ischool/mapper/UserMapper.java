@@ -5,7 +5,7 @@ import com.ischool.model.entity.User;
 
 
 /**
-* @author Albert han
+* @author Ljx
 * @description 针对表【user】的数据库操作Mapper
 * @createDate 2024-05-02 13:46:01
 * @Entity generator.domain.User
