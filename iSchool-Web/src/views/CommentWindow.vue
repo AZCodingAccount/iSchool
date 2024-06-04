@@ -73,7 +73,7 @@ const onAddCommentObj = async () => { // 添加点评对象
     formAddCommentObj.value.name = ''
     formAddCommentObj.value.type = ''
 }
-const commentObj_like = async (commentObj) => { // 给点评对象点赞
+const commentObj_like = async (commentObj) => { // 给点评对象评分
     await score({
         commentObjId: commentObj.id,
         score: commentObj.userScore * 2
@@ -178,10 +178,8 @@ const onSelectComment = async (commentObj, commentLevel) => { // 选择或取消
 }
 const onSendComment = async () => { // 一级评论输入框发送信息
     if (messageComment.value == '') {
-        ElMessage.error({
-            message: '评论信息不能为空',
-            grouping: true
-        })
+        ElMessage.error({ message: '评论信息不能为空', grouping: true })
+        return
     }
     if (commentSendTo.value == 0) { // 评论点评对象
         await addComment_1({
@@ -226,7 +224,7 @@ const onSendComment = async () => { // 一级评论输入框发送信息
 const window1 = ref(null)
 const window2 = ref(null)
 const window3 = ref(null)
-const toStatus = (status) => {
+const toStatus = (status) => { // 窗口状态转换函数
     if (status == 1) {
         window1.value.style.left = '31%'
         window2.value.style.left = '31%'
@@ -318,7 +316,7 @@ const toStatus = (status) => {
                                 <div style="text-align: center;" @click="onSelectCommentObj(item)">
                                     <div style="font-size: 25px; font-weight: 600; color: #f7ba2a">{{
                                         item.score.toFixed(1)
-                                        }} <img style="height: 20px;" src="/public/img/star.png">
+                                    }} <img style="height: 20px;" src="/public/img/star.png">
                                     </div>
                                     <div style="color: gray;">
                                         <span style="font-weight: 700;">{{ item.count }}</span>评分/
@@ -450,7 +448,7 @@ const toStatus = (status) => {
                                 <img style="height: 40px;" :src="likeImgUrl(selectedComment1.liked)">
                                 <span :style="{ color: selectedComment1.liked ? '#f3c668' : '', marginLeft: '5px' }">{{
                                     selectedComment1.likes
-                                    }}</span>
+                                }}</span>
                             </el-link>
                         </div>
                         <el-scrollbar style="margin-top: 10px;" height="72px">
@@ -493,7 +491,7 @@ const toStatus = (status) => {
                                     <img style="height: 25px;" :src="likeImgUrl(item.liked)">
                                     <span :style="{ color: item.liked ? '#f3c668' : '', marginLeft: '5px' }">{{
                                         item.likes
-                                        }}</span>
+                                    }}</span>
                                 </el-link>
                             </div>
                         </div>
