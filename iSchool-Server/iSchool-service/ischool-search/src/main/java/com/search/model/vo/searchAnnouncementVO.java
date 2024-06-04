@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 /**
  * @program: iSchool-Server
- * @author: AlbertZhang
+ * @author: Ljx
  * @create: 2024-05-04 21:45
  * @description: 搜索结果
  **/

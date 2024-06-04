@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * @author Albert han
+ * @author Ljx
  * @description 针对表【user】的数据库操作Service实现
  * @createDate 2024-05-02 13:46:01
  */
@@ -164,6 +164,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (id <= 0 || !Objects.equals(role, UserRoleEnum.USER.getText())) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
+
         String password = updateUserDto.getPassword();
         Integer age = updateUserDto.getAge();
         if (password != null && password.length() < 6) {

@@ -2,7 +2,7 @@ package com.search.mq;
 
 /**
  * @program: iSchool-Server
- * @author: AlbertZhang
+ * @author: Ljx
  * @create: 2024-05-05 21:25
  * @description: AImq的相关常量
  **/

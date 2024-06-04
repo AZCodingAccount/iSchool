@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 /**
  * @program: iSchool-Server
- * @author: AlbertZhang
+ * @author: Ljx
  * @create: 2024-05-03 22:42
  * @description: 评论VO
  **/

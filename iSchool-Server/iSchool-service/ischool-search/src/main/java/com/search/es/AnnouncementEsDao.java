@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * @program: iSchool-Server
- * @author: AlbertZhang
+ * @author: Ljx
  * @create: 2024-05-17 21:24
  * @description: 框架封装好的简单的增删改查, 本项目没用上
  **/
