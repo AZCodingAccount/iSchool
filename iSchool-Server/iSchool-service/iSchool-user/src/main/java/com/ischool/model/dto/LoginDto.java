@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * @program: iSchool-Server
- * @author: AlbertZhang
+ * @author: Ljx
  * @create: 2024-04-20 20:42
  * @description: 登录实体类
  **/

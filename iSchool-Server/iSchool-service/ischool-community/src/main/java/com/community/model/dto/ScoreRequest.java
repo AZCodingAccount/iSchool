@@ -5,7 +5,7 @@ import lombok.Data;
 
 /**
  * @program: iSchool-Server
- * @author: AlbertZhang
+ * @author: Ljx
  * @create: 2024-05-04 14:34
  * @description: 点评对象评分请求
  **/

@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * @author Albert han
+ * @author Ljx
  * @description 针对表【info】的数据库操作Service实现
  * @createDate 2024-05-04 21:31:19
  */
@@ -122,19 +122,29 @@ public class InfoServiceImpl extends ServiceImpl<InfoMapper, Info>
                     ).build());
         }
 
-        if (request.getStartDate() != null) {
+        // 严格筛选日期范围
+        if (request.getStartDate() != null && request.getEndDate() != null) {
             boolQueryBuilder.filter(new Query.Builder()
                     .range(r -> r
                             .field("pubTime")
                             .gte(JsonData.of(request.getStartDate().toString()))
-                    ).build());
-        }
-        if (request.getEndDate() != null) {
-            boolQueryBuilder.filter(new Query.Builder()
-                    .range(r -> r
-                            .field("pubTime")
                             .lte(JsonData.of(request.getEndDate().toString()))
                     ).build());
+        } else {
+            if (request.getStartDate() != null) {
+                boolQueryBuilder.filter(new Query.Builder()
+                        .range(r -> r
+                                .field("pubTime")
+                                .gte(JsonData.of(request.getStartDate().toString()))
+                        ).build());
+            }
+            if (request.getEndDate() != null) {
+                boolQueryBuilder.filter(new Query.Builder()
+                        .range(r -> r
+                                .field("pubTime")
+                                .lte(JsonData.of(request.getEndDate().toString()))
+                        ).build());
+            }
         }
 
         if (school != null && !school.isEmpty()) {
@@ -149,7 +159,7 @@ public class InfoServiceImpl extends ServiceImpl<InfoMapper, Info>
 
         // 3：构建高亮显示
         Highlight.Builder highlightBuilder = new Highlight.Builder()
-                .preTags("<span style=\"color: red; font-weight: bold;\">")
+                .preTags("<span style=\"color: red;\">")
                 .postTags("</span>")
                 .fields("title", new HighlightField.Builder().build())
                 .fields("pureText", new HighlightField.Builder().build());

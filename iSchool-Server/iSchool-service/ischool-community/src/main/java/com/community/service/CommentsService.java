@@ -9,7 +9,7 @@ import com.community.model.vo.CommentsVO;
 import java.util.List;
 
 /**
- * @author Albert han
+ * @author Ljx
  * @description 针对表【comments】的数据库操作Service
  * @createDate 2024-05-03 22:24:26
  */
@@ -27,7 +27,7 @@ public interface CommentsService extends IService<Comments> {
      * @return List<CommentsVO>
      * @description 获取某个点评对象的所有一级评论数据
      **/
-    List<CommentsVO> getList(Long objId);
+    List<CommentsVO> getList(Long objId,Long requestUserId);
 
     /**
      * @param commentId

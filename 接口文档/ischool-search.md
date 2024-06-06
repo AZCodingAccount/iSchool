@@ -4,7 +4,7 @@
 **简介**:iSchool项目API 文档
 
 
-**HOST**:http://192.168.148.191:8904/api/v1/search
+**HOST**:http://192.168.41.191:8904/api/v1/search
 
 
 **联系人**:AlbertZhang
@@ -77,14 +77,14 @@
 **响应示例**:
 ```javascript
 {
-	"code": 50010,
+	"code": 0,
 	"data": {
 		"id": 1789548655582642177,
 		"content": "<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n    <title>关于举办第七届全国大学生化工实验大赛的通知</title>",
 		"pubTime": "2024-05-22",
 		"url": "http://jwzx.hrbust.edu.cn/homepage/infoSingleArticle.do?articleId=4712&columnId=354"
 	},
-	"msg": "接口调用失败"
+	"msg": "success"
 }
 ```
 
@@ -150,7 +150,7 @@
 **响应示例**:
 ```javascript
 {
-	"code": 50010,
+	"code": 0,
 	"data": {
 		"items": [
 			{
@@ -165,7 +165,7 @@
 		"pageNum": 0,
 		"pageSize": 0
 	},
-	"msg": "接口调用失败"
+	"msg": "success"
 }
 ```
 
@@ -220,9 +220,9 @@
 **响应示例**:
 ```javascript
 {
-	"code": 50010,
-	"data": "null",
-	"msg": "接口调用失败"
+	"code": 0,
+	"data": "",
+	"msg": "success"
 }
 ```
 
@@ -275,9 +275,9 @@
 **响应示例**:
 ```javascript
 {
-	"code": 50010,
-	"data": null,
-	"msg": "接口调用失败"
+	"code": 0,
+	"data": {},
+	"msg": "success"
 }
 ```
 
@@ -329,8 +329,8 @@
 **响应示例**:
 ```javascript
 {
-	"code": 50010,
-	"data": null,
-	"msg": "接口调用失败"
+	"code": 0,
+	"data": {},
+	"msg": "success"
 }
 ```

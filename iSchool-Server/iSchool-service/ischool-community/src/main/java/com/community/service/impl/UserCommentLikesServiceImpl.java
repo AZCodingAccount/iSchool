@@ -8,7 +8,7 @@ import com.community.service.UserCommentLikesService;
 import org.springframework.stereotype.Service;
 
 /**
-* @author Albert han
+* @author Ljx
 * @description 针对表【user_comment_likes】的数据库操作Service实现
 * @createDate 2024-05-21 10:54:20
 */

@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Albert han
+ * @author Ljx
  * @description 针对表【comments】的数据库操作Service实现
  * @createDate 2024-05-03 22:24:26
  */
@@ -84,7 +84,7 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments>
      * @description 获取某个点评对象下的一级评论相关信息
      **/
     @Override
-    public List<CommentsVO> getList(Long objId) {
+    public List<CommentsVO> getList(Long objId, Long requestUserId) {
         // 1:校验参数
         if (objId <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -127,7 +127,7 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments>
             // 3: 加入用户是否点赞
             Long commentId = comment.getId();
             UserCommentLikes userCommentLikes = userCommentLikesMapper.selectOne(new LambdaQueryWrapper<UserCommentLikes>()
-                    .eq(UserCommentLikes::getUserId, userId)
+                    .eq(UserCommentLikes::getUserId, requestUserId)
                     .eq(UserCommentLikes::getCommentId, commentId));
             Boolean liked = Boolean.FALSE;
             if (userCommentLikes != null) {

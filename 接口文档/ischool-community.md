@@ -4,7 +4,7 @@
 **简介**:iSchool项目API 文档
 
 
-**HOST**:http://192.168.148.191:8903/api/v1/community
+**HOST**:http://192.168.41.191:8903/api/v1/community
 
 
 **联系人**:AlbertZhang
@@ -86,9 +86,9 @@
 **响应示例**:
 ```javascript
 {
-	"code": 50010,
-	"data": null,
-	"msg": "接口调用失败"
+	"code": 0,
+	"data": {},
+	"msg": "success"
 }
 ```
 
@@ -153,9 +153,9 @@
 **响应示例**:
 ```javascript
 {
-	"code": 50010,
-	"data": null,
-	"msg": "接口调用失败"
+	"code": 0,
+	"data": {},
+	"msg": "success"
 }
 ```
 
@@ -201,16 +201,35 @@
 | 参数名称 | 参数说明 | 类型 | schema |
 | -------- | -------- | ----- |----- | 
 |code|响应码，成功为0其他（4xxxx客户端错误，5xxxx服务端错误）|integer(int32)|integer(int32)|
-|data|响应数据|array|array|
+|data|响应数据|array|CommentObjVO|
+|&emsp;&emsp;id|点评对象id|integer(int64)||
+|&emsp;&emsp;type|点评对象类型|string||
+|&emsp;&emsp;name|点评对象名称|string||
+|&emsp;&emsp;commentCount|总评分数（用count吧，我也忘了这个字段）|integer(int32)||
+|&emsp;&emsp;score|平均评分|number(double)||
+|&emsp;&emsp;userScore|用户评分|number(double)||
+|&emsp;&emsp;count|总评分数|integer(int32)||
+|&emsp;&emsp;createTime||string(date-time)||
 |msg|响应消息，成功为success，错误返回失败信息|string||
 
 
 **响应示例**:
 ```javascript
 {
-	"code": 50010,
-	"data": null,
-	"msg": "接口调用失败"
+	"code": 0,
+	"data": [
+		{
+			"id": 1789548655582642177,
+			"type": "课程",
+			"name": "服务端架构设计",
+			"commentCount": 12,
+			"score": 7.9,
+			"userScore": 5.5,
+			"count": 12,
+			"createTime": ""
+		}
+	],
+	"msg": "success"
 }
 ```
 
@@ -284,9 +303,9 @@
 **响应示例**:
 ```javascript
 {
-	"code": 50010,
-	"data": null,
-	"msg": "接口调用失败"
+	"code": 0,
+	"data": {},
+	"msg": "success"
 }
 ```
 
@@ -331,16 +350,43 @@
 | 参数名称 | 参数说明 | 类型 | schema |
 | -------- | -------- | ----- |----- | 
 |code|响应码，成功为0其他（4xxxx客户端错误，5xxxx服务端错误）|integer(int32)|integer(int32)|
-|data|响应数据|array|array|
+|data|响应数据|array|ReplyCommentsVO|
+|&emsp;&emsp;id|评论id|integer(int64)||
+|&emsp;&emsp;objId|评论所属对象id|integer(int64)||
+|&emsp;&emsp;userId|发送评论的用户id|integer(int64)||
+|&emsp;&emsp;content|评论的内容|string||
+|&emsp;&emsp;likes|评论点赞数|integer(int32)||
+|&emsp;&emsp;liked|用户是否点赞（True代表点赞）|boolean||
+|&emsp;&emsp;userAvatar|用户头像url|string||
+|&emsp;&emsp;username|评论的用户名|string||
+|&emsp;&emsp;replyUserId|回复的用户id|integer(int64)||
+|&emsp;&emsp;replyUsername|回复的用户名|string||
+|&emsp;&emsp;replyUserAvatar|回复的用户头像|string||
+|&emsp;&emsp;pubTime|评论的发布时间|string(date-time)||
 |msg|响应消息，成功为success，错误返回失败信息|string||
 
 
 **响应示例**:
 ```javascript
 {
-	"code": 50010,
-	"data": null,
-	"msg": "接口调用失败"
+	"code": 0,
+	"data": [
+		{
+			"id": 1789548655582642177,
+			"objId": 1789548655582642177,
+			"userId": 1789548655582642177,
+			"content": "我知道了，这是个好老师",
+			"likes": 15,
+			"liked": true,
+			"userAvatar": "https://ischool-bucket.oss-cn-beijing.aliyuncs.com/4c079b7b-0873-4c99-a666-0874a1595811.jpg",
+			"username": "张三",
+			"replyUserId": 1789548655582642177,
+			"replyUsername": "李四",
+			"replyUserAvatar": "https://ischool-bucket.oss-cn-beijing.aliyuncs.com/4c079b7b-0873-4c99-a666-0874a1595811.jpg",
+			"pubTime": ""
+		}
+	],
+	"msg": "success"
 }
 ```
 
@@ -392,9 +438,9 @@
 **响应示例**:
 ```javascript
 {
-	"code": 50010,
-	"data": null,
-	"msg": "接口调用失败"
+	"code": 0,
+	"data": {},
+	"msg": "success"
 }
 ```
 
@@ -446,9 +492,9 @@
 **响应示例**:
 ```javascript
 {
-	"code": 50010,
-	"data": null,
-	"msg": "接口调用失败"
+	"code": 0,
+	"data": {},
+	"msg": "success"
 }
 ```
 
@@ -691,9 +737,9 @@
 **响应示例**:
 ```javascript
 {
-	"code": 50010,
-	"data": null,
-	"msg": "接口调用失败"
+	"code": 0,
+	"data": {},
+	"msg": "success"
 }
 ```
 
@@ -738,16 +784,39 @@
 | 参数名称 | 参数说明 | 类型 | schema |
 | -------- | -------- | ----- |----- | 
 |code|响应码，成功为0其他（4xxxx客户端错误，5xxxx服务端错误）|integer(int32)|integer(int32)|
-|data|响应数据|array|array|
+|data|响应数据|array|CommentsVO|
+|&emsp;&emsp;id|一级评论id|integer(int64)||
+|&emsp;&emsp;objId|点评对象id|integer(int64)||
+|&emsp;&emsp;userId|当前用户id|integer(int64)||
+|&emsp;&emsp;content|评论内容|string||
+|&emsp;&emsp;likes|当前评论点赞数|integer(int32)||
+|&emsp;&emsp;liked|当前用户是否点赞（True已点赞）|boolean||
+|&emsp;&emsp;userAvatar|用户头像url|string||
+|&emsp;&emsp;username|评论的用户名|string||
+|&emsp;&emsp;replyCount|当前评论回复数|integer(int64)||
+|&emsp;&emsp;pubTime|发布时间|string(date-time)||
 |msg|响应消息，成功为success，错误返回失败信息|string||
 
 
 **响应示例**:
 ```javascript
 {
-	"code": 50010,
-	"data": null,
-	"msg": "接口调用失败"
+	"code": 0,
+	"data": [
+		{
+			"id": 1789548655582642177,
+			"objId": 1789548655582642177,
+			"userId": 1789548655582642177,
+			"content": "你说的对，但是......",
+			"likes": 100,
+			"liked": true,
+			"userAvatar": "https://ischool-bucket.oss-cn-beijing.aliyuncs.com/4c079b7b-0873-4c99-a666-0874a1595811.jpg",
+			"username": "张狗蛋",
+			"replyCount": 100,
+			"pubTime": ""
+		}
+	],
+	"msg": "success"
 }
 ```
 
@@ -799,9 +868,9 @@
 **响应示例**:
 ```javascript
 {
-	"code": 50010,
-	"data": null,
-	"msg": "接口调用失败"
+	"code": 0,
+	"data": {},
+	"msg": "success"
 }
 ```
 
@@ -853,8 +922,8 @@
 **响应示例**:
 ```javascript
 {
-	"code": 50010,
-	"data": null,
-	"msg": "接口调用失败"
+	"code": 0,
+	"data": {},
+	"msg": "success"
 }
 ```

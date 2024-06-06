@@ -10,7 +10,7 @@ import com.community.model.vo.CommentObjVO;
 import java.util.List;
 
 /**
- * @author Albert han
+ * @author Ljx
  * @description 针对表【obj】的数据库操作Service
  * @createDate 2024-05-03 21:10:19
  */

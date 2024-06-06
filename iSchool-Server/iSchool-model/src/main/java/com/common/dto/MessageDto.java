@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 /**
  * @program: iSchool-Server
- * @author: AlbertZhang
+ * @author: Ljx
  * @create: 2024-05-07 10:27
  * @description: 信息传输Dto
  **/

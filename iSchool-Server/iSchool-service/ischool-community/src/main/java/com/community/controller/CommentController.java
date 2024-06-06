@@ -17,7 +17,7 @@ import java.util.List;
 
 /**
  * @program: iSchool-Server
- * @author: AlbertZhang
+ * @author: Ljx
  * @create: 2024-05-03 22:04
  * @description: 评论控制器
  **/
@@ -51,9 +51,10 @@ public class CommentController {
      **/
     @GetMapping("{objId}")
     @Operation(summary = "获取某一点评对象的所有评论")
-    public BaseResponse<List<CommentsVO>> getCommentsList(@Parameter(description = "点评对象id") @PathVariable Long objId) {
+    public BaseResponse<List<CommentsVO>> getCommentsList(@Parameter(description = "点评对象id") @PathVariable Long objId,
+                                                          @RequestHeader("id") Long requestUserId) {
         log.info("获取点评对象{}的所有评论", objId);
-        List<CommentsVO> commentsVOS = commentsService.getList(objId);
+        List<CommentsVO> commentsVOS = commentsService.getList(objId,requestUserId);
         return Result.success(commentsVOS);
     }
 

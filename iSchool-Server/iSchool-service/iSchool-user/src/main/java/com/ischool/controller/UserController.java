@@ -6,6 +6,7 @@ import com.common.dto.MessageDto;
 import com.common.dto.UserDto;
 
 
+import com.common.vo.SchoolVO;
 import com.ischool.exception.BusinessException;
 import com.ischool.model.BaseResponse;
 import com.ischool.model.ErrorCode;
@@ -18,6 +19,8 @@ import com.ischool.service.UserService;
 import com.ischool.utils.AliOssUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +35,7 @@ import java.util.UUID;
 
 /**
  * @program: iSchool-Server
- * @author: AlbertZhang
+ * @author: Ljx
  * @create: 2024-04-20 20:10
  * @description: 用户控制器
  **/
@@ -102,7 +105,8 @@ public class UserController {
     @Operation(summary = "修改用户信息")
     public BaseResponse<Object> updateUserInfo(@RequestBody UpdateUserDto updateUserDto,
                                                @Parameter(hidden = true) @RequestHeader("id") Long id,
-                                               @Parameter(hidden = true) @RequestHeader("role") String role, HttpServletRequest request) {
+                                               @Parameter(hidden = true) @RequestHeader("role") String role,
+                                               HttpServletRequest request) {
         log.info("用户{}，角色为{}，修改信息，要修改的信息为：{}", id, role, updateUserDto);
         userService.updateUserInfo(updateUserDto, id, role);
         return Result.success();
@@ -198,6 +202,7 @@ public class UserController {
      **/
     @GetMapping("/messages")
     @Operation(summary = "获取用户所有未读信息")
+    @ArraySchema(arraySchema = @Schema(implementation = MessageDto.class))
     public BaseResponse<List<MessageDto>> getMessageList(@Parameter(hidden = true) @RequestHeader("id") Long id) {
         log.info("获取用户{}所有未读信息", id);
         if (!checkId(id)) {

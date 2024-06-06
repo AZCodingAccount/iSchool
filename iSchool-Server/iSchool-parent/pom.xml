@@ -15,7 +15,6 @@
         <module>../ischool-service-client</module>
     </modules>
 
-
     <!-- 版本控制 -->
     <properties>
         <java.version>17</java.version>
