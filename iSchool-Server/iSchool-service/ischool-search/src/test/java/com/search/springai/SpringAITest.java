@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * @program: iSchool-Server
- * @author: Ljx
+ * @author: AlbertZhang
  * @create: 2024-05-05 17:02
  * @description: 测试springai
  **/

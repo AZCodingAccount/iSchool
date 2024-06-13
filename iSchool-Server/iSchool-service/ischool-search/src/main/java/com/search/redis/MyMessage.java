@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * @program: iSchool-Server
- * @author: Ljx
+ * @author: AlbertZhang
  * @create: 2024-05-06 18:12
  * @description: 我的message类
  **/

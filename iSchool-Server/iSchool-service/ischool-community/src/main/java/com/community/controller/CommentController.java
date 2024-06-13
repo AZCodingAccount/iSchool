@@ -17,7 +17,7 @@ import java.util.List;
 
 /**
  * @program: iSchool-Server
- * @author: Ljx
+ * @author: AlbertZhang
  * @create: 2024-05-03 22:04
  * @description: 评论控制器
  **/

@@ -41,9 +41,6 @@ screenshot
 build
 
 # 本项目文件
-第5组-中期报告.doc
-第5组-期末报告.pdf
-原型图.rp
 期末/
 # 忽略编译生成的文件夹
 **/target/

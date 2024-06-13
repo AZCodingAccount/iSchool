@@ -2,7 +2,7 @@ package com.community.model.constants;
 
 /**
  * @program: iSchool-Server
- * @author: Ljx
+ * @author: AlbertZhang
  * @create: 2024-05-03 21:39
  * @description: 评论对象常量类
  **/

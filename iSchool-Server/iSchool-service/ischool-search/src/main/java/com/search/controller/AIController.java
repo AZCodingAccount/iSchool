@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * @program: iSchool-Server
- * @author: Ljx
+ * @author: AlbertZhang
  * @create: 2024-05-06 15:42
  * @description:
  **/

@@ -30,7 +30,7 @@ public class Knife4jConfig {
                         .version("1.0")
                         .description("API 文档")
                         .contact(new Contact()
-                                .name("Ljx")
+                                .name("AlbertZhang")
                                 .email("han892577@qq.com")
                                 .url("https://www.bugdesigner.cn")));
 

@@ -2,7 +2,7 @@ package com.search.redis;
 
 /**
  * @program: iSchool-Server
- * @author: Ljx
+ * @author: AlbertZhang
  * @create: 2024-05-06 14:50
  * @description: Redis键的常量值
  **/

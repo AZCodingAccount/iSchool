@@ -35,7 +35,7 @@ import java.util.UUID;
 
 /**
  * @program: iSchool-Server
- * @author: Ljx
+ * @author: AlbertZhang
  * @create: 2024-04-20 20:10
  * @description: 用户控制器
  **/

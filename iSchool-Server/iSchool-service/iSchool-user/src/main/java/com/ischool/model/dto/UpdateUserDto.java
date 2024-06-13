@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 /**
  * @program: iSchool-Server
- * @author: Ljx
+ * @author: AlbertZhang
  * @create: 2024-04-21 12:57
  * @description: 更新用户信息
  **/

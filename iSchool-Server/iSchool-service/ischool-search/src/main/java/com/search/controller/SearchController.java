@@ -21,7 +21,7 @@ import java.time.format.DateTimeFormatter;
 
 /**
  * @program: iSchool-Server
- * @author: Ljx
+ * @author: AlbertZhang
  * @create: 2024-05-04 21:32
  * @description: 搜索控制器
  **/
