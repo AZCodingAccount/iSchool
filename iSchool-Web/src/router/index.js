@@ -1,3 +1,11 @@
+/*
+ * @Author: AlbertZhang han892577@163.com
+ * @Date: 2024-05-28 11:43:50
+ * @LastEditors: AlbertZhang han892577@163.com
+ * @LastEditTime: 2024-06-05 04:49:29
+ * @FilePath: \iSchool-Web\src\router\index.js
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -15,22 +23,22 @@ const router = createRouter({
       path: '/main',
       component: () => import('@/views/MainWindow.vue'),
       children: [
-        {
-          path: '',
-          redirect: '/main/home'
-        },
+        // {
+        //   path: '',
+        //   redirect: 'main/home'
+        // },
         {
           path: 'home',
-          component: () => import('@/views/HomeWindow.vue'),
+          component: () => import('@/views/HomeWindow.vue')
         },
         {
           path: 'comment',
-          component: () => import('@/views/CommentWindow.vue'),
+          component: () => import('@/views/CommentWindow.vue')
         },
         {
           path: 'mine',
-          component: () => import('@/views/MineWindow.vue'),
-        },
+          component: () => import('@/views/MineWindow.vue')
+        }
       ]
     },
     {

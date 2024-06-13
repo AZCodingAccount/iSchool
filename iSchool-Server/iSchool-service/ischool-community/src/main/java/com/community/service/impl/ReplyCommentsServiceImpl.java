@@ -134,10 +134,10 @@ public class ReplyCommentsServiceImpl extends ServiceImpl<ReplyCommentsMapper, R
 
             // 3.2: 填充回复的用户名
             // (根据回复的评论id查到评论——>根据评论查到用户id——>根据用户id查到用户信息——>得到用户名)
-            Comments replyComment = commentsService.getBaseMapper().selectOne(new LambdaQueryWrapper<Comments>().
-                    eq(Comments::getId, replyCommentId));
-            Long replyCommentUserId = replyComment.getUserId();
-            UserDto replyUserInfo = userFeignClient.getLoginUser(replyCommentUserId).getData();
+            // Comments replyComment = commentsService.getBaseMapper().selectOne(new LambdaQueryWrapper<Comments>().
+            //         eq(Comments::getId, replyComments.getReplyCommentId()));
+            // Long replyCommentUserId = replyComment.getUserId();
+            UserDto replyUserInfo = userFeignClient.getLoginUser(replyComments.getReplyUserId()).getData();
             String replyUsername = "";
             String replyUserAvatar = "";
             if (replyUserInfo == null) {

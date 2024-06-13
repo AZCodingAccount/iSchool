@@ -43,7 +43,7 @@ const onLogin = async () => {
         res = await getLoginUser_1() // 获取个人信息
         userInfoerStore.updateUserInfo(res.data)
         isLoading_login.value = false
-        router.push('/main')
+        router.push('/main/home')
     } catch { isLoading_login.value = false }
 }
 

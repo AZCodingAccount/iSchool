@@ -6,6 +6,10 @@
 
 <img src="https://my-picture-bed1-1321100201.cos.ap-beijing.myqcloud.com/mypictures/image-20240522153811319.png" alt="image-20240522153811319" style="zoom:50%;" />
 
+项目后端所用技术架构概览👀
+
+![image-20240613104609407](https://my-picture-bed1-1321100201.cos.ap-beijing.myqcloud.com/mypictures/image-20240613104609407.png)
+
 ## 技术选型🛠️
 
 **前端：**

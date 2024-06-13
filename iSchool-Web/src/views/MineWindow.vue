@@ -241,7 +241,7 @@ onMounted(() => {
                                     <div style="display: flex; margin-top: 10px;">
                                         <div style="color: gray;">{{ item.pubTime }}</div>
                                         <el-link style="color: #409eff; margin-left: 10px;"
-                                            :href="'/main/comment?objId=' + item.objId">去查看</el-link>
+                                            :href="`/main/comment?objId=${item.objId}&messageId=${item.id}`">去查看</el-link>
                                     </div>
                                 </el-card>
                             </el-scrollbar>

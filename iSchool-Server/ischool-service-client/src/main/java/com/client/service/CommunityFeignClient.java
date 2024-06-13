@@ -17,7 +17,6 @@ import java.util.List;
  * @description: 社区远程调用类
  **/
 @FeignClient(name = "ischool-community", path = "/api/v1/community")
-
 public interface CommunityFeignClient {
 
     /**
