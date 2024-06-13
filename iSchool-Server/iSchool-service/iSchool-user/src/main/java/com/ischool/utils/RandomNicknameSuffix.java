@@ -4,7 +4,7 @@ import java.util.Random;
 
 /**
  * @program: iSchool-Server
- * @author: Ljx
+ * @author: AlbertZhang
  * @create: 2024-05-02 14:11
  * @description: 生成随机的用户名后缀
  **/

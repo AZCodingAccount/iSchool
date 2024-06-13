@@ -17,7 +17,7 @@ import java.util.List;
 
 /**
  * @program: iSchool-Server
- * @author: Ljx
+ * @author: AlbertZhang
  * @create: 2024-05-05 16:10
  * @description: 测试SpringAI能否正常使用的测试类
  **/

@@ -22,7 +22,7 @@ import java.util.Map;
 
 /**
  * @program: iSchool-Server
- * @author: Ljx
+ * @author: AlbertZhang
  * @create: 2024-05-16 21:49
  * @description: 同步数据定时任务
  **/

@@ -16,7 +16,7 @@ public class Knife4jConfig {
                         .version("1.0")
                         .description("iSchool接口文档")
                         .termsOfService("https://www.ischool.com")
-                        .contact(new Contact().name("Ljx").url("https://www.bugdesigner.cn")
+                        .contact(new Contact().name("AlbertZhang").url("https://www.bugdesigner.cn")
                                 .email("han892577@qq.com"))
                 );
     }

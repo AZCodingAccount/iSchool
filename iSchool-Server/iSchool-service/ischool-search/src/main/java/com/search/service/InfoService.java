@@ -11,7 +11,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import java.util.List;
 
 /**
- * @author Ljx
+ * @author AlbertZhang
  * @description 针对表【info】的数据库操作Service
  * @createDate 2024-05-04 21:31:19
  */

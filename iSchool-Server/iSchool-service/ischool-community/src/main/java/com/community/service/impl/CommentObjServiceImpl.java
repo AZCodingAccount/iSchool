@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Ljx
+ * @author AlbertZhang
  * @description 针对表【obj】的数据库操作Service实现
  * @createDate 2024-05-03 21:10:19
  */

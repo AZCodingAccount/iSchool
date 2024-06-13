@@ -8,7 +8,7 @@ import com.ischool.model.entity.User;
 
 
 /**
- * @author Ljx
+ * @author AlbertZhang
  * @description 针对表【user】的数据库操作Service
  * @createDate 2024-05-02 13:46:01
  */

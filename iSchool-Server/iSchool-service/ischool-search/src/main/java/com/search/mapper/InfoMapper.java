@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.search.model.entity.Info;
 
 /**
-* @author Ljx
+* @author AlbertZhang
 * @description 针对表【info】的数据库操作Mapper
 * @createDate 2024-05-04 21:31:19
 * @Entity generator.domain.Info

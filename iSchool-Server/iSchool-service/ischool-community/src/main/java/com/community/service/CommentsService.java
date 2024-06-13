@@ -9,7 +9,7 @@ import com.community.model.vo.CommentsVO;
 import java.util.List;
 
 /**
- * @author Ljx
+ * @author AlbertZhang
  * @description 针对表【comments】的数据库操作Service
  * @createDate 2024-05-03 22:24:26
  */
