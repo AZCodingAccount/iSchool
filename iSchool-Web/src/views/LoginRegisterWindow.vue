@@ -127,7 +127,7 @@ const keyOnRegisterSurePassword = (res) => { // 注册确定密码输入框键�
 <template>
     <el-image class="background" src="/img/background/loginRegisterBackground.jpg" />
     <div ref="titleRef" class="title" @click="titleRef.style.top = '-100%'; boxRef.style.top = '28%'">
-        iSchool
+        智搜通
     </div>
     <div ref="boxRef" class="box">
         <!-- 登录界面 -->
