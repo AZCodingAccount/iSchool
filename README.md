@@ -51,3 +51,29 @@ Vue3框架、Element-Plus组件库
 ## 快速启动与项目概览 🚀
 
 由于后端涉及到中间件较多，请观看B站视频启动项目与预览项目：[iSchool项目介绍](https://space.bilibili.com/501122856)
+
+项目预览如下：
+
+搜索页
+
+![image-20240719203443727](https://my-picture-bed1-1321100201.cos.ap-beijing.myqcloud.com/mypictures/image-20240719203443727.png)
+
+AI问答页
+
+![image-20240719203531956](https://my-picture-bed1-1321100201.cos.ap-beijing.myqcloud.com/mypictures/image-20240719203531956.png)
+
+社区模块页
+
+![image-20240719203907039](https://my-picture-bed1-1321100201.cos.ap-beijing.myqcloud.com/mypictures/image-20240719203907039.png)
+
+评论页
+
+![image-20240719203941258](https://my-picture-bed1-1321100201.cos.ap-beijing.myqcloud.com/mypictures/image-20240719203941258.png)
+
+个人中心页
+
+![image-20240719203811664](https://my-picture-bed1-1321100201.cos.ap-beijing.myqcloud.com/mypictures/image-20240719203811664.png)
+
+欢迎页
+
+![img](https://my-picture-bed1-1321100201.cos.ap-beijing.myqcloud.com/mypictures/clip_image002.jpg)
