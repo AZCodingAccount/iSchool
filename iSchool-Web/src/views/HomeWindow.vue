@@ -302,7 +302,7 @@ onMounted(() => {
         <div class="searchBox">
             <!-- 搜索结果 -->
             <el-empty style="height: 600px" v-show="resultData.counts == 0 && searchingKeyword !== ''"
-                image="/public/img/empty_search.png" description="无搜索结果" />
+                image="/public/img/emptySearch.png" description="无搜索结果" />
             <el-empty style="height: 600px" v-show="resultData.counts == 0 && searchingKeyword === ''"
                 image="/public/img/searchForWhat.png" description="搜点什么吧" />
             <div class="result" v-show="resultData.counts != 0">

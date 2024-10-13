@@ -18,7 +18,7 @@ if (import.meta.env.MODE === 'development') {
   baseURL = 'http://localhost:8901'
   // baseURL = 'http://192.168.41.191:8901'
 } else {
-  baseURL = 'http://localhost:8901'
+  baseURL = 'http://117.72.64.163:9001'
 }
 
 const instance = axios.create({

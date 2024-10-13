@@ -9,7 +9,7 @@ class MyDatabase:
 
     # 初始化数据库连接环境
     def __init__(self):
-        self.db = pymysql.connect(host='localhost', user='root', password='123456', database='ischool')
+        self.db = pymysql.connect(host='mysql', user='root', password='123456', database='ischool')
         self.cursor = self.db.cursor()
 
     def save_data(self, datas):

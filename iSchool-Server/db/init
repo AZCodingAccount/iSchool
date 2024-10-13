@@ -1,18 +1,102 @@
-# 创建ES中的info表
-PUT announcement
+curl -X PUT "http://127.0.0.1:9200/announcement" -H 'Content-Type: application/json' -d '{
+  "mappings": {
+    "properties": {
+      "title": {
+        "type": "text",
+        "analyzer": "ik_max_word",
+        "search_analyzer": "ik_smart",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "pureText": {
+        "type": "text",
+        "analyzer": "ik_max_word",
+        "search_analyzer": "ik_smart",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "content": {
+        "type": "text",
+        "analyzer": "ik_max_word",
+        "search_analyzer": "ik_smart",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "pubTime": {
+        "type": "date",
+        "format": "yyyy-MM-dd"
+      },
+      "url": {
+        "type": "keyword",
+        "index": false
+      },
+      "createTime": {
+        "type": "date",
+        "index": false
+      },
+      "articleId": {
+        "type": "integer",
+        "index": false
+      },
+      "school": {
+        "type": "keyword"
+      }
+    }
+  }
+}'
+
+PUT /announcement
 {
   "mappings": {
     "properties": {
       "title": {
         "type": "text",
-        "analyzer": "ik_smart"
+        "analyzer": "ik_max_word",
+        "search_analyzer": "ik_smart",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "pureText": {
+        "type": "text",
+        "analyzer": "ik_max_word",
+        "search_analyzer": "ik_smart",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
       },
       "content": {
         "type": "text",
-        "analyzer": "ik_max_word"
+        "analyzer": "ik_max_word",
+        "search_analyzer": "ik_smart",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
       },
       "pubTime": {
-        "type": "date"
+        "type": "date",
+        "format": "yyyy-MM-dd"
       },
       "url": {
         "type": "keyword",

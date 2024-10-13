@@ -43,6 +43,7 @@ public class AiMessageConsumer {
                     key = AiMQConstant.AI_ROUTING_KEY
             ), ackMode = "MANUAL")
     public void receiverMessage(String message, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag) {
+        // todo：业务幂等，每次消费时候都判断是否被消费，消费以后调用reject拒绝消息
         log.info("AiMessageConsumer receive message: {}", message);
         // 处理业务逻辑
         // 调用AI生成接口，todo: 如果超时，重试三次，拒绝该消息，并配置死信队列

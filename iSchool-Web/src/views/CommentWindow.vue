@@ -156,7 +156,7 @@ const inputPlaceholder = computed(() => {
 })
 const likeImgUrl = (isLike) => {
   // 点赞的图标
-  if (isLike) return '/public/img/like_active.png'
+  if (isLike) return '/public/img/likeActive.png'
   else return '/public/img/like.png'
 }
 const onLikeComment1 = async (commentObj) => {
@@ -365,7 +365,7 @@ const toStatus = (status) => {
         <el-empty
           style="height: 509px"
           v-show="commentObjData.length == 0"
-          image="/public/img/empty_commentObj.png"
+          image="/public/img/emptyCommentObj.png"
           description="无点评"
         />
         <div v-show="commentObjData.length != 0" class="result">
@@ -434,7 +434,7 @@ const toStatus = (status) => {
       <el-empty
         style="height: 100%"
         v-show="selectedCommentObj.id == -1"
-        image="/public/img/empty_comment1.png"
+        image="/public/img/emptyComment1.png"
         description="无评论"
       />
       <el-card style="height: 100%" v-show="selectedCommentObj.id != -1">
@@ -542,7 +542,7 @@ const toStatus = (status) => {
       <el-empty
         style="height: 100%"
         v-show="selectedComment1.id == -1"
-        image="/public/img/empty_comment2.png"
+        image="/public/img/emptyComment2.png"
         description="无评论"
       />
       <el-card style="height: 100%" v-show="selectedComment1.id != -1">

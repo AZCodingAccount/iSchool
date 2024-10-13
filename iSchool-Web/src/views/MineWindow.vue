@@ -222,7 +222,7 @@ onMounted(() => {
                         </template>
                         <div v-loading="isLoading_myMessage">
                             <el-scrollbar height="610px">
-                                <el-empty v-show="myMessage.length == 0" image="/public/img/empty_message.png"
+                                <el-empty v-show="myMessage.length == 0" image="/public/img/emptyMessage.png"
                                     description="没有消息" />
                                 <el-card v-for="item in myMessage" :key="item"
                                     style="max-width: 100%; margin-bottom: 2%; text-align: left;" shadow="hover">

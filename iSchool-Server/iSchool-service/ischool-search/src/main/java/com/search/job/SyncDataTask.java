@@ -47,7 +47,7 @@ public class SyncDataTask {
             String schoolName = schoolVO.getSchoolName();
             body.put("school", schoolName);
             // 通知远程python程序去同步数据
-            String result = HttpUtil.createPost("http://127.0.0.1:10086/full_sync_data")
+            String result = HttpUtil.createPost("http://117.72.64.163:10086/full_sync_data")
                     .contentType("application/json")
                     .body(JSONUtil.toJsonStr(body))
                     .execute()
@@ -74,7 +74,7 @@ public class SyncDataTask {
             Long articleId = (Long) redisTemplate.opsForValue().get(redisKey);
             body.put("end_article_id", articleId);
             // 通知远程python程序去同步数据
-            String result = HttpUtil.createPost("http://127.0.0.1:10086/incr_sync_data")
+            String result = HttpUtil.createPost("http://117.72.64.163:10086/incr_sync_data")
                     .contentType("application/json")
                     .body(JSONUtil.toJsonStr(body))
                     .execute()
