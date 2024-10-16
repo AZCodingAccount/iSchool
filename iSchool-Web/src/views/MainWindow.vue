@@ -7,8 +7,8 @@ const userInfoerStore = useUserInfoerStore()
 
 <template>
   <div style="position: fixed; z-index: 5; width: 100%; margin-top: -0.4%; left: 0">
-    <el-menu  mode="horizontal" :ellipsis="false" :router="true">
-      <!-- logo -->
+    <el-menu :default-active="$route.path" mode="horizontal" :ellipsis="false" :router="true">
+        <!-- logo -->
       <div style="display: flex; margin-left: 2%">
         <img style="height: 100%" src="/public/img/code.png" />
         <div style="font-size: 30px; padding: 5px 10px; font-style: italic; line-height: 160%">
