@@ -125,10 +125,11 @@ const commentObj_like = async (commentObj) => {
 
 const selectedCommentObj = ref({ id: -1 }) // 当前选择的点评对象
 const isLoading_comment1 = ref(false) // 是否在加载一级评论数据
-const onSelectCommentObj = async (commentObj) => {
+const onSelectCommentObj = async (commentObj) => {  
   // 选择点评对象
   selectedCommentObj.value = commentObj
   isLoading_comment1.value = true
+  commentSendTo.value = 0
   input1Ref.value.focus()
   toStatus(2)
   try {
@@ -196,7 +197,7 @@ const comment2ScrollbarRef = ref(null) // 一级评论滚动窗口绑定变量
 const isLoading_comment2 = ref(false) // 是否在加载二级评论数据
 const commentData2 = ref([]) // 所有二级评论数据
 const InputDisabled = ref(false) // 是否禁用输入框
-const onSelectComment = async (commentObj, commentLevel) => {
+const onSelectComment = async (commentObj, commentLevel) => {  
   // 选择或取消选择评论
   if (selectedComment.value.id == commentObj.id) {
     // 取消对评论的选择
@@ -234,7 +235,9 @@ const onSelectComment = async (commentObj, commentLevel) => {
     }
   }
 }
+const firstCommentLoading = ref(false)
 const onSendComment = async () => {
+  firstCommentLoading.value = true
   // 一级评论输入框发送信息
   if (messageComment.value == '') {
     ElMessage.error({ message: '评论信息不能为空', grouping: true })
@@ -284,6 +287,7 @@ const onSendComment = async () => {
     isLoading_comment2.value = false
   }
   messageComment.value = ''
+  firstCommentLoading.value = false
 }
 
 const window1 = ref(null)
@@ -530,7 +534,11 @@ const toStatus = (status) => {
               @keyup.enter="onSendComment"
               :disabled="InputDisabled"
             />
-            <el-button style="height: 50px; margin-left: 20px" type="primary" @click="onSendComment"
+            <el-button
+              style="height: 50px; margin-left: 20px"
+              type="primary"
+              @click="onSendComment"
+              :loading="firstCommentLoading"
               >发送</el-button
             >
           </div>

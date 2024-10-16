@@ -149,8 +149,6 @@ const chatScrollbarRef = ref(null) // 聊天窗口滚动条绑定变量
 const isResulting = ref(false) // ai是否正在回复消息
 const isFirstTimeClick = ref(true) // 是否第一次点击机器人按钮
 const onClickChatButton = async () => {
-  console.log(isFirstTimeClick.value, searchingKeyword.value, tempSearchKeyWord.value)
-
   // 点击机器人按钮
   if (isFirstTimeClick.value) {
     // 第一次点击机器人按钮，获取AI搜索建议
