@@ -56,9 +56,9 @@ services:
     networks:
       - mynetwork
     environment:
-      - PARAMS=--spring.datasource.url=jdbc:mysql://mysql:3306/xxl_job?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai --spring.datasource.username=root --spring.datasource.password=xxx
+      - PARAMS=--spring.datasource.url=jdbc:mysql://mysql:3306/xxl_job?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai --spring.datasource.username=root --spring.datasource.password=handsome_zhang
       - SERVER_PORT=9000
-      - XXL_JOB_ACCESS_TOKEN=xxx
+      - XXL_JOB_ACCESS_TOKEN=default_token
 
 
 
