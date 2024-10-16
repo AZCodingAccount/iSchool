@@ -1,5 +1,6 @@
 package com.community.controller;
 
+import com.client.service.SearchFeignClient;
 import com.common.dto.MessageDto;
 import com.community.model.dto.AddCommentRequest;
 import com.community.model.dto.AddReplyCommentRequest;
@@ -7,6 +8,7 @@ import com.community.model.vo.CommentsVO;
 import com.community.model.vo.ReplyCommentsVO;
 import com.community.service.ReplyCommentsService;
 import com.ischool.model.BaseResponse;
+import com.ischool.model.ErrorCode;
 import com.ischool.model.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -32,6 +34,11 @@ public class ReplyCommentController {
     @Autowired
     ReplyCommentsService replyCommentsService;
 
+    @Autowired
+    SearchFeignClient searchFeignClient;
+
+    private static final String systemPrompt = "你是一个评论审核机器人，请筛选下面用户发表的评论，包括但不限于涉黄、涉黑、暴力、涉政等内容，请帮助我识别这个评论，如果有上述问题的话，请返回“不合格”，反之返回“合格”。注意，请严格按照上面要求的格式返回";
+
 
     /**
      * @param addReplyCommentRequest
@@ -44,6 +51,12 @@ public class ReplyCommentController {
     public BaseResponse<Object> addComment(
             @RequestBody AddReplyCommentRequest addReplyCommentRequest, @Parameter(hidden = true) @RequestHeader("id") Long id) {
         log.info("添加二级评论信息，评论信息为:{}", addReplyCommentRequest);
+        // 校验是否含有违规信息
+        String aiRes = searchFeignClient.chat(systemPrompt, addReplyCommentRequest.getReplyContent());
+        log.info("ai回答的信息:{}", aiRes);
+        if (aiRes.equals("不合格")) {
+            return Result.error(ErrorCode.PARAMS_ERROR, "评论不合规");
+        }
         replyCommentsService.add(addReplyCommentRequest, id);
         return Result.success();
     }

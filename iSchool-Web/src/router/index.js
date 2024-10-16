@@ -52,4 +52,23 @@ const router = createRouter({
   ]
 })
 
+import { useUserInfoerStore } from '@/stores/userInfoer'
+
+router.beforeEach((to, from, next) => {
+  // 管理员和普通用户使用不同的存储，结构相似
+  const userStore = useUserInfoerStore()
+  const token = userStore.userInfo.token
+  if (to.path.startsWith('/login') && token) {
+    next('/main/home')
+  }
+  // 登录或注册，直接放行
+  if (to.path.startsWith('/login') || to.path.startsWith('/register')) {
+    next()
+  } else if (!token) {
+    next('/login') // todo:校验token合法性
+  } else {
+    next()
+  }
+})
+
 export default router

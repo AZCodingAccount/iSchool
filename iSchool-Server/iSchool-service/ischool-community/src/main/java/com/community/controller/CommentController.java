@@ -1,10 +1,12 @@
 package com.community.controller;
 
+import com.client.service.SearchFeignClient;
 import com.community.model.dto.AddCommentRequest;
 import com.community.model.vo.CommentsVO;
 import com.community.service.CommentsService;
 
 import com.ischool.model.BaseResponse;
+import com.ischool.model.ErrorCode;
 import com.ischool.model.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -29,6 +31,11 @@ public class CommentController {
     @Autowired
     CommentsService commentsService;
 
+    @Autowired
+    SearchFeignClient searchFeignClient;
+
+    private static final String systemPrompt = "你是一个评论审核机器人，请筛选下面用户发表的评论，包括但不限于涉黄、涉黑、暴力、涉政等内容，请帮助我识别这个评论，如果有上述问题的话，请返回“不合格”，反之返回“合格”。注意，请严格按照上面要求的格式返回";
+
     /**
      * @param addCommentRequest
      * @param id
@@ -40,6 +47,11 @@ public class CommentController {
     public BaseResponse<Object> addComment(@RequestBody AddCommentRequest addCommentRequest,
                                            @Parameter(hidden = true) @RequestHeader("id") Long id) {
         log.info("添加评论信息，评论信息为:{}", addCommentRequest);
+        String aiRes = searchFeignClient.chat(systemPrompt, addCommentRequest.getContent());
+        log.info("ai回答的信息:{}", aiRes);
+        if (aiRes.equals("不合格")) {
+            return Result.error(ErrorCode.PARAMS_ERROR, "评论不合规");
+        }
         commentsService.add(addCommentRequest, id);
         return Result.success();
     }
@@ -54,7 +66,7 @@ public class CommentController {
     public BaseResponse<List<CommentsVO>> getCommentsList(@Parameter(description = "点评对象id") @PathVariable Long objId,
                                                           @RequestHeader("id") Long requestUserId) {
         log.info("获取点评对象{}的所有评论", objId);
-        List<CommentsVO> commentsVOS = commentsService.getList(objId,requestUserId);
+        List<CommentsVO> commentsVOS = commentsService.getList(objId, requestUserId);
         return Result.success(commentsVOS);
     }
 

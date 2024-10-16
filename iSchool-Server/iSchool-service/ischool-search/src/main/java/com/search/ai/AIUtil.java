@@ -108,4 +108,23 @@ public class AIUtil {
         // 5：返回用户响应信息
         return assistantMessage.getContent();
     }
+
+    /*
+        使用预设跟ai进行一问一答
+     */
+    public String chatWithRole(String role, String message) {
+        // 1：构建请求消息
+        List<Message> userMessage = new ArrayList<>();
+        userMessage.add(new SystemMessage(role));
+        userMessage.add(new UserMessage(message));
+        Prompt prompt = new Prompt(userMessage);
+
+        // 2：调用
+        ChatResponse chatResponse = chatClient.call(prompt);
+
+        AssistantMessage assistantMessage = chatResponse.getResult().getOutput();
+
+        // 3：返回
+        return assistantMessage.getContent();
+    }
 }
