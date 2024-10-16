@@ -129,6 +129,7 @@ const onSelectCommentObj = async (commentObj) => {
   // 选择点评对象
   selectedCommentObj.value = commentObj
   isLoading_comment1.value = true
+  commentSendTo.value = 0
   input1Ref.value.focus()
   toStatus(2)
   try {
@@ -156,7 +157,7 @@ const inputPlaceholder = computed(() => {
 })
 const likeImgUrl = (isLike) => {
   // 点赞的图标
-  if (isLike) return '/public/img/like_active.png'
+  if (isLike) return '/public/img/likeActive.png'
   else return '/public/img/like.png'
 }
 const onLikeComment1 = async (commentObj) => {
@@ -234,56 +235,63 @@ const onSelectComment = async (commentObj, commentLevel) => {
     }
   }
 }
+const firstCommentLoading = ref(false)
 const onSendComment = async () => {
+  firstCommentLoading.value = true
   // 一级评论输入框发送信息
   if (messageComment.value == '') {
     ElMessage.error({ message: '评论信息不能为空', grouping: true })
     return
   }
-  if (commentSendTo.value == 0) {
-    // 评论点评对象
-    await addComment_1({
-      objId: selectedCommentObj.value.id,
-      content: messageComment.value
-    })
-    // 刷新一级评论信息
-    isLoading_comment1.value = true
-    try {
-      var res1 = await getCommentsList_1(selectedCommentObj.value.id)
-      // await sleep(1000) // test
-      // var res1 = { data: comment1 }
-    } catch {
+  try {
+    if (commentSendTo.value == 0) {
+      // 评论点评对象
+      await addComment_1({
+        objId: selectedCommentObj.value.id,
+        content: messageComment.value
+      })
+      // 刷新一级评论信息
+      isLoading_comment1.value = true
+      try {
+        var res1 = await getCommentsList_1(selectedCommentObj.value.id)
+        // await sleep(1000) // test
+        // var res1 = { data: comment1 }
+      } catch {
+        isLoading_comment1.value = false
+        return
+      }
+      commentData1.value = res1.data
       isLoading_comment1.value = false
-      return
-    }
-    commentData1.value = res1.data
-    isLoading_comment1.value = false
-    // comment1ScrollbarRef.value.setScrollTop(0)
-    selectedCommentObj.value.commentCount += 1
-  } else {
-    // 回复某一级或二级评论
-    await addComment({
-      objId: selectedCommentObj.value.id,
-      commentId: selectedComment.value.id,
-      parentCommentId: selectedComment1.value.id,
-      replyContent: messageComment.value,
-      replyUserId: selectedComment.value.userId
-    })
-    selectedComment1.value.replyCount += 1
-    // 刷新二级评论数据
-    isLoading_comment2.value = true
-    try {
-      var res2 = await getCommentsList(selectedComment1.value.id)
-      // await sleep(1000) // test
-      // var res2 = { data: comment2 }
-    } catch {
+      // comment1ScrollbarRef.value.setScrollTop(0)
+      selectedCommentObj.value.commentCount += 1
+    } else {
+      // 回复某一级或二级评论
+      await addComment({
+        objId: selectedCommentObj.value.id,
+        commentId: selectedComment.value.id,
+        parentCommentId: selectedComment1.value.id,
+        replyContent: messageComment.value,
+        replyUserId: selectedComment.value.userId
+      })
+      selectedComment1.value.replyCount += 1
+      // 刷新二级评论数据
+      isLoading_comment2.value = true
+      try {
+        var res2 = await getCommentsList(selectedComment1.value.id)
+        // await sleep(1000) // test
+        // var res2 = { data: comment2 }
+      } catch {
+        isLoading_comment2.value = false
+        return
+      }
+      commentData2.value = res2.data
       isLoading_comment2.value = false
-      return
     }
-    commentData2.value = res2.data
-    isLoading_comment2.value = false
+    messageComment.value = ''
+    firstCommentLoading.value = false
+  } catch (error) {
+    firstCommentLoading.value = false
   }
-  messageComment.value = ''
 }
 
 const window1 = ref(null)
@@ -331,7 +339,7 @@ const toStatus = (status) => {
     </template>
   </el-dialog>
 
-  <div style="position: relative; height: 710px">
+  <div style="position: relative; height: 720px">
     <!-- 选择点评对象 -->
     <div ref="window1" class="window1">
       <div style="display: flex">
@@ -363,9 +371,9 @@ const toStatus = (status) => {
       </el-tabs>
       <div v-loading="isLoading">
         <el-empty
-          style="height: 509px"
+          style="height: 480px"
           v-show="commentObjData.length == 0"
-          image="/public/img/empty_commentObj.png"
+          image="/public/img/emptyCommentObj.png"
           description="无点评"
         />
         <div v-show="commentObjData.length != 0" class="result">
@@ -434,7 +442,7 @@ const toStatus = (status) => {
       <el-empty
         style="height: 100%"
         v-show="selectedCommentObj.id == -1"
-        image="/public/img/empty_comment1.png"
+        image="/public/img/emptyComment1.png"
         description="无评论"
       />
       <el-card style="height: 100%" v-show="selectedCommentObj.id != -1">
@@ -530,7 +538,11 @@ const toStatus = (status) => {
               @keyup.enter="onSendComment"
               :disabled="InputDisabled"
             />
-            <el-button style="height: 50px; margin-left: 20px" type="primary" @click="onSendComment"
+            <el-button
+              style="height: 50px; margin-left: 20px"
+              type="primary"
+              @click="onSendComment"
+              :loading="firstCommentLoading"
               >发送</el-button
             >
           </div>
@@ -542,7 +554,7 @@ const toStatus = (status) => {
       <el-empty
         style="height: 100%"
         v-show="selectedComment1.id == -1"
-        image="/public/img/empty_comment2.png"
+        image="/public/img/emptyComment2.png"
         description="无评论"
       />
       <el-card style="height: 100%" v-show="selectedComment1.id != -1">
@@ -636,7 +648,7 @@ const toStatus = (status) => {
   display: inline-block;
   position: relative;
   width: 98%;
-  height: 490px;
+  height: 500px;
   padding: 1%;
   text-align: left;
 }
@@ -655,11 +667,11 @@ const toStatus = (status) => {
   position: absolute;
   z-index: 30;
   background-color: white;
-  width: 40%;
+  width: 39%;
+  max-width: 100%; /* 确保宽度不会超过100% */
   margin-top: 70px;
-  left: 31%;
+  left: 30%;
   transition: all 0.5s;
-  /* border: 1px red solid; */
 }
 
 .window2 {
@@ -667,11 +679,10 @@ const toStatus = (status) => {
   position: absolute;
   z-index: 20;
   background-color: white;
-  width: 30%;
+  width: 29%;
   margin-top: 70px;
-  left: 31%;
+  left: 30%;
   transition: all 0.5s;
-  /* border: 1px red solid; */
 }
 
 .window3 {
@@ -679,10 +690,9 @@ const toStatus = (status) => {
   position: absolute;
   z-index: 10;
   background-color: white;
-  width: 30%;
+  width: 29%;
   margin-top: 70px;
-  left: 31%;
+  left: 30%;
   transition: all 0.5s;
-  /* border: 1px red solid; */
 }
 </style>

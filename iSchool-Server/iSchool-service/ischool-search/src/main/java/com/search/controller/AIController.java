@@ -101,4 +101,19 @@ public class AIController {
     }
 
 
+    /**
+     * @param message
+     * @return com.ischool.model.BaseResponse<java.lang.String>
+     * @description 用户聊天
+     **/
+    @GetMapping("/chat/rpc")
+    @Operation(summary = "用户进行聊天(RPC调用)")
+    public String chatRpc(@RequestParam("role") String role,
+                          @RequestParam("message") String message
+    ) {
+        log.info("预设{}，聊天信息为：{}", role, message);
+        return aiUtil.chatWithRole(role, message);
+    }
+
+
 }

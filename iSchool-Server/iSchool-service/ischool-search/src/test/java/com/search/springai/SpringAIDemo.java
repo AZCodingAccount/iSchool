@@ -39,7 +39,7 @@ public class SpringAIDemo {
 
     // 创建client
     public SpringAIDemo() {
-        var openAiApi = new OpenAiApi("https://jiekou.wlai.vip/", "sk-YBNqrFIxlQRPIsmD1e65079cBe2146F189F72a4845Bd2f8f");
+        var openAiApi = new OpenAiApi("https://xiaoai.plus", "sk-fRCHkl07a3KorE4Z22A6F94f13F943D29d6dBa48F9D60bCf");
         var openAiChatOptions = OpenAiChatOptions.builder()
                 // .withModel(OpenAiApi.ChatModel.GPT_4_TURBO_PREVIEW.value)   // 0.06/1K TOKENS
                 .withModel(OpenAiApi.ChatModel.GPT_3_5_TURBO.value)
