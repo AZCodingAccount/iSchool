@@ -335,7 +335,7 @@ const toStatus = (status) => {
     </template>
   </el-dialog>
 
-  <div style="position: relative; height: 710px">
+  <div style="position: relative; height: 720px">
     <!-- 选择点评对象 -->
     <div ref="window1" class="window1">
       <div style="display: flex">
@@ -367,7 +367,7 @@ const toStatus = (status) => {
       </el-tabs>
       <div v-loading="isLoading">
         <el-empty
-          style="height: 509px"
+          style="height: 480px"
           v-show="commentObjData.length == 0"
           image="/public/img/emptyCommentObj.png"
           description="无点评"
@@ -644,7 +644,7 @@ const toStatus = (status) => {
   display: inline-block;
   position: relative;
   width: 98%;
-  height: 490px;
+  height: 500px;
   padding: 1%;
   text-align: left;
 }
@@ -663,11 +663,11 @@ const toStatus = (status) => {
   position: absolute;
   z-index: 30;
   background-color: white;
-  width: 40%;
+  width: 39%;
+  max-width: 100%; /* 确保宽度不会超过100% */
   margin-top: 70px;
-  left: 31%;
+  left: 30%;
   transition: all 0.5s;
-  /* border: 1px red solid; */
 }
 
 .window2 {
@@ -675,11 +675,10 @@ const toStatus = (status) => {
   position: absolute;
   z-index: 20;
   background-color: white;
-  width: 30%;
+  width: 29%;
   margin-top: 70px;
-  left: 31%;
+  left: 30%;
   transition: all 0.5s;
-  /* border: 1px red solid; */
 }
 
 .window3 {
@@ -687,10 +686,10 @@ const toStatus = (status) => {
   position: absolute;
   z-index: 10;
   background-color: white;
-  width: 30%;
+  width: 29%;
   margin-top: 70px;
-  left: 31%;
+  left: 30%;
   transition: all 0.5s;
-  /* border: 1px red solid; */
 }
+
 </style>

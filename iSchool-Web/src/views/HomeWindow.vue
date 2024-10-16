@@ -254,6 +254,10 @@ onMounted(() => {
   endDate.value = '2024-10-01'
   onSearch()
 })
+
+const jumpWebSite=()=>{
+    ElMessage.info('功能尚未推出，敬请期待')
+}
 </script>
 
 <template>
@@ -318,7 +322,7 @@ onMounted(() => {
         <div style="display: flex; margin-top: -1%">
           <el-link @click="toChat" target="_blank" type="primary">进一步聊聊</el-link>
           <div style="flex-grow: 1; text-align: center">|</div>
-          <el-link href="" target="_blank" type="primary">站外搜索</el-link>
+          <el-link href="" target="_blank" type="primary" @click="jumpWebSite">站外搜索</el-link>
           <div style="flex-grow: 1; text-align: center">|</div>
           <el-link href="/main/comment" target="_blank" type="primary">大众点评</el-link>
           <div style="flex-grow: 9"></div>
