@@ -50,7 +50,7 @@ const userInfoerStore = useUserInfoerStore()
 
   <router-view />
   <div class="footer">
-    <a href="https://github.com/AZCodingAccount/iSchool">
+    <a href="https://github.com/AZCodingAccount/iSchool" target="_blank">
       <img style="width: 50px" src="/public/img/github.png"
     /></a>
     <div class="text">
