@@ -125,7 +125,7 @@ const commentObj_like = async (commentObj) => {
 
 const selectedCommentObj = ref({ id: -1 }) // 当前选择的点评对象
 const isLoading_comment1 = ref(false) // 是否在加载一级评论数据
-const onSelectCommentObj = async (commentObj) => {  
+const onSelectCommentObj = async (commentObj) => {
   // 选择点评对象
   selectedCommentObj.value = commentObj
   isLoading_comment1.value = true
@@ -197,7 +197,7 @@ const comment2ScrollbarRef = ref(null) // 一级评论滚动窗口绑定变量
 const isLoading_comment2 = ref(false) // 是否在加载二级评论数据
 const commentData2 = ref([]) // 所有二级评论数据
 const InputDisabled = ref(false) // 是否禁用输入框
-const onSelectComment = async (commentObj, commentLevel) => {  
+const onSelectComment = async (commentObj, commentLevel) => {
   // 选择或取消选择评论
   if (selectedComment.value.id == commentObj.id) {
     // 取消对评论的选择
@@ -243,51 +243,55 @@ const onSendComment = async () => {
     ElMessage.error({ message: '评论信息不能为空', grouping: true })
     return
   }
-  if (commentSendTo.value == 0) {
-    // 评论点评对象
-    await addComment_1({
-      objId: selectedCommentObj.value.id,
-      content: messageComment.value
-    })
-    // 刷新一级评论信息
-    isLoading_comment1.value = true
-    try {
-      var res1 = await getCommentsList_1(selectedCommentObj.value.id)
-      // await sleep(1000) // test
-      // var res1 = { data: comment1 }
-    } catch {
+  try {
+    if (commentSendTo.value == 0) {
+      // 评论点评对象
+      await addComment_1({
+        objId: selectedCommentObj.value.id,
+        content: messageComment.value
+      })
+      // 刷新一级评论信息
+      isLoading_comment1.value = true
+      try {
+        var res1 = await getCommentsList_1(selectedCommentObj.value.id)
+        // await sleep(1000) // test
+        // var res1 = { data: comment1 }
+      } catch {
+        isLoading_comment1.value = false
+        return
+      }
+      commentData1.value = res1.data
       isLoading_comment1.value = false
-      return
-    }
-    commentData1.value = res1.data
-    isLoading_comment1.value = false
-    // comment1ScrollbarRef.value.setScrollTop(0)
-    selectedCommentObj.value.commentCount += 1
-  } else {
-    // 回复某一级或二级评论
-    await addComment({
-      objId: selectedCommentObj.value.id,
-      commentId: selectedComment.value.id,
-      parentCommentId: selectedComment1.value.id,
-      replyContent: messageComment.value,
-      replyUserId: selectedComment.value.userId
-    })
-    selectedComment1.value.replyCount += 1
-    // 刷新二级评论数据
-    isLoading_comment2.value = true
-    try {
-      var res2 = await getCommentsList(selectedComment1.value.id)
-      // await sleep(1000) // test
-      // var res2 = { data: comment2 }
-    } catch {
+      // comment1ScrollbarRef.value.setScrollTop(0)
+      selectedCommentObj.value.commentCount += 1
+    } else {
+      // 回复某一级或二级评论
+      await addComment({
+        objId: selectedCommentObj.value.id,
+        commentId: selectedComment.value.id,
+        parentCommentId: selectedComment1.value.id,
+        replyContent: messageComment.value,
+        replyUserId: selectedComment.value.userId
+      })
+      selectedComment1.value.replyCount += 1
+      // 刷新二级评论数据
+      isLoading_comment2.value = true
+      try {
+        var res2 = await getCommentsList(selectedComment1.value.id)
+        // await sleep(1000) // test
+        // var res2 = { data: comment2 }
+      } catch {
+        isLoading_comment2.value = false
+        return
+      }
+      commentData2.value = res2.data
       isLoading_comment2.value = false
-      return
     }
-    commentData2.value = res2.data
-    isLoading_comment2.value = false
+    messageComment.value = ''
+    firstCommentLoading.value = false
+  } catch (error) {
+    firstCommentLoading.value = false
   }
-  messageComment.value = ''
-  firstCommentLoading.value = false
 }
 
 const window1 = ref(null)
@@ -691,5 +695,4 @@ const toStatus = (status) => {
   left: 30%;
   transition: all 0.5s;
 }
-
 </style>
