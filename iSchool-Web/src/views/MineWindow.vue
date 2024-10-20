@@ -168,7 +168,7 @@ onMounted(() => {
                 accept="image/*"
               >
                 <div class="avatar">
-                  <img style="height: 50%" :src="userInfoerStore.userInfo.userAvatar" />
+                  <img style="height: 100%" :src="userInfoerStore.userInfo.userAvatar" />
                 </div>
               </el-upload>
             </el-tooltip>
@@ -341,7 +341,7 @@ onMounted(() => {
 
 .avatar {
   display: inline-block;
-  border: 3px rgb(202, 202, 202) solid;
+  border: 1px rgb(202, 202, 202) solid;
   width: 150px;
   height: 150px;
   border-radius: 150px;

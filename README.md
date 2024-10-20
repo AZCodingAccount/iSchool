@@ -77,3 +77,51 @@ AI问答页
 欢迎页
 
 ![img](https://my-picture-bed1-1321100201.cos.ap-beijing.myqcloud.com/mypictures/clip_image002.jpg)
+
+## 查询接口性能测试
+
+工具：jmeter、apipost
+
+​		使用redis缓存在用户同时搜索一个关键词时，测试报告如下：
+
+硬件配置：4h8g服务器，es堆内存配置1G
+
+​		本地测试结果表明，在3000并发时，前99.99%的用户响应时间可以控制在1.2s以内。但在线上环境时，只在500并发时，时间在可以容忍的范围内(200并发时时间小于1s)，分析原因是因为**服务器硬件配置不足**、**服务器网络上行不足**、**网络传输延迟**等原因。
+
+解决方案可以**加机器**、**加配置**。目前项目瓶颈在服务器而非数据库这边
+
+1. 本地测试，时间稳定在1s以下，在3000并发时，错误率明显上升。
+
+<img src="https://my-picture-bed1-1321100201.cos.ap-beijing.myqcloud.com/mypictures/image-20241020221204804.png" alt="image-20241020221204804" style="width:67%;" />
+
+不使用缓存，3000并发下，本地QPS和响应时间下降4倍左右，由此可见，虽然es也有缓存，但是redis缓存也是有一定必要的
+
+<img src="https://my-picture-bed1-1321100201.cos.ap-beijing.myqcloud.com/mypictures/image-20241020222542994.png" alt="image-20241020222542994" style="width:67%;" />
+
+1. 在无可用线程时，连接会直接拒绝，解决方案：
+   1. 增加最大线程数（默认是100）
+   2. 加机器
+   3. 改变数据库连接池的大小（默认几十），优化逻辑，每个请求执行快一点（这里已经到顶了）
+2. 4h8g服务器，给的es堆内存只有1G。
+
+100并发下，QPS达到了80，平均响应时间在100ms左右
+
+<img src="https://my-picture-bed1-1321100201.cos.ap-beijing.myqcloud.com/mypictures/image-20241020214822618.png" alt="image-20241020214822618" width=66% />
+
+​    500并发下，QPS在40左右徘徊，等待最后几个请求时出现明显卡顿，平均响应时间增加到了4s
+
+<img src="https://my-picture-bed1-1321100201.cos.ap-beijing.myqcloud.com/mypictures/image-20241020215109256.png" alt="image-20241020215109256" style="width:66%;" />
+
+​    1000并发下，与500个用户类似，起初请求QPS在40左右，处理后续请求有明显卡顿，平均响应时间增加到了11s
+
+<img src="https://my-picture-bed1-1321100201.cos.ap-beijing.myqcloud.com/mypictures/image-20241020215539764.png" alt="image-20241020215539764" style="width:66%;" />
+
+2000并发下，QPS15，平均响应时间20s，**第一次出现error**
+
+<img src="https://my-picture-bed1-1321100201.cos.ap-beijing.myqcloud.com/mypictures/image-20241020220259655.png" alt="image-20241020220259655" style="width:67%;" />
+
+增加到4000以后，错误率明显上升达到30%，错误信息为连接超时
+
+<img src="https://my-picture-bed1-1321100201.cos.ap-beijing.myqcloud.com/mypictures/image-20241020220606635.png" alt="image-20241020220606635" style="width:67%;" />
+
+
