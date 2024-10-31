@@ -90,6 +90,10 @@ Vue3框架、Element-Plus组件库
 
 <img src="https://my-picture-bed1-1321100201.cos.ap-beijing.myqcloud.com/mypictures/image-20241020220259655.png" alt="image-20241020220259655" style="width:67%;" />
 
+增加到4000以后，错误率明显上升达到30%，错误信息为连接超时
+
+<img src="https://my-picture-bed1-1321100201.cos.ap-beijing.myqcloud.com/mypictures/image-20241020220606635.png" alt="image-20241020220606635" style="width:67%;" />
+
 ## 快速启动与项目概览 🚀
 
 由于后端涉及到中间件较多，请观看B站视频启动项目与预览项目：[iSchool项目介绍](https://space.bilibili.com/501122856)
@@ -121,8 +125,5 @@ AI问答页
 ![img](https://my-picture-bed1-1321100201.cos.ap-beijing.myqcloud.com/mypictures/clip_image002.jpg)
 
 
-增加到4000以后，错误率明显上升达到30%，错误信息为连接超时
-
-<img src="https://my-picture-bed1-1321100201.cos.ap-beijing.myqcloud.com/mypictures/image-20241020220606635.png" alt="image-20241020220606635" style="width:67%;" />
 
 
